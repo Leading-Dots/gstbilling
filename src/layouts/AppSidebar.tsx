@@ -118,12 +118,17 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex flex-col items-center justify-center py-4">
-        <Link to="/" className="flex items-center gap-2 px-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-            <FileText className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <span className="text-lg font-bold">InvoiceGST</span>
-        </Link>
+        <SidebarMenuButton
+          size="lg"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        >
+          <Link to="/" className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
+              <FileText className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="text-lg font-bold">InvoiceGST</span>
+          </Link>
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         {sections.map(([sectionName, items]) => (
