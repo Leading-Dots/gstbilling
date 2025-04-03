@@ -1,10 +1,10 @@
- "use client"
+"use client"
 
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { CalendarIcon, Trash2, Plus, Save } from "lucide-react"
+import { CalendarIcon, Trash2, Plus, Save, ChevronRight, ChevronLeft, Download, Share2, Palette } from "lucide-react"
 import { format } from "date-fns"
 
 import { Button } from "@/components/ui/button"
@@ -16,8 +16,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { Separator } from "@/components/ui/separator"
-import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
+import { HexColorPicker } from "react-colorful"
+import { toast } from "sonner"
+
 // Define the form schema
 const quotationFormSchema = z.object({
   quotationNumber: z.string().min(1, "Quotation number is required"),
@@ -90,9 +92,22 @@ const companyInfo = {
   phone: "+91 98765 12345",
 }
 
+// Quotation themes
+const quotationThemes = [
+  { name: "Classic", primaryColor: "#4f46e5", secondaryColor: "#f9fafb", accentColor: "#e5e7eb" },
+  { name: "Modern", primaryColor: "#0ea5e9", secondaryColor: "#f0f9ff", accentColor: "#e0f2fe" },
+  { name: "Professional", primaryColor: "#0f766e", secondaryColor: "#f0fdfa", accentColor: "#ccfbf1" },
+  { name: "Bold", primaryColor: "#b91c1c", secondaryColor: "#fef2f2", accentColor: "#fee2e2" },
+  { name: "Elegant", primaryColor: "#4b5563", secondaryColor: "#f9fafb", accentColor: "#f3f4f6" },
+]
+
 export default function NewQuotationPage() {
   const router = useNavigate()
   const [selectedCustomer, setSelectedCustomer] = useState<string>("")
+  const [currentStep, setCurrentStep] = useState(1)
+  const [selectedTheme, setSelectedTheme] = useState(quotationThemes[0])
+  const [customColor, setCustomColor] = useState(quotationThemes[0].primaryColor)
+  const [showColorPicker, setShowColorPicker] = useState(false)
 
   // Initialize the form with default values
   const form = useForm<QuotationFormValues>({
@@ -206,70 +221,187 @@ export default function NewQuotationPage() {
     }
   }
 
+  // Handle theme selection
+  const handleThemeSelect = (themeName: string) => {
+    const theme = quotationThemes.find((t) => t.name === themeName)
+    if (theme) {
+      setSelectedTheme(theme)
+      setCustomColor(theme.primaryColor)
+    }
+  }
+
+  // Navigate to next step
+  const goToNextStep = () => {
+    if (currentStep === 1) {
+      const isValid = form.trigger()
+      isValid.then((valid) => {
+        if (valid) {
+          setCurrentStep(2)
+        }
+      })
+    }
+  }
+
+  // Navigate to previous step
+  const goToPreviousStep = () => {
+    if (currentStep === 2) {
+      setCurrentStep(1)
+    }
+  }
+
+  // Download quotation as PDF
+  const downloadQuotation = () => {
+    // In a real app, you would generate a PDF here
+    toast.success("Quotation PDF downloaded successfully.")
+  }
+
+  // Share quotation
+  const shareQuotation = () => {
+    // In a real app, you would implement sharing functionality
+    toast.success("Quotation shared successfully.")
+  }
+
   // Form submission
   const onSubmit = (data: QuotationFormValues) => {
-    toast({
-      title: "Quotation Created",
-      description: `Quotation ${data.quotationNumber} has been created successfully.`,
-    })
+    toast.success("Quotation created successfully.")
 
     // In a real app, you would save the quotation to the database here
     console.log("Quotation data:", data)
 
     // Navigate back to quotations list
-    router.push("/quotations")
+    router("/quotations")
   }
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Create New Quotation</h2>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-muted-foreground">
+            Step {currentStep} of 2: {currentStep === 1 ? "Enter Details" : "Preview & Customize"}
+          </span>
+        </div>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Quotation Details */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quotation Details</CardTitle>
-                <CardDescription>Enter the basic details for this quotation</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="quotationNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Quotation Number</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid gap-4 md:grid-cols-2">
+      {currentStep === 1 ? (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Quotation Details */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Quotation Details</CardTitle>
+                  <CardDescription>Enter the basic details for this quotation</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="quotationDate"
+                    name="quotationNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Quotation Date</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button variant="outline" className="w-full pl-3 text-left font-normal">
-                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                          </PopoverContent>
-                        </Popover>
+                        <FormLabel>Quotation Number</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="quotationDate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Quotation Date</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button variant="outline" className="w-full pl-3 text-left font-normal">
+                                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="validUntil"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Valid Until</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button variant="outline" className="w-full pl-3 text-left font-normal">
+                                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Customer Selection */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Select Customer</CardTitle>
+                  <CardDescription>Choose an existing customer or enter details manually</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Select value={selectedCustomer} onValueChange={handleCustomerSelect}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a customer" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {customers.map((customer) => (
+                        <SelectItem key={customer.id} value={customer.id}>
+                          {customer.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="mt-2 text-sm text-muted-foreground">Or enter customer details manually below</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* From and To Information */}
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* From (Your Company) */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>From (Your Company)</CardTitle>
+                  <CardDescription>Your company details</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="fromCompany"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -277,401 +409,528 @@ export default function NewQuotationPage() {
 
                   <FormField
                     control={form.control}
-                    name="validUntil"
+                    name="fromGstin"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Valid Until</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button variant="outline" className="w-full pl-3 text-left font-normal">
-                                {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                          </PopoverContent>
-                        </Popover>
+                        <FormLabel>GSTIN</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-              </CardContent>
-            </Card>
 
-            {/* Customer Selection */}
+                  <FormField
+                    control={form.control}
+                    name="fromAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={3} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="fromEmail"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="fromPhone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* To (Customer) */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>To (Customer)</CardTitle>
+                  <CardDescription>Customer details</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="toCustomer"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Customer Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="toGstin"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>GSTIN</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="toAddress"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={3} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="toEmail"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="toPhone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Quotation Items */}
             <Card>
               <CardHeader>
-                <CardTitle>Select Customer</CardTitle>
-                <CardDescription>Choose an existing customer or enter details manually</CardDescription>
+                <CardTitle>Quotation Items</CardTitle>
+                <CardDescription>Add the items you want to include in this quotation</CardDescription>
               </CardHeader>
               <CardContent>
-                <Select value={selectedCustomer} onValueChange={handleCustomerSelect}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a customer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {customers.map((customer) => (
-                      <SelectItem key={customer.id} value={customer.id}>
-                        {customer.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <p className="mt-2 text-sm text-muted-foreground">Or enter customer details manually below</p>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-12 gap-2 font-medium">
+                    <div className="col-span-5">Description</div>
+                    <div className="col-span-1">Qty</div>
+                    <div className="col-span-2">Rate (₹)</div>
+                    <div className="col-span-1">GST %</div>
+                    <div className="col-span-2">Amount (₹)</div>
+                    <div className="col-span-1"></div>
+                  </div>
+
+                  {form.watch("items").map((item, index) => (
+                    <div key={index} className="grid grid-cols-12 gap-2 items-start">
+                      <div className="col-span-5">
+                        <Input
+                          {...form.register(`items.${index}.description`)}
+                          onChange={(e) => {
+                            form.setValue(`items.${index}.description`, e.target.value)
+                          }}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <Input
+                          type="number"
+                          {...form.register(`items.${index}.quantity`, {
+                            valueAsNumber: true,
+                          })}
+                          onChange={(e) => {
+                            form.setValue(`items.${index}.quantity`, Number.parseInt(e.target.value) || 0)
+                            updateItemAmount(index)
+                          }}
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <Input
+                          type="number"
+                          step="0.01"
+                          {...form.register(`items.${index}.rate`, {
+                            valueAsNumber: true,
+                          })}
+                          onChange={(e) => {
+                            form.setValue(`items.${index}.rate`, Number.parseFloat(e.target.value) || 0)
+                            updateItemAmount(index)
+                          }}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <Select
+                          value={item.gstRate.toString()}
+                          onValueChange={(value) => {
+                            form.setValue(`items.${index}.gstRate`, Number.parseInt(value))
+                            updateItemAmount(index)
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="0">0%</SelectItem>
+                            <SelectItem value="5">5%</SelectItem>
+                            <SelectItem value="12">12%</SelectItem>
+                            <SelectItem value="18">18%</SelectItem>
+                            <SelectItem value="28">28%</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="col-span-2">
+                        <Input type="number" step="0.01" value={item.amount.toFixed(2)} readOnly />
+                      </div>
+                      <div className="col-span-1">
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeItem(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <Button type="button" variant="outline" size="sm" className="mt-2" onClick={addItem}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Item
+                  </Button>
+                </div>
               </CardContent>
             </Card>
-          </div>
 
-          {/* From and To Information */}
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* From (Your Company) */}
+            {/* Totals */}
             <Card>
               <CardHeader>
-                <CardTitle>From (Your Company)</CardTitle>
-                <CardDescription>Your company details</CardDescription>
+                <CardTitle>Quotation Summary</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="fromCompany"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Company Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="fromGstin"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>GSTIN</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="fromAddress"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={3} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="fromEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="fromPhone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="font-medium">Subtotal:</span>
+                    <span>₹{form.watch("subtotal").toFixed(2)}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="font-medium">CGST:</span>
+                    <span>₹{form.watch("cgst").toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">SGST:</span>
+                    <span>₹{form.watch("sgst").toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">IGST:</span>
+                    <span>₹{form.watch("igst").toFixed(2)}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between text-lg font-bold">
+                    <span>Total:</span>
+                    <span>₹{form.watch("total").toFixed(2)}</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* To (Customer) */}
-            <Card>
-              <CardHeader>
-                <CardTitle>To (Customer)</CardTitle>
-                <CardDescription>Customer details</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="toCustomer"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Customer Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="toGstin"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>GSTIN</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="toAddress"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={3} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid gap-4 md:grid-cols-2">
+            {/* Notes and Terms */}
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notes</CardTitle>
+                  <CardDescription>Add any additional notes for this quotation</CardDescription>
+                </CardHeader>
+                <CardContent>
                   <FormField
                     control={form.control}
-                    name="toEmail"
+                    name="notes"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Textarea {...field} rows={4} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+                </CardContent>
+              </Card>
 
+              <Card>
+                <CardHeader>
+                  <CardTitle>Terms & Conditions</CardTitle>
+                  <CardDescription>Specify the terms and conditions for this quotation</CardDescription>
+                </CardHeader>
+                <CardContent>
                   <FormField
                     control={form.control}
-                    name="toPhone"
+                    name="termsAndConditions"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Textarea {...field} rows={4} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
+            </div>
 
-          {/* Quotation Items */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quotation Items</CardTitle>
-              <CardDescription>Add the items you want to include in this quotation</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-12 gap-2 font-medium">
-                  <div className="col-span-5">Description</div>
-                  <div className="col-span-1">Qty</div>
-                  <div className="col-span-2">Rate (₹)</div>
-                  <div className="col-span-1">GST %</div>
-                  <div className="col-span-2">Amount (₹)</div>
-                  <div className="col-span-1"></div>
-                </div>
+            {/* Form Actions */}
+            <div className="flex justify-end gap-4">
+              <Button type="button" variant="outline" onClick={() => router("/quotations")}>
+                Cancel
+              </Button>
+              <Button type="button" onClick={goToNextStep}>
+                Preview
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </form>
+        </Form>
+      ) : (
+        // Preview Step
+        <div className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="md:col-span-2">
+              <Card className="overflow-hidden">
+                <CardHeader
+                  className="flex flex-row items-center justify-between"
+                  style={{ backgroundColor: customColor, color: "white" }}
+                >
+                  <CardTitle>Quotation Preview</CardTitle>
+                  <div className="flex space-x-2">
+                    <Button variant="secondary" size="sm" onClick={downloadQuotation}>
+                      <Download className="mr-2 h-4 w-4" />
+                      Download
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={shareQuotation}>
+                      <Share2 className="mr-2 h-4 w-4" />
+                      Share
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="p-6 space-y-6">
+                    {/* Quotation Header */}
+                    <div className="flex flex-col md:flex-row justify-between items-start">
+                      <div>
+                        <h2 className="text-2xl font-bold">{form.getValues("fromCompany")}</h2>
+                        <p className="whitespace-pre-line text-sm text-muted-foreground">
+                          {form.getValues("fromAddress")}
+                        </p>
+                        <p className="text-sm">GSTIN: {form.getValues("fromGstin")}</p>
+                        <p className="text-sm">
+                          {form.getValues("fromEmail")} | {form.getValues("fromPhone")}
+                        </p>
+                      </div>
+                      <div className="mt-4 md:mt-0 md:text-right">
+                        <h1 className="text-3xl font-bold" style={{ color: customColor }}>
+                          QUOTATION
+                        </h1>
+                        <p className="text-sm">
+                          <span className="font-medium">Quotation Number:</span> {form.getValues("quotationNumber")}
+                        </p>
+                        <p className="text-sm">
+                          <span className="font-medium">Date:</span>{" "}
+                          {format(form.getValues("quotationDate"), "dd/MM/yyyy")}
+                        </p>
+                        <p className="text-sm">
+                          <span className="font-medium">Valid Until:</span>{" "}
+                          {format(form.getValues("validUntil"), "dd/MM/yyyy")}
+                        </p>
+                      </div>
+                    </div>
 
-                {form.watch("items").map((item, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-2 items-start">
-                    <div className="col-span-5">
-                      <Input
-                        {...form.register(`items.${index}.description`)}
-                        onChange={(e) => {
-                          form.setValue(`items.${index}.description`, e.target.value)
-                        }}
-                      />
+                    {/* Customer Information */}
+                    <div className="border rounded-md p-4" style={{ borderColor: customColor }}>
+                      <h3 className="font-medium mb-2">Prepared For:</h3>
+                      <h4 className="font-bold">{form.getValues("toCustomer")}</h4>
+                      <p className="whitespace-pre-line text-sm text-muted-foreground">{form.getValues("toAddress")}</p>
+                      <p className="text-sm">GSTIN: {form.getValues("toGstin")}</p>
+                      <p className="text-sm">
+                        {form.getValues("toEmail")} | {form.getValues("toPhone")}
+                      </p>
                     </div>
-                    <div className="col-span-1">
-                      <Input
-                        type="number"
-                        {...form.register(`items.${index}.quantity`, {
-                          valueAsNumber: true,
-                        })}
-                        onChange={(e) => {
-                          form.setValue(`items.${index}.quantity`, Number.parseInt(e.target.value) || 0)
-                          updateItemAmount(index)
-                        }}
-                      />
+
+                    {/* Quotation Items */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="border-b" style={{ borderColor: customColor }}>
+                            <th className="py-2 text-left">Description</th>
+                            <th className="py-2 text-right">Qty</th>
+                            <th className="py-2 text-right">Rate (₹)</th>
+                            <th className="py-2 text-right">GST %</th>
+                            <th className="py-2 text-right">Amount (₹)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {form.getValues("items").map((item, index) => (
+                            <tr key={index} className="border-b">
+                              <td className="py-2 text-left">{item.description}</td>
+                              <td className="py-2 text-right">{item.quantity}</td>
+                              <td className="py-2 text-right">{item.rate.toFixed(2)}</td>
+                              <td className="py-2 text-right">{item.gstRate}%</td>
+                              <td className="py-2 text-right">{item.amount.toFixed(2)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                    <div className="col-span-2">
-                      <Input
-                        type="number"
-                        step="0.01"
-                        {...form.register(`items.${index}.rate`, {
-                          valueAsNumber: true,
-                        })}
-                        onChange={(e) => {
-                          form.setValue(`items.${index}.rate`, Number.parseFloat(e.target.value) || 0)
-                          updateItemAmount(index)
-                        }}
-                      />
+
+                    {/* Quotation Summary */}
+                    <div className="flex justify-end">
+                      <div className="w-full md:w-1/2 space-y-2">
+                        <div className="flex justify-between">
+                          <span className="font-medium">Subtotal:</span>
+                          <span>₹{form.getValues("subtotal").toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">CGST:</span>
+                          <span>₹{form.getValues("cgst").toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">SGST:</span>
+                          <span>₹{form.getValues("sgst").toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">IGST:</span>
+                          <span>₹{form.getValues("igst").toFixed(2)}</span>
+                        </div>
+                        <div
+                          className="flex justify-between pt-2 border-t font-bold"
+                          style={{ borderColor: customColor }}
+                        >
+                          <span>Total:</span>
+                          <span>₹{form.getValues("total").toFixed(2)}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="col-span-1">
-                      <Select
-                        value={item.gstRate.toString()}
-                        onValueChange={(value) => {
-                          form.setValue(`items.${index}.gstRate`, Number.parseInt(value))
-                          updateItemAmount(index)
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="0">0%</SelectItem>
-                          <SelectItem value="5">5%</SelectItem>
-                          <SelectItem value="12">12%</SelectItem>
-                          <SelectItem value="18">18%</SelectItem>
-                          <SelectItem value="28">28%</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="col-span-2">
-                      <Input type="number" step="0.01" value={item.amount.toFixed(2)} readOnly />
-                    </div>
-                    <div className="col-span-1">
-                      <Button type="button" variant="ghost" size="icon" onClick={() => removeItem(index)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+
+                    {/* Notes and Terms */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <h3 className="font-medium mb-1">Notes:</h3>
+                        <p className="text-sm whitespace-pre-line">{form.getValues("notes")}</p>
+                      </div>
+                      <div>
+                        <h3 className="font-medium mb-1">Terms & Conditions:</h3>
+                        <p className="text-sm whitespace-pre-line">{form.getValues("termsAndConditions")}</p>
+                      </div>
                     </div>
                   </div>
-                ))}
+                </CardContent>
+              </Card>
+            </div>
 
-                <Button type="button" variant="outline" size="sm" className="mt-2" onClick={addItem}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Item
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Customize Quotation</CardTitle>
+                  <CardDescription>Change the appearance of your quotation</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Select Theme</label>
+                    <Select value={selectedTheme.name} onValueChange={handleThemeSelect}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {quotationThemes.map((theme) => (
+                          <SelectItem key={theme.name} value={theme.name}>
+                            {theme.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-          {/* Totals */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quotation Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="font-medium">Subtotal:</span>
-                  <span>₹{form.watch("subtotal").toFixed(2)}</span>
-                </div>
-                <Separator />
-                <div className="flex justify-between">
-                  <span className="font-medium">CGST:</span>
-                  <span>₹{form.watch("cgst").toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">SGST:</span>
-                  <span>₹{form.watch("sgst").toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">IGST:</span>
-                  <span>₹{form.watch("igst").toFixed(2)}</span>
-                </div>
-                <Separator />
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total:</span>
-                  <span>₹{form.watch("total").toFixed(2)}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Notes and Terms */}
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Notes</CardTitle>
-                <CardDescription>Add any additional notes for this quotation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="notes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea {...field} rows={4} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Terms & Conditions</CardTitle>
-                <CardDescription>Specify the terms and conditions for this quotation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="termsAndConditions"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea {...field} rows={4} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+                  <div>
+                    <label className="text-sm font-medium">Primary Color</label>
+                    <div className="flex items-center mt-2 space-x-2">
+                      <div
+                        className="w-10 h-10 rounded-md cursor-pointer border"
+                        style={{ backgroundColor: customColor }}
+                        onClick={() => setShowColorPicker(!showColorPicker)}
+                      ></div>
+                      <Input value={customColor} onChange={(e) => setCustomColor(e.target.value)} className="w-32" />
+                      <Button variant="outline" size="icon" onClick={() => setShowColorPicker(!showColorPicker)}>
+                        <Palette className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {showColorPicker && (
+                      <div className="mt-2">
+                        <HexColorPicker color={customColor} onChange={setCustomColor} />
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => router("/quotations")}>
-              Cancel
+          <div className="flex justify-between">
+            <Button type="button" variant="outline" onClick={goToPreviousStep}>
+              <ChevronLeft className="mr-2 h-4 w-4" />
+              Back to Edit
             </Button>
-            <Button type="submit">
-              <Save className="mr-2 h-4 w-4" />
-              Create Quotation
-            </Button>
+            <div className="space-x-2">
+              <Button type="button" variant="outline" onClick={() => router("/quotations")}>
+                Cancel
+              </Button>
+              <Button type="button" onClick={form.handleSubmit(onSubmit)}>
+                <Save className="mr-2 h-4 w-4" />
+                Create Quotation
+              </Button>
+            </div>
           </div>
-        </form>
-      </Form>
+        </div>
+      )}
     </div>
   )
 }

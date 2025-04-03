@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
+import { Combobox } from "@/components/ui/combobox"
 
 // Define the form schema
 const customerFormSchema = z.object({
@@ -44,44 +45,7 @@ const customerFormSchema = z.object({
 type CustomerFormValues = z.infer<typeof customerFormSchema>
 
 // List of Indian states
-const indianStates = [
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chhattisgarh",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-  "Andaman and Nicobar Islands",
-  "Chandigarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi",
-  "Jammu and Kashmir",
-  "Ladakh",
-  "Lakshadweep",
-  "Puducherry",
-]
+
 
 export default function NewCustomerPage() {
   const router = useNavigate()
@@ -313,7 +277,7 @@ export default function NewCustomerPage() {
                 )}
               />
 
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-4">
                 <FormField
                   control={form.control}
                   name="city"
@@ -332,22 +296,12 @@ export default function NewCustomerPage() {
                   control={form.control}
                   name="state"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>State*</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormItem className="flex flex-col mt-2">
+                        <FormLabel>State*</FormLabel>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select state" />
-                          </SelectTrigger>
+                            <Combobox {...field} />
                         </FormControl>
-                        <SelectContent>
-                          {indianStates.map((state) => (
-                            <SelectItem key={state} value={state}>
-                              {state}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                         
                       <FormMessage />
                     </FormItem>
                   )}

@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
+import { Combobox } from "@/components/ui/combobox"
 // Define the form schema
 const vendorFormSchema = z.object({
   vendorName: z.string().min(1, "Vendor name is required"),
@@ -356,20 +357,7 @@ export default function NewVendorPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>State*</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select state" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {indianStates.map((state) => (
-                            <SelectItem key={state} value={state}>
-                              {state}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <Combobox {...field} />
                       <FormMessage />
                     </FormItem>
                   )}
