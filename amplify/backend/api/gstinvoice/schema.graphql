@@ -1,0 +1,112 @@
+enum QuotationStatus {
+  SENT
+  DRAFT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  CONVERTED
+}
+
+enum InvoiceStatus {
+  PAID
+  PENDING
+  OVERDUE
+}
+
+enum ProfileStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type Vendor @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  vendor_id: String
+  company_name: String
+  owner_name: String
+  email: String
+  phone: String
+  payable_amount: Float
+  billing_address: String
+  vendor_status: ProfileStatus
+  garin: String
+  shipping_address: String
+}
+
+type Customer @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  customer_id: String
+  company_name: String
+  owner_name: String
+  email: String
+  phone: String
+  outstanding_amount: Float
+  billing_address: String
+  customer_status: ProfileStatus
+  Invoices: [Invoice] @hasMany(indexName: "byCustomer", fields: ["id"])
+  Quotations: [Quotation] @hasMany(indexName: "byCustomer", fields: ["id"])
+  gstin: String
+  shipping_address: String
+  city: String
+  state: String
+  pincode: String
+  country: String
+  pan_number: String
+  credit_limit: String
+}
+
+type Quotation @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  quotation_id: String
+  quotation_status: QuotationStatus
+  quotation_number: String
+  quotation_date: AWSDate
+  valid_until: AWSDate
+  from_company: String
+  from_address: String
+  from_gstin: String
+  from_email: String
+  from_phone: String
+  to_customer: String
+  to_address: String
+  to_gstin: String
+  to_email: String
+  to_phone: String
+  items: AWSJSON
+  subtotal: String
+  cgst: String
+  sgst: String
+  igst: String
+  total: String
+  notes: String
+  terms_conditions: String
+  customerID: ID! @index(name: "byCustomer")
+}
+
+type Invoice @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  invoice_id: String
+  invoice_status: InvoiceStatus
+  invoice_number: String
+  invoice_date: AWSDate
+  due_date: AWSDate
+  from_company: String
+  from_address: String
+  from_gstin: String
+  from_email: String
+  from_phone: String
+  to_customer: String
+  to_address: String
+  to_gstin: String
+  to_email: String
+  to_phone: String
+  items: AWSJSON
+  subtotal: String
+  cgst: String
+  sgst: String
+  igst: String
+  total: String
+  notes: String
+  terms_conditions: String
+  customerID: ID! @index(name: "byCustomer")
+}
+ 

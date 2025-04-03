@@ -1,0 +1,15 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-gstinvoice-staging-fd2f2-authRole",
+      "UnauthRoleArn": "arn:aws:iam::517223944896:role/amplify-gstinvoice-staging-fd2f2-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::517223944896:role/amplify-gstinvoice-staging-fd2f2-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-gstinvoice-staging-fd2f2-deployment",
+      "UnauthRoleName": "amplify-gstinvoice-staging-fd2f2-unauthRole",
+      "StackName": "amplify-gstinvoice-staging-fd2f2",
+      "StackId": "arn:aws:cloudformation:ap-south-1:517223944896:stack/amplify-gstinvoice-staging-fd2f2/ed5e5d60-0bc6-11f0-a6ec-066eb39dac57",
+      "AmplifyAppId": "dezumgb27m50l"
+    }
+  }
+}
