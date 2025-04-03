@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Link } from "react-router-dom"
 
 const vendors = [
   {
@@ -90,10 +91,12 @@ export default function VendorsPage() {
           <h2 className="text-3xl font-bold tracking-tight">Vendors</h2>
           <p className="text-muted-foreground">Manage your supplier information and track payables</p>
         </div>
+        <Link to="/vendors/new">
         <Button className="ml-auto">
           <Plus className="mr-2 h-4 w-4" />
           Add Vendor
         </Button>
+        </Link>
       </div>
 
       <div className="flex items-center gap-2">

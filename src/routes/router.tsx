@@ -8,6 +8,8 @@ import VendorsPage from "@/pages/VendorsPage";
 import ReportsPage from "@/pages/ReportsPage";
 import NewInvoicePage from "@/pages/new/CreateInvoicePage";
 import NewQuotationPage from "@/pages/new/CreateQuotationsPage";
+import NewCustomerPage from "@/pages/new/CreateCustomerPage";
+import NewVendorPage from "@/pages/new/CreateVendorPage";
 
 const routes = [
     {
@@ -20,6 +22,12 @@ const routes = [
       path: "/customers",
       element: <DashboardLayout>
         <CustomersPage />
+      </DashboardLayout>
+    },
+    {
+      path: "/customers/new",
+      element: <DashboardLayout>
+        <NewCustomerPage />
       </DashboardLayout>
     },
     {
@@ -50,6 +58,12 @@ const routes = [
       path: "/vendors",
       element: <DashboardLayout>
         <VendorsPage />
+      </DashboardLayout>
+    },
+    {
+      path: "/vendors/new",
+      element: <DashboardLayout>
+        <NewVendorPage />
       </DashboardLayout>
     },
     {
