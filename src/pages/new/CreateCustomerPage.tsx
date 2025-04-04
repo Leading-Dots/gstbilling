@@ -1,24 +1,45 @@
-"use client"
+"use client";
 
-import React from "react"
+import React from "react";
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Save } from "lucide-react"
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Switch } from "@/components/ui/switch"
-import { useNavigate } from "react-router-dom"
-import { toast } from "sonner"
-import { Combobox } from "@/components/ui/combobox"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Combobox } from "@/components/ui/combobox";
+import { addCustomer } from "@/db/Customers";
+import { ProfileStatus } from "@/API";
 
 // Define the form schema
 const customerFormSchema = z.object({
@@ -33,23 +54,25 @@ const customerFormSchema = z.object({
   state: z.string().min(1, "State is required"),
   pincode: z.string().min(6, "PIN code must be 6 digits").max(6),
   country: z.string().min(1, "Country is required"),
-  status: z.enum(["active", "inactive"]),
-  creditLimit: z.coerce.number().min(0, "Credit limit must be a positive number").optional(),
+  status: z.enum(["ACTIVE", "INACTIVE"]),
+  creditLimit: z.coerce
+    .number()
+    .min(0, "Credit limit must be a positive number")
+    .optional(),
   paymentTerms: z.string().optional(),
   notes: z.string().optional(),
   billingAddress: z.string().optional(),
   shippingAddress: z.string().optional(),
   taxExempt: z.boolean(),
-})
+});
 
-type CustomerFormValues = z.infer<typeof customerFormSchema>
+type CustomerFormValues = z.infer<typeof customerFormSchema>;
 
 // List of Indian states
 
-
 export default function NewCustomerPage() {
-  const router = useNavigate()
-  const [sameAsBilling, setSameAsBilling] = useState(true)
+  const router = useNavigate();
+  const [sameAsBilling, setSameAsBilling] = useState(true);
 
   // Initialize the form with default values
   const form = useForm<CustomerFormValues>({
@@ -66,7 +89,7 @@ export default function NewCustomerPage() {
       state: "",
       pincode: "",
       country: "India",
-      status: "active",
+      status: "ACTIVE",
       creditLimit: 0,
       paymentTerms: "Net 30",
       notes: "",
@@ -74,43 +97,66 @@ export default function NewCustomerPage() {
       shippingAddress: "",
       taxExempt: false,
     },
-  })
+  });
 
   // Watch billing address to sync with shipping address if needed
-  const billingAddress = form.watch("billingAddress")
+  const billingAddress = form.watch("billingAddress");
 
   // Update shipping address when billing address changes and sameAsBilling is true
   React.useEffect(() => {
     if (sameAsBilling) {
-      form.setValue("shippingAddress", billingAddress)
+      form.setValue("shippingAddress", billingAddress);
     }
-  }, [billingAddress, sameAsBilling, form])
+  }, [billingAddress, sameAsBilling, form]);
 
   // Handle same as billing toggle
   const handleSameAsBillingChange = (checked: boolean) => {
-    setSameAsBilling(checked)
+    setSameAsBilling(checked);
     if (checked) {
-      form.setValue("shippingAddress", form.getValues("billingAddress"))
+      form.setValue("shippingAddress", form.getValues("billingAddress"));
     }
-  }
+  };
 
   // Form submission
-  const onSubmit = (data: CustomerFormValues) => {
-    toast.success("Customer created successfully!", {
-        description: "Customer data has been saved.",
-    })
-
-    // In a real app, you would save the customer to the database here
-    console.log("Customer data:", data)
-
-    // Navigate back to customers list
-    router("/customers")
-  }
+  const onSubmit = async (data: CustomerFormValues) => {
+    try {
+      const newCustomer = await addCustomer({
+        customer_id: "Customer" + Math.floor(Math.random() * 10000),
+        company_name: data.customerName,
+        owner_name: data.contactPerson,
+        email: data.email,
+        phone: data.phone,
+        gstin: data.gstin,
+        pan_number: data.panNumber,
+        billing_address: data.billingAddress,
+        shipping_address: data.shippingAddress,
+        city: data.city,
+        country: data.country,
+        state: data.state,
+        pincode: data.pincode,
+        customer_status: data.status as ProfileStatus,
+        credit_limit: "0",
+        outstanding_amount: 0,
+      });
+      if (newCustomer) {
+        toast.success("Customer created successfully");
+        router("/customers");
+      } else {
+        toast.error("Failed to create customer");
+      }
+    } catch (error) {
+      console.error("Error creating customer:", error);
+      toast.error("Error creating customer");
+    }
+  };
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Add New Customer</h2>
+      <div className="flex flex-col justify-between">
+        <h2 className="text-2xl font-bold tracking-tight">Add New Customer</h2>
+        <h3 className="text-sm text-muted-foreground">
+          Fill in the details below to create a new customer profile.
+        </h3>
       </div>
 
       <Form {...form}>
@@ -119,7 +165,9 @@ export default function NewCustomerPage() {
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
-              <CardDescription>Enter the basic details for this customer</CardDescription>
+              <CardDescription>
+                Enter the basic details for this customer
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
@@ -192,7 +240,10 @@ export default function NewCustomerPage() {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>15-character Goods and Services Tax Identification Number</FormDescription>
+                      <FormDescription>
+                        15-character Goods and Services Tax Identification
+                        Number
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -207,7 +258,9 @@ export default function NewCustomerPage() {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>10-character Permanent Account Number</FormDescription>
+                      <FormDescription>
+                        10-character Permanent Account Number
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -221,15 +274,18 @@ export default function NewCustomerPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Status</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select status" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
+                          <SelectItem value="ACTIVE">Active</SelectItem>
+                          <SelectItem value="INACTIVE">Inactive</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -244,10 +300,15 @@ export default function NewCustomerPage() {
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                       <div className="space-y-0.5">
                         <FormLabel>Tax Exempt</FormLabel>
-                        <FormDescription>Is this customer exempt from taxes?</FormDescription>
+                        <FormDescription>
+                          Is this customer exempt from taxes?
+                        </FormDescription>
                       </div>
                       <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -260,7 +321,9 @@ export default function NewCustomerPage() {
           <Card>
             <CardHeader>
               <CardTitle>Address Information</CardTitle>
-              <CardDescription>Enter the address details for this customer</CardDescription>
+              <CardDescription>
+                Enter the address details for this customer
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -297,11 +360,11 @@ export default function NewCustomerPage() {
                   name="state"
                   render={({ field }) => (
                     <FormItem className="flex flex-col mt-2">
-                        <FormLabel>State*</FormLabel>
-                        <FormControl>
-                            <Combobox {...field} />
-                        </FormControl>
-                         
+                      <FormLabel>State*</FormLabel>
+                      <FormControl>
+                        <Combobox {...field} />
+                      </FormControl>
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -347,14 +410,20 @@ export default function NewCustomerPage() {
                     <FormControl>
                       <Textarea {...field} rows={3} />
                     </FormControl>
-                    <FormDescription>Complete billing address if different from main address</FormDescription>
+                    <FormDescription>
+                      Complete billing address if different from main address
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
               <div className="flex items-center space-x-2">
-                <Switch id="same-as-billing" checked={sameAsBilling} onCheckedChange={handleSameAsBillingChange} />
+                <Switch
+                  id="same-as-billing"
+                  checked={sameAsBilling}
+                  onCheckedChange={handleSameAsBillingChange}
+                />
                 <label
                   htmlFor="same-as-billing"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -372,7 +441,10 @@ export default function NewCustomerPage() {
                     <FormControl>
                       <Textarea {...field} rows={3} disabled={sameAsBilling} />
                     </FormControl>
-                    <FormDescription>Complete shipping address if different from billing address</FormDescription>
+                    <FormDescription>
+                      Complete shipping address if different from billing
+                      address
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -384,7 +456,9 @@ export default function NewCustomerPage() {
           <Card>
             <CardHeader>
               <CardTitle>Financial Information</CardTitle>
-              <CardDescription>Enter financial details for this customer</CardDescription>
+              <CardDescription>
+                Enter financial details for this customer
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
@@ -397,7 +471,9 @@ export default function NewCustomerPage() {
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
-                      <FormDescription>Maximum credit amount for this customer (0 for no limit)</FormDescription>
+                      <FormDescription>
+                        Maximum credit amount for this customer (0 for no limit)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -409,14 +485,19 @@ export default function NewCustomerPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Payment Terms</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select payment terms" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Due on Receipt">Due on Receipt</SelectItem>
+                          <SelectItem value="Due on Receipt">
+                            Due on Receipt
+                          </SelectItem>
                           <SelectItem value="Net 15">Net 15</SelectItem>
                           <SelectItem value="Net 30">Net 30</SelectItem>
                           <SelectItem value="Net 45">Net 45</SelectItem>
@@ -424,7 +505,9 @@ export default function NewCustomerPage() {
                           <SelectItem value="Custom">Custom</SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormDescription>Standard payment terms for this customer</FormDescription>
+                      <FormDescription>
+                        Standard payment terms for this customer
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -437,7 +520,9 @@ export default function NewCustomerPage() {
           <Card>
             <CardHeader>
               <CardTitle>Additional Information</CardTitle>
-              <CardDescription>Any other details about this customer</CardDescription>
+              <CardDescription>
+                Any other details about this customer
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <FormField
@@ -449,7 +534,10 @@ export default function NewCustomerPage() {
                     <FormControl>
                       <Textarea {...field} rows={4} />
                     </FormControl>
-                    <FormDescription>Internal notes about this customer (not visible to the customer)</FormDescription>
+                    <FormDescription>
+                      Internal notes about this customer (not visible to the
+                      customer)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -459,17 +547,13 @@ export default function NewCustomerPage() {
 
           {/* Form Actions */}
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => router("/customers")}>
-              Cancel
-            </Button>
-            <Button type="submit">
-              <Save className="mr-2 h-4 w-4" />
+           
+            <Button type="submit" className="w-full md:w-auto">
               Create Customer
             </Button>
           </div>
         </form>
       </Form>
     </div>
-  )
+  );
 }
-

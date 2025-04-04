@@ -1,18 +1,21 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Download, Plus, Search, UserCircle, Mail, Phone, MoreHorizontal } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Link } from "react-router-dom"
+  Download,
+  Plus,
+  Search,
+  UserCircle,
+  
+} from "lucide-react";
+
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAllCustomers } from "@/db/Customers";
+import { Customer, ProfileStatus } from "@/API";
+import CustomerTable from "@/components/tables/CustomerTable";
 
 const customers = [
   {
@@ -103,28 +106,53 @@ const customers = [
     gstin: "27AABCQ6789U1ZX",
     outstandingAmount: "₹0.00",
   },
-]
+];
 
 export default function CustomersPage() {
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const listCustomers = async () => {
+      try {
+        const customerData = await getAllCustomers();
+        if (customerData) {
+          setCustomers(customerData);
+        }
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    listCustomers();
+  }, []);
+
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 container max-w-[100vw] md:max-w-6xl flex flex-col">
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Customers</h2>
-          <p className="text-muted-foreground">Manage your customer information and track outstanding balances</p>
+          <p className="text-muted-foreground">
+            Manage your customer information and track outstanding balances
+          </p>
         </div>
         <Link to="/customers/new">
-        <Button className="ml-auto">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Customer
-        </Button>
+          <Button className="ml-auto">
+            <Plus className="h-4 w-4" />
+            Add Customer
+          </Button>
         </Link>
       </div>
 
       <div className="flex items-center gap-2">
         <div className="relative flex-1 md:max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search customers..." className="pl-8" />
+          <Input
+            type="search"
+            placeholder="Search customers..."
+            className="pl-8"
+          />
         </div>
         <Button variant="outline" size="icon">
           <Download className="h-4 w-4" />
@@ -134,7 +162,9 @@ export default function CustomersPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Customers
+            </CardTitle>
             <UserCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -144,17 +174,23 @@ export default function CustomersPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Customers
+            </CardTitle>
             <UserCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">6</div>
-            <p className="text-xs text-muted-foreground">75% of total customers</p>
+            <p className="text-xs text-muted-foreground">
+              75% of total customers
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Outstanding</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Outstanding
+            </CardTitle>
             <UserCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -164,12 +200,16 @@ export default function CustomersPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg. Customer Value</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Avg. Customer Value
+            </CardTitle>
             <UserCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₹9,750.00</div>
-            <p className="text-xs text-muted-foreground">+12.5% from last month</p>
+            <p className="text-xs text-muted-foreground">
+              +12.5% from last month
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -185,68 +225,7 @@ export default function CustomersPage() {
         <TabsContent value="all" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Contact Person</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Phone</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Outstanding</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {customers.map((customer) => (
-                    <TableRow key={customer.id}>
-                      <TableCell className="font-medium">{customer.id}</TableCell>
-                      <TableCell>{customer.name}</TableCell>
-                      <TableCell>{customer.contactPerson}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Mail className="h-3 w-3 text-muted-foreground" />
-                          {customer.email}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Phone className="h-3 w-3 text-muted-foreground" />
-                          {customer.phone}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                            customer.status === "Active" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {customer.status}
-                        </div>
-                      </TableCell>
-                      <TableCell>{customer.outstandingAmount}</TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Edit Customer</DropdownMenuItem>
-                            <DropdownMenuItem>Create Invoice</DropdownMenuItem>
-                            <DropdownMenuItem>Create Quotation</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <CustomerTable customers={customers} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -254,66 +233,12 @@ export default function CustomersPage() {
         <TabsContent value="active" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Contact Person</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Phone</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Outstanding</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {customers
-                    .filter((customer) => customer.status === "Active")
-                    .map((customer) => (
-                      <TableRow key={customer.id}>
-                        <TableCell className="font-medium">{customer.id}</TableCell>
-                        <TableCell>{customer.name}</TableCell>
-                        <TableCell>{customer.contactPerson}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-3 w-3 text-muted-foreground" />
-                            {customer.email}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3 text-muted-foreground" />
-                            {customer.phone}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-                            {customer.status}
-                          </div>
-                        </TableCell>
-                        <TableCell>{customer.outstandingAmount}</TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Edit Customer</DropdownMenuItem>
-                              <DropdownMenuItem>Create Invoice</DropdownMenuItem>
-                              <DropdownMenuItem>Create Quotation</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <CustomerTable
+                customers={customers.filter(
+                  (customer) =>
+                    customer.customer_status === ProfileStatus.ACTIVE
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -321,65 +246,12 @@ export default function CustomersPage() {
         <TabsContent value="inactive" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Contact Person</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Phone</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Outstanding</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {customers
-                    .filter((customer) => customer.status === "Inactive")
-                    .map((customer) => (
-                      <TableRow key={customer.id}>
-                        <TableCell className="font-medium">{customer.id}</TableCell>
-                        <TableCell>{customer.name}</TableCell>
-                        <TableCell>{customer.contactPerson}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-3 w-3 text-muted-foreground" />
-                            {customer.email}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3 text-muted-foreground" />
-                            {customer.phone}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800">
-                            {customer.status}
-                          </div>
-                        </TableCell>
-                        <TableCell>{customer.outstandingAmount}</TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Edit Customer</DropdownMenuItem>
-                              <DropdownMenuItem>Activate Customer</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <CustomerTable
+                customers={customers.filter(
+                  (customer) =>
+                    customer.customer_status === ProfileStatus.INACTIVE
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -387,76 +259,15 @@ export default function CustomersPage() {
         <TabsContent value="outstanding" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Contact Person</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Phone</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Outstanding</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {customers
-                    .filter((customer) => customer.outstandingAmount !== "₹0.00")
-                    .map((customer) => (
-                      <TableRow key={customer.id}>
-                        <TableCell className="font-medium">{customer.id}</TableCell>
-                        <TableCell>{customer.name}</TableCell>
-                        <TableCell>{customer.contactPerson}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-3 w-3 text-muted-foreground" />
-                            {customer.email}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1">
-                            <Phone className="h-3 w-3 text-muted-foreground" />
-                            {customer.phone}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div
-                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                              customer.status === "Active"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {customer.status}
-                          </div>
-                        </TableCell>
-                        <TableCell>{customer.outstandingAmount}</TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>View Details</DropdownMenuItem>
-                              <DropdownMenuItem>Record Payment</DropdownMenuItem>
-                              <DropdownMenuItem>Send Reminder</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <CustomerTable
+                customers={customers.filter(
+                  (customer) => customer.outstanding_amount!! > 0
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

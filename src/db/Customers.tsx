@@ -20,13 +20,21 @@ export const getAllCustomers = async () => {
 
 export const addCustomer = async (customer: CreateCustomerInput) => {
   try {
-    const { data } = await client.graphql({
+    console.log("Adding customer:", customer);
+    const { data, errors } = await client.graphql({
       query: createCustomer,
       variables: { input: customer },
     });
     if (data) {
+      console.log("Customer created successfully:", data);
       return data.createCustomer;
     }
+    if(errors) {
+      console.error("Error creating customer:", errors);
+      return null;
+    }
     return null;
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error creating customer:", error);
+  }
 };
