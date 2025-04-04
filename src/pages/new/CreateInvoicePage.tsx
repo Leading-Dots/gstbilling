@@ -350,7 +350,8 @@ export default function NewInvoicePage() {
         cgst: String(data.cgst),
         sgst: String(data.sgst),
         igst: String(data.igst),
-        total: String(data.total),
+        //round off to 2 decimal places
+        total: String(data.total.toFixed(2)),
         notes: data.notes || "",
         terms_conditions: data.termsAndConditions || "",
       });

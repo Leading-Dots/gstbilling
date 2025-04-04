@@ -2,20 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, FileText, Plus, Search } from "lucide-react";
+import { Download, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Invoice, InvoiceStatus } from "@/API";
 import { getAllInvoices } from "@/db/Invoices";
 import InvoiceTable from "@/components/tables/InvoiceTable";
+import Loader1 from "@/components/loaders/Loader1";
 
 const invoices = [
   {
@@ -98,11 +91,7 @@ export default function InvoicesPage() {
     listInvoices();
   }, []);
   if (loading) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
+    return <Loader1 />;
   }
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 container max-w-[100vw] md:max-w-6xl flex flex-col">
@@ -178,14 +167,11 @@ export default function InvoicesPage() {
         <TabsContent value="overdue" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-             
-                  <InvoiceTable
-                    invoices={(invoices ?? []).filter(
-                      (invoice) =>
-                        invoice.invoice_status === InvoiceStatus.OVERDUE
-                    )}
-                  />
-             
+              <InvoiceTable
+                invoices={(invoices ?? []).filter(
+                  (invoice) => invoice.invoice_status === InvoiceStatus.OVERDUE
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>

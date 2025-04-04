@@ -49,7 +49,6 @@ const customerFormSchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
   gstin: z.string().min(15, "GSTIN must be 15 characters").max(15),
   panNumber: z.string().min(10, "PAN must be 10 characters").max(10).optional(),
-  address: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   pincode: z.string().min(6, "PIN code must be 6 digits").max(6),
@@ -84,7 +83,6 @@ export default function NewCustomerPage() {
       phone: "",
       gstin: "",
       panNumber: "",
-      address: "",
       city: "",
       state: "",
       pincode: "",
@@ -326,19 +324,7 @@ export default function NewCustomerPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address*</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              
 
               <div className="grid gap-4 md:grid-cols-4">
                 <FormField
@@ -410,9 +396,7 @@ export default function NewCustomerPage() {
                     <FormControl>
                       <Textarea {...field} rows={3} />
                     </FormControl>
-                    <FormDescription>
-                      Complete billing address if different from main address
-                    </FormDescription>
+                    
                     <FormMessage />
                   </FormItem>
                 )}

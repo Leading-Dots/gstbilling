@@ -2,7 +2,6 @@ import client from "@/lib/apiClient";
 import { CreateInvoiceInput } from "@/API";
 import { createInvoice } from "@/graphql/mutations";
 import { listInvoices } from "@/graphql/queries";
-import { Invoice } from "@/API";
 
 
 export const getAllInvoices = async () => {
@@ -47,3 +46,4 @@ export const addInvoice = async (invoice: CreateInvoiceInput) => {
     console.error("Error creating invoice:", error);
   }
 };
+

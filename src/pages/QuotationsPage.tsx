@@ -1,12 +1,15 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Link } from "react-router-dom"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Download, FileCheck, Plus, Search } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Download, Plus, Search } from "lucide-react";
+import QuotationTable from "@/components/tables/QuotationTable";
+import { useEffect, useState } from "react";
+import { Quotation, QuotationStatus } from "@/API";
+import { getAllQuotations } from "@/db/Quotations";
+import Loader1 from "@/components/loaders/Loader1";
 
 const quotations = [
   {
@@ -73,15 +76,38 @@ const quotations = [
     date: "2023-03-30",
     validUntil: "2023-04-30",
   },
-]
+];
 
 export default function QuotationsPage() {
+  const [quotations, setInvoices] = useState<Quotation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const listQuotations = async () => {
+      try {
+        const quotationData = await getAllQuotations();
+        if (quotationData) {
+          setInvoices(quotationData || []);
+        }
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    listQuotations();
+  }, []);
+  if (loading) {
+    return <Loader1 />;
+  }
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 container max-w-[100vw] md:max-w-6xl flex flex-col">
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Quotations</h2>
-          <p className="text-muted-foreground">Create and manage price quotations for your customers</p>
+          <p className="text-muted-foreground">
+            Create and manage price quotations for your customers
+          </p>
         </div>
         <Link to="/quotations/new">
           <Button className="ml-auto">
@@ -94,7 +120,11 @@ export default function QuotationsPage() {
       <div className="flex items-center gap-2">
         <div className="relative flex-1 md:max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search quotations..." className="pl-8" />
+          <Input
+            type="search"
+            placeholder="Search quotations..."
+            className="pl-8"
+          />
         </div>
         <Button variant="outline" size="icon">
           <Download className="h-4 w-4" />
@@ -113,53 +143,7 @@ export default function QuotationsPage() {
         <TabsContent value="all" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Quotation</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Valid Until</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {quotations.map((quotation) => (
-                    <TableRow key={quotation.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          <FileCheck className="h-4 w-4 text-muted-foreground" />
-                          {quotation.id}
-                        </div>
-                      </TableCell>
-                      <TableCell>{quotation.customer}</TableCell>
-                      <TableCell>{quotation.date}</TableCell>
-                      <TableCell>{quotation.validUntil}</TableCell>
-                      <TableCell>
-                        <div
-                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                            quotation.status === "Accepted"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : quotation.status === "Sent"
-                                ? "bg-blue-100 text-blue-800"
-                                : quotation.status === "Draft"
-                                  ? "bg-gray-100 text-gray-800"
-                                  : quotation.status === "Converted"
-                                    ? "bg-purple-100 text-purple-800"
-                                    : quotation.status === "Expired" || quotation.status === "Rejected"
-                                      ? "bg-red-100 text-red-800"
-                                      : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {quotation.status}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">{quotation.amount}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <QuotationTable quotations={quotations} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -167,41 +151,12 @@ export default function QuotationsPage() {
         <TabsContent value="draft" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Quotation</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Valid Until</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {quotations
-                    .filter((quotation) => quotation.status === "Draft")
-                    .map((quotation) => (
-                      <TableRow key={quotation.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <FileCheck className="h-4 w-4 text-muted-foreground" />
-                            {quotation.id}
-                          </div>
-                        </TableCell>
-                        <TableCell>{quotation.customer}</TableCell>
-                        <TableCell>{quotation.date}</TableCell>
-                        <TableCell>{quotation.validUntil}</TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-800">
-                            {quotation.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">{quotation.amount}</TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <QuotationTable
+                quotations={quotations.filter(
+                  (quotation) =>
+                    quotation.quotation_status === QuotationStatus.DRAFT
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -209,41 +164,12 @@ export default function QuotationsPage() {
         <TabsContent value="sent" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Quotation</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Valid Until</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {quotations
-                    .filter((quotation) => quotation.status === "Sent")
-                    .map((quotation) => (
-                      <TableRow key={quotation.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <FileCheck className="h-4 w-4 text-muted-foreground" />
-                            {quotation.id}
-                          </div>
-                        </TableCell>
-                        <TableCell>{quotation.customer}</TableCell>
-                        <TableCell>{quotation.date}</TableCell>
-                        <TableCell>{quotation.validUntil}</TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
-                            {quotation.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">{quotation.amount}</TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <QuotationTable
+                quotations={quotations.filter(
+                  (quotation) =>
+                    quotation.quotation_status === QuotationStatus.SENT
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -251,47 +177,12 @@ export default function QuotationsPage() {
         <TabsContent value="accepted" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Quotation</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Valid Until</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {quotations
-                    .filter((quotation) => quotation.status === "Accepted" || quotation.status === "Converted")
-                    .map((quotation) => (
-                      <TableRow key={quotation.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <FileCheck className="h-4 w-4 text-muted-foreground" />
-                            {quotation.id}
-                          </div>
-                        </TableCell>
-                        <TableCell>{quotation.customer}</TableCell>
-                        <TableCell>{quotation.date}</TableCell>
-                        <TableCell>{quotation.validUntil}</TableCell>
-                        <TableCell>
-                          <div
-                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                              quotation.status === "Accepted"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : "bg-purple-100 text-purple-800"
-                            }`}
-                          >
-                            {quotation.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">{quotation.amount}</TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <QuotationTable
+                quotations={quotations.filter(
+                  (quotation) =>
+                    quotation.quotation_status === QuotationStatus.ACCEPTED
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -299,46 +190,17 @@ export default function QuotationsPage() {
         <TabsContent value="expired" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Quotation</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Valid Until</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {quotations
-                    .filter((quotation) => quotation.status === "Expired" || quotation.status === "Rejected")
-                    .map((quotation) => (
-                      <TableRow key={quotation.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <FileCheck className="h-4 w-4 text-muted-foreground" />
-                            {quotation.id}
-                          </div>
-                        </TableCell>
-                        <TableCell>{quotation.customer}</TableCell>
-                        <TableCell>{quotation.date}</TableCell>
-                        <TableCell>{quotation.validUntil}</TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800">
-                            {quotation.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">{quotation.amount}</TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <QuotationTable
+                quotations={quotations.filter(
+                  (quotation) =>
+                    quotation.quotation_status === QuotationStatus.EXPIRED ||
+                    quotation.quotation_status === QuotationStatus.REJECTED
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-
