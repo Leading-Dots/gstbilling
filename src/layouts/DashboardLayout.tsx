@@ -9,7 +9,6 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <SidebarProvider>
-      <Toaster richColors />
       <div className="flex min-h-screen">
         <AppSidebar />
         <SidebarTrigger className="lg:hidden p-4" />

@@ -60,7 +60,7 @@ const customerFormSchema = z.object({
     .optional(),
   paymentTerms: z.string().optional(),
   notes: z.string().optional(),
-  billingAddress: z.string().optional(),
+  billingAddress: z.string().min(1, "Billing address is required"),
   shippingAddress: z.string().optional(),
   taxExempt: z.boolean(),
 });
@@ -236,7 +236,7 @@ export default function NewCustomerPage() {
                     <FormItem>
                       <FormLabel>GSTIN*</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field}  maxLength={15}/>
                       </FormControl>
                       <FormDescription>
                         15-character Goods and Services Tax Identification
@@ -254,7 +254,7 @@ export default function NewCustomerPage() {
                     <FormItem>
                       <FormLabel>PAN Number</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input maxLength={10} {...field} />
                       </FormControl>
                       <FormDescription>
                         10-character Permanent Account Number

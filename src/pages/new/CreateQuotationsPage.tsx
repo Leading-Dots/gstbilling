@@ -164,7 +164,9 @@ const quotationThemes = [
 
 export default function NewQuotationPage() {
   const router = useNavigate();
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer| null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null
+  );
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTheme, setSelectedTheme] = useState(quotationThemes[0]);
   const [customColor, setCustomColor] = useState(
@@ -244,18 +246,17 @@ export default function NewQuotationPage() {
   };
 
   // Handle customer selection
- const handleCustomerSelect = (customer: Customer) => {
-     setSelectedCustomer(customer);
- 
-     if (customer) {
-       form.setValue("toCustomer", customer.company_name!!);
-       form.setValue("toAddress", customer.billing_address!!);
-       form.setValue("toGstin", customer.gstin!!);
-       form.setValue("toEmail", customer.email!!);
-       form.setValue("toPhone", customer.phone!!);
-     }
-   };
- 
+  const handleCustomerSelect = (customer: Customer) => {
+    setSelectedCustomer(customer);
+
+    if (customer) {
+      form.setValue("toCustomer", customer.company_name!!);
+      form.setValue("toAddress", customer.billing_address!!);
+      form.setValue("toGstin", customer.gstin!!);
+      form.setValue("toEmail", customer.email!!);
+      form.setValue("toPhone", customer.phone!!);
+    }
+  };
 
   // Handle item changes
   const updateItemAmount = (index: number) => {
@@ -507,10 +508,8 @@ export default function NewQuotationPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <CustomerSelector
-                      onSelect={handleCustomerSelect}
-                      />
-                    
+                  <CustomerSelector onSelect={handleCustomerSelect} />
+
                   <p className="mt-2 text-sm text-muted-foreground">
                     Or enter customer details manually below
                   </p>

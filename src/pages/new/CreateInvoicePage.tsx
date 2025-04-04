@@ -77,7 +77,7 @@ const invoiceFormSchema = z.object({
       gstRate: z.coerce.number().min(0, "GST rate must be a positive number"),
       amount: z.coerce.number(),
     })
-  ),
+  ).min(1, "At least one item is required"),
   subtotal: z.coerce.number(),
   cgst: z.coerce.number(),
   sgst: z.coerce.number(),
@@ -300,18 +300,22 @@ export default function NewInvoicePage() {
   };
 
   // Navigate to next step
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (currentStep === 1) {
+      const result = await form.trigger();
+      if (!result) {
+        toast.error("Please fill in all required fields correctly");
+        return;
+      }
       
-      const isValid = form.trigger();
-      isValid.then((valid) => {
-        if (valid) {
-          setCurrentStep(2);
-        }
-      });
+      if (form.getValues("items").length === 0) {
+        toast.error("Please add at least one item to the invoice");
+        return;
+      }
+
+      setCurrentStep(2);
     }
   };
-
   // Navigate to previous step
   const goToPreviousStep = () => {
     if (currentStep === 2) {
@@ -332,6 +336,9 @@ export default function NewInvoicePage() {
 
   // Form submission
   const onSubmit = async (data: InvoiceFormValues) => {
+    //no items throw a toast
+
+    
     try {
       const newInvoice = await addInvoice({
         customerID: selectedCustomer?.id!!,
@@ -695,6 +702,8 @@ export default function NewInvoicePage() {
                     <div className="col-span-1"></div>
                   </div>
 
+                 
+
                   {form.watch("items").map((item, index) => (
                     <div
                       key={index}
@@ -783,6 +792,15 @@ export default function NewInvoicePage() {
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
+
+
+                      {form.formState.errors.items && (
+                        <div className="col-span-12">
+                          <p className="text-sm text-destructive">
+                            {form.formState.errors.items.message}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   ))}
 

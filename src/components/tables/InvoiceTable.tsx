@@ -56,9 +56,7 @@ const InvoiceTable = ({ invoices }: { invoices: Invoice[] }) => {
         <span className="text-sm text-muted-foreground">
           Showing {invoices.length} invoices
         </span>
-        <Button variant="outline" size="icon">
-          <Download className="h-4 w-4" />
-        </Button>
+       
       </div>
     </div>
   );
