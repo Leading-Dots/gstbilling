@@ -1,23 +1,57 @@
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  CalendarIcon,
+  Trash2,
+  Plus,
+  Save,
+  ChevronRight,
+  ChevronLeft,
+  Download,
+  Share2,
+  Palette,
+} from "lucide-react";
+import { format } from "date-fns";
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { CalendarIcon, Trash2, Plus, Save, ChevronRight, ChevronLeft, Download, Share2, Palette } from 'lucide-react'
-import { format } from "date-fns"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { Separator } from "@/components/ui/separator"
-import { toast } from "sonner"
-import { HexColorPicker } from "react-colorful"
-import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { HexColorPicker } from "react-colorful";
+import { useNavigate } from "react-router-dom";
+import { addInvoice } from "@/db/Invoices";
+import { InvoiceStatus } from "@/API";
 
 // Define the form schema
 const invoiceFormSchema = z.object({
@@ -41,7 +75,7 @@ const invoiceFormSchema = z.object({
       rate: z.coerce.number().min(0, "Rate must be a positive number"),
       gstRate: z.coerce.number().min(0, "GST rate must be a positive number"),
       amount: z.coerce.number(),
-    }),
+    })
   ),
   subtotal: z.coerce.number(),
   cgst: z.coerce.number(),
@@ -50,9 +84,9 @@ const invoiceFormSchema = z.object({
   total: z.coerce.number(),
   notes: z.string().optional(),
   termsAndConditions: z.string().optional(),
-})
+});
 
-type InvoiceFormValues = z.infer<typeof invoiceFormSchema>
+type InvoiceFormValues = z.infer<typeof invoiceFormSchema>;
 
 // Sample customers for the demo
 const customers = [
@@ -80,7 +114,7 @@ const customers = [
     email: "rajesh@retailkings.com",
     phone: "+91 76543 21098",
   },
-]
+];
 
 // Default company information
 const companyInfo = {
@@ -89,33 +123,60 @@ const companyInfo = {
   gstin: "33AABCX1234Y1ZX",
   email: "contact@yourcompany.com",
   phone: "+91 98765 12345",
-}
+};
 
 // Invoice themes
 const invoiceThemes = [
-  { name: "Classic", primaryColor: "#4f46e5", secondaryColor: "#f9fafb", accentColor: "#e5e7eb" },
-  { name: "Modern", primaryColor: "#0ea5e9", secondaryColor: "#f0f9ff", accentColor: "#e0f2fe" },
-  { name: "Professional", primaryColor: "#0f766e", secondaryColor: "#f0fdfa", accentColor: "#ccfbf1" },
-  { name: "Bold", primaryColor: "#b91c1c", secondaryColor: "#fef2f2", accentColor: "#fee2e2" },
-  { name: "Elegant", primaryColor: "#4b5563", secondaryColor: "#f9fafb", accentColor: "#f3f4f6" },
-]
+  {
+    name: "Classic",
+    primaryColor: "#4f46e5",
+    secondaryColor: "#f9fafb",
+    accentColor: "#e5e7eb",
+  },
+  {
+    name: "Modern",
+    primaryColor: "#0ea5e9",
+    secondaryColor: "#f0f9ff",
+    accentColor: "#e0f2fe",
+  },
+  {
+    name: "Professional",
+    primaryColor: "#0f766e",
+    secondaryColor: "#f0fdfa",
+    accentColor: "#ccfbf1",
+  },
+  {
+    name: "Bold",
+    primaryColor: "#b91c1c",
+    secondaryColor: "#fef2f2",
+    accentColor: "#fee2e2",
+  },
+  {
+    name: "Elegant",
+    primaryColor: "#4b5563",
+    secondaryColor: "#f9fafb",
+    accentColor: "#f3f4f6",
+  },
+];
 
 export default function NewInvoicePage() {
-  const router = useNavigate()
-  const [selectedCustomer, setSelectedCustomer] = useState<string>("")
-  const [currentStep, setCurrentStep] = useState(1)
-  const [selectedTheme, setSelectedTheme] = useState(invoiceThemes[0])
-  const [customColor, setCustomColor] = useState(invoiceThemes[0].primaryColor)
-  const [showColorPicker, setShowColorPicker] = useState(false)
+  const router = useNavigate();
+  const [selectedCustomer, setSelectedCustomer] = useState<string>("");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedTheme, setSelectedTheme] = useState(invoiceThemes[0]);
+  const [customColor, setCustomColor] = useState(invoiceThemes[0].primaryColor);
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   // Initialize the form with default values
   const form = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceFormSchema),
     defaultValues: {
-      invoiceNumber: `INV-${String(new Date().getFullYear()).slice(2)}${String(new Date().getMonth() + 1).padStart(
-        2,
-        "0",
-      )}${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}`,
+      invoiceNumber: `INV-${String(new Date().getFullYear()).slice(2)}${String(
+        new Date().getMonth() + 1
+      ).padStart(2, "0")}${String(Math.floor(Math.random() * 1000)).padStart(
+        3,
+        "0"
+      )}`,
       invoiceDate: new Date(),
       dueDate: new Date(new Date().setDate(new Date().getDate() + 30)),
       fromCompany: companyInfo.name,
@@ -146,57 +207,63 @@ export default function NewInvoicePage() {
       termsAndConditions:
         "1. Payment due within 30 days\n2. GST will be charged as applicable\n3. Late payment will incur a 2% monthly interest",
     },
-  })
+  });
 
   // Calculate totals whenever items change
   const calculateTotals = (items: InvoiceFormValues["items"]) => {
-    const subtotal = items.reduce((sum, item) => sum + item.quantity * item.rate, 0)
+    const subtotal = items.reduce(
+      (sum, item) => sum + item.quantity * item.rate,
+      0
+    );
 
     // Determine if IGST or CGST+SGST based on customer location
     // For demo, we'll use CGST+SGST
-    const useIGST = false
+    const useIGST = false;
 
-    const totalGST = items.reduce((sum, item) => sum + (item.quantity * item.rate * item.gstRate) / 100, 0)
+    const totalGST = items.reduce(
+      (sum, item) => sum + (item.quantity * item.rate * item.gstRate) / 100,
+      0
+    );
 
-    const cgst = useIGST ? 0 : totalGST / 2
-    const sgst = useIGST ? 0 : totalGST / 2
-    const igst = useIGST ? totalGST : 0
+    const cgst = useIGST ? 0 : totalGST / 2;
+    const sgst = useIGST ? 0 : totalGST / 2;
+    const igst = useIGST ? totalGST : 0;
 
-    const total = subtotal + totalGST
+    const total = subtotal + totalGST;
 
-    form.setValue("subtotal", subtotal)
-    form.setValue("cgst", cgst)
-    form.setValue("sgst", sgst)
-    form.setValue("igst", igst)
-    form.setValue("total", total)
-  }
+    form.setValue("subtotal", subtotal);
+    form.setValue("cgst", cgst);
+    form.setValue("sgst", sgst);
+    form.setValue("igst", igst);
+    form.setValue("total", total);
+  };
 
   // Handle customer selection
   const handleCustomerSelect = (customerId: string) => {
-    setSelectedCustomer(customerId)
-    const customer = customers.find((c) => c.id === customerId)
+    setSelectedCustomer(customerId);
+    const customer = customers.find((c) => c.id === customerId);
     if (customer) {
-      form.setValue("toCustomer", customer.name)
-      form.setValue("toAddress", customer.address)
-      form.setValue("toGstin", customer.gstin)
-      form.setValue("toEmail", customer.email)
-      form.setValue("toPhone", customer.phone)
+      form.setValue("toCustomer", customer.name);
+      form.setValue("toAddress", customer.address);
+      form.setValue("toGstin", customer.gstin);
+      form.setValue("toEmail", customer.email);
+      form.setValue("toPhone", customer.phone);
     }
-  }
+  };
 
   // Handle item changes
   const updateItemAmount = (index: number) => {
-    const items = form.getValues("items")
-    const item = items[index]
-    const amount = item.quantity * item.rate
-    items[index].amount = amount
-    form.setValue(`items.${index}.amount`, amount)
-    calculateTotals(items)
-  }
+    const items = form.getValues("items");
+    const item = items[index];
+    const amount = item.quantity * item.rate;
+    items[index].amount = amount;
+    form.setValue(`items.${index}.amount`, amount);
+    calculateTotals(items);
+  };
 
   // Add a new item
   const addItem = () => {
-    const items = form.getValues("items")
+    const items = form.getValues("items");
     form.setValue("items", [
       ...items,
       {
@@ -206,77 +273,109 @@ export default function NewInvoicePage() {
         gstRate: 18,
         amount: 0,
       },
-    ])
-  }
+    ]);
+  };
 
   // Remove an item
   const removeItem = (index: number) => {
-    const items = form.getValues("items")
+    const items = form.getValues("items");
     if (items.length > 1) {
-      const newItems = [...items]
-      newItems.splice(index, 1)
-      form.setValue("items", newItems)
-      calculateTotals(newItems)
+      const newItems = [...items];
+      newItems.splice(index, 1);
+      form.setValue("items", newItems);
+      calculateTotals(newItems);
     }
-  }
+  };
 
   // Handle theme selection
   const handleThemeSelect = (themeName: string) => {
-    const theme = invoiceThemes.find((t) => t.name === themeName)
+    const theme = invoiceThemes.find((t) => t.name === themeName);
     if (theme) {
-      setSelectedTheme(theme)
-      setCustomColor(theme.primaryColor)
+      setSelectedTheme(theme);
+      setCustomColor(theme.primaryColor);
     }
-  }
+  };
 
   // Navigate to next step
   const goToNextStep = () => {
     if (currentStep === 1) {
-      const isValid = form.trigger()
+      const isValid = form.trigger();
       isValid.then((valid) => {
         if (valid) {
-          setCurrentStep(2)
+          setCurrentStep(2);
         }
-      })
+      });
     }
-  }
+  };
 
   // Navigate to previous step
   const goToPreviousStep = () => {
     if (currentStep === 2) {
-      setCurrentStep(1)
+      setCurrentStep(1);
     }
-  }
+  };
 
   // Download invoice as PDF
   const downloadInvoice = () => {
     // In a real app, you would generate a PDF here
-   
-  }
+  };
 
   // Share invoice
   const shareInvoice = () => {
     // In a real app, you would implement sharing functionality
-   toast.success("Invoice shared successfully!")
-  }
+    toast.success("Invoice shared successfully!");
+  };
 
   // Form submission
-  const onSubmit = (data: InvoiceFormValues) => {
-    toast.success("Invoice created successfully!")
-    // In a real app, you would save the invoice to the database here
-    console.log("Invoice data:", data)
-
-    // Navigate back to invoices list
-    router("/invoices")
-  }
+  const onSubmit = async (data: InvoiceFormValues) => {
+    try {
+      const newInvoice = await addInvoice({
+        customerID: "b30b861b-98c2-4d77-8bf5-e52a785a98da",
+        invoice_status: InvoiceStatus.PENDING,
+        invoice_number: data.invoiceNumber,
+        invoice_date: data.invoiceDate.toISOString().split("T")[0], // Format: 2020-03-12
+        due_date: data.dueDate.toISOString().split("T")[0], // Format: 2020-03-12
+        from_company: data.fromCompany,
+        from_address: data.fromAddress,
+        from_gstin: data.fromGstin,
+        from_email: data.fromEmail,
+        from_phone: data.fromPhone,
+        to_customer: data.toCustomer,
+        to_address: data.toAddress,
+        to_gstin: data.toGstin,
+        to_email: data.toEmail,
+        to_phone: data.toPhone,
+        items: JSON.stringify(data.items),
+        subtotal: String(data.subtotal),
+        cgst: String(data.cgst),
+        sgst: String(data.sgst),
+        igst: String(data.igst),
+        total: String(data.total),
+        notes: data.notes || "",
+        terms_conditions: data.termsAndConditions || "",
+      });
+      if (newInvoice) {
+        toast.success("Invoice created successfully!");
+        router("/invoices");
+      } else {
+        toast.error("Failed to create invoice.");
+      }
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+      toast.error("Failed to create invoice.");
+    }
+  };
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Create New Invoice</h2>
+        <h2 className="text-3xl font-bold tracking-tight">
+          Create New Invoice
+        </h2>
         <div className="flex items-center space-x-2">
           <span className="text-sm text-muted-foreground">
-            Step {currentStep} of 2: {currentStep === 1 ? "Enter Details" : "Preview & Customize"}
+            Step {currentStep} of 2:{" "}
+            {currentStep === 1 ? "Enter Details" : "Preview & Customize"}
           </span>
         </div>
       </div>
@@ -289,7 +388,9 @@ export default function NewInvoicePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Invoice Details</CardTitle>
-                  <CardDescription>Enter the basic details for this invoice</CardDescription>
+                  <CardDescription>
+                    Enter the basic details for this invoice
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -316,14 +417,29 @@ export default function NewInvoicePage() {
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
-                                <Button variant="outline" className="w-full pl-3 text-left font-normal">
-                                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                <Button
+                                  variant="outline"
+                                  className="w-full pl-3 text-left font-normal"
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
                                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                initialFocus
+                              />
                             </PopoverContent>
                           </Popover>
                           <FormMessage />
@@ -340,14 +456,29 @@ export default function NewInvoicePage() {
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
-                                <Button variant="outline" className="w-full pl-3 text-left font-normal">
-                                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                <Button
+                                  variant="outline"
+                                  className="w-full pl-3 text-left font-normal"
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
                                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                initialFocus
+                              />
                             </PopoverContent>
                           </Popover>
                           <FormMessage />
@@ -362,10 +493,15 @@ export default function NewInvoicePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Select Customer</CardTitle>
-                  <CardDescription>Choose an existing customer or enter details manually</CardDescription>
+                  <CardDescription>
+                    Choose an existing customer or enter details manually
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Select value={selectedCustomer} onValueChange={handleCustomerSelect}>
+                  <Select
+                    value={selectedCustomer}
+                    onValueChange={handleCustomerSelect}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a customer" />
                     </SelectTrigger>
@@ -377,7 +513,9 @@ export default function NewInvoicePage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="mt-2 text-sm text-muted-foreground">Or enter customer details manually below</p>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Or enter customer details manually below
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -551,7 +689,9 @@ export default function NewInvoicePage() {
             <Card>
               <CardHeader>
                 <CardTitle>Invoice Items</CardTitle>
-                <CardDescription>Add the items you want to include in this invoice</CardDescription>
+                <CardDescription>
+                  Add the items you want to include in this invoice
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -565,12 +705,18 @@ export default function NewInvoicePage() {
                   </div>
 
                   {form.watch("items").map((item, index) => (
-                    <div key={index} className="grid grid-cols-12 gap-2 items-start">
+                    <div
+                      key={index}
+                      className="grid grid-cols-12 gap-2 items-start"
+                    >
                       <div className="col-span-5">
                         <Input
                           {...form.register(`items.${index}.description`)}
                           onChange={(e) => {
-                            form.setValue(`items.${index}.description`, e.target.value)
+                            form.setValue(
+                              `items.${index}.description`,
+                              e.target.value
+                            );
                           }}
                         />
                       </div>
@@ -581,8 +727,11 @@ export default function NewInvoicePage() {
                             valueAsNumber: true,
                           })}
                           onChange={(e) => {
-                            form.setValue(`items.${index}.quantity`, Number.parseInt(e.target.value) || 0)
-                            updateItemAmount(index)
+                            form.setValue(
+                              `items.${index}.quantity`,
+                              Number.parseInt(e.target.value) || 0
+                            );
+                            updateItemAmount(index);
                           }}
                         />
                       </div>
@@ -594,8 +743,11 @@ export default function NewInvoicePage() {
                             valueAsNumber: true,
                           })}
                           onChange={(e) => {
-                            form.setValue(`items.${index}.rate`, Number.parseFloat(e.target.value) || 0)
-                            updateItemAmount(index)
+                            form.setValue(
+                              `items.${index}.rate`,
+                              Number.parseFloat(e.target.value) || 0
+                            );
+                            updateItemAmount(index);
                           }}
                         />
                       </div>
@@ -603,8 +755,11 @@ export default function NewInvoicePage() {
                         <Select
                           value={item.gstRate.toString()}
                           onValueChange={(value) => {
-                            form.setValue(`items.${index}.gstRate`, Number.parseInt(value))
-                            updateItemAmount(index)
+                            form.setValue(
+                              `items.${index}.gstRate`,
+                              Number.parseInt(value)
+                            );
+                            updateItemAmount(index);
                           }}
                         >
                           <SelectTrigger>
@@ -620,17 +775,33 @@ export default function NewInvoicePage() {
                         </Select>
                       </div>
                       <div className="col-span-2">
-                        <Input type="number" step="0.01" value={item.amount.toFixed(2)} readOnly />
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={item.amount.toFixed(2)}
+                          readOnly
+                        />
                       </div>
                       <div className="col-span-1">
-                        <Button type="button" variant="ghost" size="icon" onClick={() => removeItem(index)}>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeItem(index)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
                   ))}
 
-                  <Button type="button" variant="outline" size="sm" className="mt-2" onClick={addItem}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={addItem}
+                  >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Item
                   </Button>
@@ -676,7 +847,9 @@ export default function NewInvoicePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Notes</CardTitle>
-                  <CardDescription>Add any additional notes for this invoice</CardDescription>
+                  <CardDescription>
+                    Add any additional notes for this invoice
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <FormField
@@ -697,7 +870,9 @@ export default function NewInvoicePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Terms & Conditions</CardTitle>
-                  <CardDescription>Specify the terms and conditions for this invoice</CardDescription>
+                  <CardDescription>
+                    Specify the terms and conditions for this invoice
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <FormField
@@ -718,7 +893,11 @@ export default function NewInvoicePage() {
 
             {/* Form Actions */}
             <div className="flex justify-end gap-4">
-              <Button type="button" variant="outline" onClick={() => router("/invoices")}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router("/invoices")}
+              >
                 Cancel
               </Button>
               <Button type="button" onClick={goToNextStep}>
@@ -740,11 +919,19 @@ export default function NewInvoicePage() {
                 >
                   <CardTitle>Invoice Preview</CardTitle>
                   <div className="flex space-x-2">
-                    <Button variant="secondary" size="sm" onClick={downloadInvoice}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={downloadInvoice}
+                    >
                       <Download className="mr-2 h-4 w-4" />
                       Download
                     </Button>
-                    <Button variant="secondary" size="sm" onClick={shareInvoice}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={shareInvoice}
+                    >
                       <Share2 className="mr-2 h-4 w-4" />
                       Share
                     </Button>
@@ -755,27 +942,36 @@ export default function NewInvoicePage() {
                     {/* Invoice Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start">
                       <div>
-                        <h2 className="text-2xl font-bold">{form.getValues("fromCompany")}</h2>
+                        <h2 className="text-2xl font-bold">
+                          {form.getValues("fromCompany")}
+                        </h2>
                         <p className="whitespace-pre-line text-sm text-muted-foreground">
                           {form.getValues("fromAddress")}
                         </p>
-                        <p className="text-sm">GSTIN: {form.getValues("fromGstin")}</p>
                         <p className="text-sm">
-                          {form.getValues("fromEmail")} | {form.getValues("fromPhone")}
+                          GSTIN: {form.getValues("fromGstin")}
+                        </p>
+                        <p className="text-sm">
+                          {form.getValues("fromEmail")} |{" "}
+                          {form.getValues("fromPhone")}
                         </p>
                       </div>
                       <div className="mt-4 md:mt-0 md:text-right">
-                        <h1 className="text-3xl font-bold" style={{ color: customColor }}>
+                        <h1
+                          className="text-3xl font-bold"
+                          style={{ color: customColor }}
+                        >
                           INVOICE
                         </h1>
                         <p className="text-sm">
-                          <span className="font-medium">Invoice Number:</span> {form.getValues("invoiceNumber")}
+                          <span className="font-medium">Invoice Number:</span>{" "}
+                          {form.getValues("invoiceNumber")}
                         </p>
                         <p className="text-sm">
                           <span className="font-medium">Date:</span>{" "}
                           {format(form.getValues("invoiceDate"), "dd/MM/yyyy")}
                         </p>
-                       
+
                         <p className="text-sm">
                           <span className="font-medium">Due Date:</span>{" "}
                           {format(form.getValues("dueDate"), "dd/MM/yyyy")}
@@ -784,15 +980,23 @@ export default function NewInvoicePage() {
                     </div>
 
                     {/* Customer Information */}
-                    <div className="border rounded-md p-4" style={{ borderColor: customColor }}>
+                    <div
+                      className="border rounded-md p-4"
+                      style={{ borderColor: customColor }}
+                    >
                       <h3 className="font-medium mb-2">Bill To:</h3>
-                      <h4 className="font-bold">{form.getValues("toCustomer")}</h4>
+                      <h4 className="font-bold">
+                        {form.getValues("toCustomer")}
+                      </h4>
                       <p className="whitespace-pre-line text-sm text-muted-foreground">
                         {form.getValues("toAddress")}
                       </p>
-                      <p className="text-sm">GSTIN: {form.getValues("toGstin")}</p>
                       <p className="text-sm">
-                        {form.getValues("toEmail")} | {form.getValues("toPhone")}
+                        GSTIN: {form.getValues("toGstin")}
+                      </p>
+                      <p className="text-sm">
+                        {form.getValues("toEmail")} |{" "}
+                        {form.getValues("toPhone")}
                       </p>
                     </div>
 
@@ -800,7 +1004,10 @@ export default function NewInvoicePage() {
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse">
                         <thead>
-                          <tr className="border-b" style={{ borderColor: customColor }}>
+                          <tr
+                            className="border-b"
+                            style={{ borderColor: customColor }}
+                          >
                             <th className="py-2 text-left">Description</th>
                             <th className="py-2 text-right">Qty</th>
                             <th className="py-2 text-right">Rate (₹)</th>
@@ -811,11 +1018,21 @@ export default function NewInvoicePage() {
                         <tbody>
                           {form.getValues("items").map((item, index) => (
                             <tr key={index} className="border-b">
-                              <td className="py-2 text-left">{item.description}</td>
-                              <td className="py-2 text-right">{item.quantity}</td>
-                              <td className="py-2 text-right">{item.rate.toFixed(2)}</td>
-                              <td className="py-2 text-right">{item.gstRate}%</td>
-                              <td className="py-2 text-right">{item.amount.toFixed(2)}</td>
+                              <td className="py-2 text-left">
+                                {item.description}
+                              </td>
+                              <td className="py-2 text-right">
+                                {item.quantity}
+                              </td>
+                              <td className="py-2 text-right">
+                                {item.rate.toFixed(2)}
+                              </td>
+                              <td className="py-2 text-right">
+                                {item.gstRate}%
+                              </td>
+                              <td className="py-2 text-right">
+                                {item.amount.toFixed(2)}
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -841,7 +1058,10 @@ export default function NewInvoicePage() {
                           <span className="font-medium">IGST:</span>
                           <span>₹{form.getValues("igst").toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between pt-2 border-t font-bold" style={{ borderColor: customColor }}>
+                        <div
+                          className="flex justify-between pt-2 border-t font-bold"
+                          style={{ borderColor: customColor }}
+                        >
                           <span>Total:</span>
                           <span>₹{form.getValues("total").toFixed(2)}</span>
                         </div>
@@ -852,11 +1072,17 @@ export default function NewInvoicePage() {
                     <div className="grid gap-4 md:grid-cols-2">
                       <div>
                         <h3 className="font-medium mb-1">Notes:</h3>
-                        <p className="text-sm whitespace-pre-line">{form.getValues("notes")}</p>
+                        <p className="text-sm whitespace-pre-line">
+                          {form.getValues("notes")}
+                        </p>
                       </div>
                       <div>
-                        <h3 className="font-medium mb-1">Terms & Conditions:</h3>
-                        <p className="text-sm whitespace-pre-line">{form.getValues("termsAndConditions")}</p>
+                        <h3 className="font-medium mb-1">
+                          Terms & Conditions:
+                        </h3>
+                        <p className="text-sm whitespace-pre-line">
+                          {form.getValues("termsAndConditions")}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -868,12 +1094,17 @@ export default function NewInvoicePage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Customize Invoice</CardTitle>
-                  <CardDescription>Change the appearance of your invoice</CardDescription>
+                  <CardDescription>
+                    Change the appearance of your invoice
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <label className="text-sm font-medium">Select Theme</label>
-                    <Select value={selectedTheme.name} onValueChange={handleThemeSelect}>
+                    <Select
+                      value={selectedTheme.name}
+                      onValueChange={handleThemeSelect}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a theme" />
                       </SelectTrigger>
@@ -910,7 +1141,10 @@ export default function NewInvoicePage() {
                     </div>
                     {showColorPicker && (
                       <div className="mt-2">
-                        <HexColorPicker color={customColor} onChange={setCustomColor} />
+                        <HexColorPicker
+                          color={customColor}
+                          onChange={setCustomColor}
+                        />
                       </div>
                     )}
                   </div>
@@ -926,7 +1160,11 @@ export default function NewInvoicePage() {
               Back to Edit
             </Button>
             <div className="space-x-2">
-              <Button type="button" variant="outline" onClick={() => router("/invoices")}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router("/invoices")}
+              >
                 Cancel
               </Button>
               <Button type="button" onClick={form.handleSubmit(onSubmit)}>
@@ -938,5 +1176,5 @@ export default function NewInvoicePage() {
         </div>
       )}
     </div>
-  )
+  );
 }

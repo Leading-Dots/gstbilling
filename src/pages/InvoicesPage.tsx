@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, FileText, Plus, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Invoice, InvoiceStatus } from "@/API";
+import { getAllInvoices } from "@/db/Invoices";
+import InvoiceTable from "@/components/tables/InvoiceTable";
 
 const invoices = [
   {
@@ -73,8 +77,35 @@ const invoices = [
 ];
 
 export default function InvoicesPage() {
+  const [invoices, setInvoices] = useState<Invoice[]>();
+  const [loading, setLoading] = useState(true);
+
+  console.log("InvoicesPage rendered");
+
+  useEffect(() => {
+    const listInvoices = async () => {
+      try {
+        const invoiceData = await getAllInvoices();
+        if (invoiceData) {
+          setInvoices(invoiceData || []);
+        }
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    listInvoices();
+  }, []);
+  if (loading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 container max-w-[100vw] md:max-w-6xl flex flex-col">
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Invoices</h2>
@@ -115,47 +146,7 @@ export default function InvoicesPage() {
         <TabsContent value="all" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-muted-foreground" />
-                          {invoice.id}
-                        </div>
-                      </TableCell>
-                      <TableCell>{invoice.customer}</TableCell>
-                      <TableCell>{invoice.date}</TableCell>
-                      <TableCell>
-                        <div
-                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                            invoice.status === "Paid"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : invoice.status === "Pending"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {invoice.status}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {invoice.amount}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <InvoiceTable invoices={invoices!!} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -163,41 +154,11 @@ export default function InvoicesPage() {
         <TabsContent value="paid" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices
-                    .filter((invoice) => invoice.status === "Paid")
-                    .map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-muted-foreground" />
-                            {invoice.id}
-                          </div>
-                        </TableCell>
-                        <TableCell>{invoice.customer}</TableCell>
-                        <TableCell>{invoice.date}</TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-                            {invoice.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {invoice.amount}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <InvoiceTable
+                invoices={(invoices ?? []).filter(
+                  (invoice) => invoice.invoice_status === InvoiceStatus.PAID
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -205,41 +166,11 @@ export default function InvoicesPage() {
         <TabsContent value="pending" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices
-                    .filter((invoice) => invoice.status === "Pending")
-                    .map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-muted-foreground" />
-                            {invoice.id}
-                          </div>
-                        </TableCell>
-                        <TableCell>{invoice.customer}</TableCell>
-                        <TableCell>{invoice.date}</TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-800">
-                            {invoice.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {invoice.amount}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+              <InvoiceTable
+                invoices={(invoices ?? []).filter(
+                  (invoice) => invoice.invoice_status === InvoiceStatus.PENDING
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -247,41 +178,14 @@ export default function InvoicesPage() {
         <TabsContent value="overdue" className="space-y-4">
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Invoice</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices
-                    .filter((invoice) => invoice.status === "Overdue")
-                    .map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell className="font-medium">
-                          <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-muted-foreground" />
-                            {invoice.id}
-                          </div>
-                        </TableCell>
-                        <TableCell>{invoice.customer}</TableCell>
-                        <TableCell>{invoice.date}</TableCell>
-                        <TableCell>
-                          <div className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800">
-                            {invoice.status}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {invoice.amount}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+             
+                  <InvoiceTable
+                    invoices={(invoices ?? []).filter(
+                      (invoice) =>
+                        invoice.invoice_status === InvoiceStatus.OVERDUE
+                    )}
+                  />
+             
             </CardContent>
           </Card>
         </TabsContent>
