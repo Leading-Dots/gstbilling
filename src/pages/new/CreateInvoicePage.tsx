@@ -51,7 +51,8 @@ import { toast } from "sonner";
 import { HexColorPicker } from "react-colorful";
 import { useNavigate } from "react-router-dom";
 import { addInvoice } from "@/db/Invoices";
-import { InvoiceStatus } from "@/API";
+import { Customer, InvoiceStatus } from "@/API";
+import CustomerSelector from "@/components/shared/CustomerSelector";
 
 // Define the form schema
 const invoiceFormSchema = z.object({
@@ -161,7 +162,9 @@ const invoiceThemes = [
 
 export default function NewInvoicePage() {
   const router = useNavigate();
-  const [selectedCustomer, setSelectedCustomer] = useState<string>("");
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null
+  );
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTheme, setSelectedTheme] = useState(invoiceThemes[0]);
   const [customColor, setCustomColor] = useState(invoiceThemes[0].primaryColor);
@@ -239,15 +242,15 @@ export default function NewInvoicePage() {
   };
 
   // Handle customer selection
-  const handleCustomerSelect = (customerId: string) => {
-    setSelectedCustomer(customerId);
-    const customer = customers.find((c) => c.id === customerId);
+  const handleCustomerSelect = (customer: Customer) => {
+    setSelectedCustomer(customer);
+
     if (customer) {
-      form.setValue("toCustomer", customer.name);
-      form.setValue("toAddress", customer.address);
-      form.setValue("toGstin", customer.gstin);
-      form.setValue("toEmail", customer.email);
-      form.setValue("toPhone", customer.phone);
+      form.setValue("toCustomer", customer.company_name!!);
+      form.setValue("toAddress", customer.billing_address!!);
+      form.setValue("toGstin", customer.gstin!!);
+      form.setValue("toEmail", customer.email!!);
+      form.setValue("toPhone", customer.phone!!);
     }
   };
 
@@ -299,6 +302,7 @@ export default function NewInvoicePage() {
   // Navigate to next step
   const goToNextStep = () => {
     if (currentStep === 1) {
+      
       const isValid = form.trigger();
       isValid.then((valid) => {
         if (valid) {
@@ -330,7 +334,7 @@ export default function NewInvoicePage() {
   const onSubmit = async (data: InvoiceFormValues) => {
     try {
       const newInvoice = await addInvoice({
-        customerID: "b30b861b-98c2-4d77-8bf5-e52a785a98da",
+        customerID: selectedCustomer?.id!!,
         invoice_status: InvoiceStatus.PENDING,
         invoice_number: data.invoiceNumber,
         invoice_date: data.invoiceDate.toISOString().split("T")[0], // Format: 2020-03-12
@@ -499,21 +503,7 @@ export default function NewInvoicePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Select
-                    value={selectedCustomer}
-                    onValueChange={handleCustomerSelect}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a customer" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {customers.map((customer) => (
-                        <SelectItem key={customer.id} value={customer.id}>
-                          {customer.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <CustomerSelector onSelect={handleCustomerSelect} />
                   <p className="mt-2 text-sm text-muted-foreground">
                     Or enter customer details manually below
                   </p>

@@ -53,7 +53,8 @@ import { useNavigate } from "react-router-dom";
 import { HexColorPicker } from "react-colorful";
 import { toast } from "sonner";
 import { addQuotation } from "@/db/Quotations";
-import { QuotationStatus } from "@/API";
+import { Customer, QuotationStatus } from "@/API";
+import CustomerSelector from "@/components/shared/CustomerSelector";
 
 // Define the form schema
 const quotationFormSchema = z.object({
@@ -163,7 +164,7 @@ const quotationThemes = [
 
 export default function NewQuotationPage() {
   const router = useNavigate();
-  const [selectedCustomer, setSelectedCustomer] = useState<string>("");
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer| null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTheme, setSelectedTheme] = useState(quotationThemes[0]);
   const [customColor, setCustomColor] = useState(
@@ -243,17 +244,18 @@ export default function NewQuotationPage() {
   };
 
   // Handle customer selection
-  const handleCustomerSelect = (customerId: string) => {
-    setSelectedCustomer(customerId);
-    const customer = customers.find((c) => c.id === customerId);
-    if (customer) {
-      form.setValue("toCustomer", customer.name);
-      form.setValue("toAddress", customer.address);
-      form.setValue("toGstin", customer.gstin);
-      form.setValue("toEmail", customer.email);
-      form.setValue("toPhone", customer.phone);
-    }
-  };
+ const handleCustomerSelect = (customer: Customer) => {
+     setSelectedCustomer(customer);
+ 
+     if (customer) {
+       form.setValue("toCustomer", customer.company_name!!);
+       form.setValue("toAddress", customer.billing_address!!);
+       form.setValue("toGstin", customer.gstin!!);
+       form.setValue("toEmail", customer.email!!);
+       form.setValue("toPhone", customer.phone!!);
+     }
+   };
+ 
 
   // Handle item changes
   const updateItemAmount = (index: number) => {
@@ -505,21 +507,10 @@ export default function NewQuotationPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Select
-                    value={selectedCustomer}
-                    onValueChange={handleCustomerSelect}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a customer" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {customers.map((customer) => (
-                        <SelectItem key={customer.id} value={customer.id}>
-                          {customer.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <CustomerSelector
+                      onSelect={handleCustomerSelect}
+                      />
+                    
                   <p className="mt-2 text-sm text-muted-foreground">
                     Or enter customer details manually below
                   </p>
