@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -55,6 +55,7 @@ import { toast } from "sonner";
 import { addQuotation } from "@/db/Quotations";
 import { Customer, QuotationStatus } from "@/API";
 import CustomerSelector from "@/components/shared/CustomerSelector";
+import generatePDF from "react-to-pdf";
 
 // Define the form schema
 const quotationFormSchema = z.object({
@@ -173,6 +174,9 @@ export default function NewQuotationPage() {
     quotationThemes[0].primaryColor
   );
   const [showColorPicker, setShowColorPicker] = useState(false);
+
+
+  const targetRef = useRef<HTMLDivElement>(null);
 
   // Initialize the form with default values
   const form = useForm<QuotationFormValues>({
@@ -325,7 +329,19 @@ export default function NewQuotationPage() {
   // Download quotation as PDF
   const downloadQuotation = () => {
     // In a real app, you would generate a PDF here
-    toast.success("Quotation PDF downloaded successfully.");
+    const pdfContent = targetRef;
+    if (pdfContent) {
+      const pdf = generatePDF(pdfContent, {
+        filename: `quotation-${form.getValues("quotationNumber")}.pdf`,
+      });
+      //download it
+      
+      toast.success("Invoice downloaded successfully!");
+    }
+    else {
+      toast.error("Failed to download invoice.");
+    }
+
   };
 
   // Share quotation
@@ -934,7 +950,7 @@ export default function NewQuotationPage() {
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="p-0">
+                <CardContent className="p-0" ref={targetRef}>
                   <div className="p-6 space-y-6">
                     {/* Quotation Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -32,6 +32,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import generatePDF from 'react-to-pdf';
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -169,6 +170,7 @@ export default function NewInvoicePage() {
   const [selectedTheme, setSelectedTheme] = useState(invoiceThemes[0]);
   const [customColor, setCustomColor] = useState(invoiceThemes[0].primaryColor);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const targetRef = React.useRef<HTMLDivElement>(null);
 
   // Initialize the form with default values
   const form = useForm<InvoiceFormValues>({
@@ -326,6 +328,19 @@ export default function NewInvoicePage() {
   // Download invoice as PDF
   const downloadInvoice = () => {
     // In a real app, you would generate a PDF here
+    const pdfContent = targetRef;
+    if (pdfContent) {
+      const pdf = generatePDF(pdfContent, {
+        filename: `invoice-${form.getValues("invoiceNumber")}.pdf`,
+      });
+      //download it
+      
+      toast.success("Invoice downloaded successfully!");
+    }
+    else {
+      toast.error("Failed to download invoice.");
+    }
+
   };
 
   // Share invoice
@@ -946,7 +961,7 @@ export default function NewInvoicePage() {
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="p-0">
+                <CardContent className="p-0" ref={targetRef}>
                   <div className="p-6 space-y-6">
                     {/* Invoice Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start">
