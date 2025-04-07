@@ -175,7 +175,6 @@ export default function NewQuotationPage() {
   );
   const [showColorPicker, setShowColorPicker] = useState(false);
 
-
   const targetRef = useRef<HTMLDivElement>(null);
 
   // Initialize the form with default values
@@ -335,13 +334,11 @@ export default function NewQuotationPage() {
         filename: `quotation-${form.getValues("quotationNumber")}.pdf`,
       });
       //download it
-      
+
       toast.success("Invoice downloaded successfully!");
-    }
-    else {
+    } else {
       toast.error("Failed to download invoice.");
     }
-
   };
 
   // Share quotation
@@ -393,15 +390,37 @@ export default function NewQuotationPage() {
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">
-          Create New Quotation
-        </h2>
-        <h3 className="text-lg font-semibold"></h3>
+      <div className="flex items-center justify-between mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+          {currentStep === 2 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={goToPreviousStep}
+              className="w-full sm:w-auto"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Back to Edit
+            </Button>
+          )}
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Create New Quotation
+          </h2>
+        </div>
+
         <div className="flex items-center space-x-2">
           <span className="text-sm text-muted-foreground">
-            Step {currentStep} of 2:{" "}
-            {currentStep === 1 ? "Enter Details" : "Preview & Customize"}
+            {currentStep === 1 ? (
+              <Button type="button" onClick={goToNextStep}>
+                Preview
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button type="button" onClick={form.handleSubmit(onSubmit)}>
+                <Save className="h-4 w-4" />
+                Create Quotation
+              </Button>
+            )}
           </span>
         </div>
       </div>
@@ -905,19 +924,6 @@ export default function NewQuotationPage() {
             </div>
 
             {/* Form Actions */}
-            <div className="flex justify-end gap-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router("/quotations")}
-              >
-                Cancel
-              </Button>
-              <Button type="button" onClick={goToNextStep}>
-                Preview
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
           </form>
         </Form>
       ) : (
@@ -951,101 +957,127 @@ export default function NewQuotationPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="p-0" ref={targetRef}>
-                  <div className="p-6 space-y-6">
-                    {/* Quotation Header */}
-                    <div className="flex flex-col md:flex-row justify-between items-start">
-                      <div>
-                        <h2 className="text-2xl font-bold">
+                  <div className="p-8 space-y-8">
+                    {/* Invoice Header */}
+                    <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+                      {/* Company Logo & Details */}
+                      <div className="space-y-4 flex-1">
+                        <h2 className="text-3xl font-bold tracking-tight">
                           {form.getValues("fromCompany")}
                         </h2>
-                        <p className="whitespace-pre-line text-sm text-muted-foreground">
-                          {form.getValues("fromAddress")}
-                        </p>
-                        <p className="text-sm">
-                          GSTIN: {form.getValues("fromGstin")}
-                        </p>
-                        <p className="text-sm">
-                          {form.getValues("fromEmail")} |{" "}
-                          {form.getValues("fromPhone")}
-                        </p>
+                        <div className="space-y-2">
+                          <p className="whitespace-pre-line text-sm text-muted-foreground leading-relaxed">
+                            {form.getValues("fromAddress")}
+                          </p>
+                          <p className="text-sm font-medium">
+                            GSTIN: {form.getValues("fromGstin")}
+                          </p>
+                          <div className="text-sm text-muted-foreground">
+                            <p>{form.getValues("fromEmail")}</p>
+                            <p>{form.getValues("fromPhone")}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="mt-4 md:mt-0 md:text-right">
+
+                      {/* Invoice Details */}
+                      <div className="md:text-right space-y-4">
                         <h1
-                          className="text-3xl font-bold"
+                          className="text-4xl font-bold tracking-tight"
                           style={{ color: customColor }}
                         >
                           QUOTATION
                         </h1>
-                        <p className="text-sm">
-                          <span className="font-medium">Quotation Number:</span>{" "}
-                          {form.getValues("quotationNumber")}
-                        </p>
-                        <p className="text-sm">
-                          <span className="font-medium">Date:</span>{" "}
-                          {format(
-                            form.getValues("quotationDate"),
-                            "dd/MM/yyyy"
-                          )}
-                        </p>
-                        <p className="text-sm">
-                          <span className="font-medium">Valid Until:</span>{" "}
-                          {format(form.getValues("validUntil"), "dd/MM/yyyy")}
-                        </p>
+                        <div className="space-y-1">
+                          <div className="flex justify-between md:justify-end gap-4">
+                            <span className="text-muted-foreground">
+                              Invoice Number:
+                            </span>
+                            <span className="font-medium">
+                              {form.getValues("quotationNumber")}
+                            </span>
+                          </div>
+                          <div className="flex justify-between md:justify-end gap-4">
+                            <span className="text-muted-foreground">Date:</span>
+                            <span className="font-medium">
+                              {format(
+                                form.getValues("quotationDate"),
+                                "dd MMM yyyy"
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex justify-between md:justify-end gap-4">
+                            <span className="text-muted-foreground">
+                              Due Date:
+                            </span>
+                            <span className="font-medium">
+                              {format(form.getValues("validUntil"), "dd MMM yyyy")}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Customer Information */}
+                    {/* Bill To Section */}
                     <div
-                      className="border rounded-md p-4"
+                      className="border rounded-lg p-6 space-y-3"
                       style={{ borderColor: customColor }}
                     >
-                      <h3 className="font-medium mb-2">Prepared For:</h3>
-                      <h4 className="font-bold">
-                        {form.getValues("toCustomer")}
-                      </h4>
-                      <p className="whitespace-pre-line text-sm text-muted-foreground">
-                        {form.getValues("toAddress")}
-                      </p>
-                      <p className="text-sm">
-                        GSTIN: {form.getValues("toGstin")}
-                      </p>
-                      <p className="text-sm">
-                        {form.getValues("toEmail")} |{" "}
-                        {form.getValues("toPhone")}
-                      </p>
+                      <h3
+                        className="text-lg font-semibold"
+                        style={{ color: customColor }}
+                      >
+                        Bill To:
+                      </h3>
+                      <div className="space-y-2">
+                        <h4 className="text-xl font-bold">
+                          {form.getValues("toCustomer")}
+                        </h4>
+                        <p className="whitespace-pre-line text-sm text-muted-foreground leading-relaxed">
+                          {form.getValues("toAddress")}
+                        </p>
+                        <p className="text-sm font-medium">
+                          GSTIN: {form.getValues("toGstin")}
+                        </p>
+                        <div className="text-sm text-muted-foreground">
+                          <p>{form.getValues("toEmail")}</p>
+                          <p>{form.getValues("toPhone")}</p>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Quotation Items */}
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse">
+                    {/* Invoice Items */}
+                    <div className="overflow-x-auto rounded-lg border">
+                      <table className="w-full">
                         <thead>
                           <tr
-                            className="border-b"
-                            style={{ borderColor: customColor }}
+                            style={{
+                              backgroundColor: customColor,
+                              color: "white",
+                            }}
                           >
-                            <th className="py-2 text-left">Description</th>
-                            <th className="py-2 text-right">Qty</th>
-                            <th className="py-2 text-right">Rate (₹)</th>
-                            <th className="py-2 text-right">GST %</th>
-                            <th className="py-2 text-right">Amount (₹)</th>
+                            <th className="px-6 py-3 text-left">Description</th>
+                            <th className="px-6 py-3 text-right">Qty</th>
+                            <th className="px-6 py-3 text-right">Rate (₹)</th>
+                            <th className="px-6 py-3 text-right">GST %</th>
+                            <th className="px-6 py-3 text-right">Amount (₹)</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y">
                           {form.getValues("items").map((item, index) => (
-                            <tr key={index} className="border-b">
-                              <td className="py-2 text-left">
+                            <tr key={index} className="hover:bg-muted/50">
+                              <td className="px-6 py-4 text-left">
                                 {item.description}
                               </td>
-                              <td className="py-2 text-right">
+                              <td className="px-6 py-4 text-right">
                                 {item.quantity}
                               </td>
-                              <td className="py-2 text-right">
+                              <td className="px-6 py-4 text-right">
                                 {item.rate.toFixed(2)}
                               </td>
-                              <td className="py-2 text-right">
+                              <td className="px-6 py-4 text-right">
                                 {item.gstRate}%
                               </td>
-                              <td className="py-2 text-right">
+                              <td className="px-6 py-4 text-right font-medium">
                                 {item.amount.toFixed(2)}
                               </td>
                             </tr>
@@ -1054,27 +1086,37 @@ export default function NewQuotationPage() {
                       </table>
                     </div>
 
-                    {/* Quotation Summary */}
+                    {/* Invoice Summary */}
                     <div className="flex justify-end">
-                      <div className="w-full md:w-1/2 space-y-2">
-                        <div className="flex justify-between">
-                          <span className="font-medium">Subtotal:</span>
-                          <span>₹{form.getValues("subtotal").toFixed(2)}</span>
+                      <div className="w-full md:w-72 space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            Subtotal:
+                          </span>
+                          <span className="font-medium">
+                            ₹{form.getValues("subtotal").toFixed(2)}
+                          </span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">CGST:</span>
-                          <span>₹{form.getValues("cgst").toFixed(2)}</span>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">CGST:</span>
+                          <span className="font-medium">
+                            ₹{form.getValues("cgst").toFixed(2)}
+                          </span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">SGST:</span>
-                          <span>₹{form.getValues("sgst").toFixed(2)}</span>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">SGST:</span>
+                          <span className="font-medium">
+                            ₹{form.getValues("sgst").toFixed(2)}
+                          </span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="font-medium">IGST:</span>
-                          <span>₹{form.getValues("igst").toFixed(2)}</span>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">IGST:</span>
+                          <span className="font-medium">
+                            ₹{form.getValues("igst").toFixed(2)}
+                          </span>
                         </div>
                         <div
-                          className="flex justify-between pt-2 border-t font-bold"
+                          className="flex justify-between pt-2 border-t text-lg font-bold"
                           style={{ borderColor: customColor }}
                         >
                           <span>Total:</span>
@@ -1084,18 +1126,26 @@ export default function NewQuotationPage() {
                     </div>
 
                     {/* Notes and Terms */}
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div>
-                        <h3 className="font-medium mb-1">Notes:</h3>
-                        <p className="text-sm whitespace-pre-line">
+                    <div className="grid gap-8 md:grid-cols-2 pt-4 border-t">
+                      <div className="space-y-2">
+                        <h3
+                          className="font-semibold"
+                          style={{ color: customColor }}
+                        >
+                          Notes:
+                        </h3>
+                        <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
                           {form.getValues("notes")}
                         </p>
                       </div>
-                      <div>
-                        <h3 className="font-medium mb-1">
+                      <div className="space-y-2">
+                        <h3
+                          className="font-semibold"
+                          style={{ color: customColor }}
+                        >
                           Terms & Conditions:
                         </h3>
-                        <p className="text-sm whitespace-pre-line">
+                        <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
                           {form.getValues("termsAndConditions")}
                         </p>
                       </div>
@@ -1169,25 +1219,6 @@ export default function NewQuotationPage() {
           </div>
 
           {/* Form Actions */}
-          <div className="flex justify-between">
-            <Button type="button" variant="outline" onClick={goToPreviousStep}>
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Back to Edit
-            </Button>
-            <div className="space-x-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router("/quotations")}
-              >
-                Cancel
-              </Button>
-              <Button type="button" onClick={form.handleSubmit(onSubmit)}>
-                <Save className="mr-2 h-4 w-4" />
-                Create Quotation
-              </Button>
-            </div>
-          </div>
         </div>
       )}
     </div>
