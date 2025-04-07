@@ -20,8 +20,8 @@ import { Mail, Phone, MoreHorizontal, Download } from "lucide-react";
 
 const CustomerTable = ({ customers }: { customers: Customer[] }) => {
   return (
-    <div className="overflow-x-auto">
-      <Table className="w-full table-fixed">
+    <div className="">
+      <Table className="w-full table-auto">
         <TableHeader>
           <TableRow>
             <TableHead className="w-16">ID</TableHead>

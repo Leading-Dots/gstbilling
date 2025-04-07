@@ -1,4 +1,4 @@
-import { Download, FileCheck } from "lucide-react";
+import { Download, FileCheck, MoreHorizontal } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -10,24 +10,37 @@ import {
 
 import { Quotation, QuotationStatus } from "@/API";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "../ui/dropdown-menu";
 
 const QuotationTable = ({ quotations }: { quotations: Quotation[] }) => {
   return (
-    <div className="overflow-x-auto">
-      <Table className="w-full table-fixed">
+    <div className="">
+      <Table className="w-full table-auto">
         <TableHeader>
           <TableRow>
-            <TableHead>Quotation</TableHead>
-            <TableHead>Customer</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Valid Until</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="w-12">S.No</TableHead>
+            <TableHead className="w-48">Quotation</TableHead>
+            <TableHead className="w-48">Customer</TableHead>
+            <TableHead className="w-32">Date</TableHead>
+            <TableHead className="w-32">Valid Until</TableHead>
+            <TableHead className="">Status</TableHead>
+            <TableHead className="">Amount</TableHead>
+            <TableHead className="w-32"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {quotations.map((quotation) => (
             <TableRow key={quotation.id}>
+              <TableCell className="font-medium">
+                {quotations.indexOf(quotation) + 1}
+              </TableCell>
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
                   <FileCheck className="h-4 w-4 text-muted-foreground" />
@@ -58,16 +71,31 @@ const QuotationTable = ({ quotations }: { quotations: Quotation[] }) => {
                 </div>
               </TableCell>
               <TableCell className="text-right">{quotation.total}</TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>View Details</DropdownMenuItem>
+                    <DropdownMenuItem>Edit Quotation</DropdownMenuItem>
+                    <DropdownMenuItem>View Customer Details</DropdownMenuItem>
+                    <DropdownMenuItem>Share Quotation</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
       <div className="flex items-center justify-between p-4">
         <span className="text-sm text-muted-foreground">
           Showing {quotations.length} quotations
         </span>
-       
       </div>
     </div>
   );
