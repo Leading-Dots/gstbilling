@@ -13,6 +13,8 @@ import NewVendorPage from "@/pages/new/CreateVendorPage";
 import EditInvoicePage from "@/pages/edit/EditInvoicePage";
 import UpdateQuotationPage from "@/pages/edit/EditQuotationPage";
 import EditCustomerPage from "@/pages/edit/EditCustomerPage";
+import CustomerDetailsPage from "@/pages/view/CustomerViewPage";
+import InvoiceDetailsPage from "@/pages/view/InvoiceViewPage";
 
 const routes = [
   {
@@ -72,10 +74,26 @@ const routes = [
     ),
   },
   {
+    path: "/invoices/:id/view",
+    element: (
+      <DashboardLayout>
+        <InvoiceDetailsPage />
+      </DashboardLayout>
+    ),
+  },
+  {
     path: "/customers/:id/edit",
     element: (
       <DashboardLayout>
         <EditCustomerPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/customers/:id/view",
+    element: (
+      <DashboardLayout>
+        <CustomerDetailsPage />
       </DashboardLayout>
     ),
   },

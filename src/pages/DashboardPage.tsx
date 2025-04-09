@@ -153,7 +153,7 @@ export default function DashboardPage() {
           </span>
         </div>
       </div>
-      <Card>
+      <Card className="">
         <CardHeader>
           <CardTitle>
             What would you like to do today?

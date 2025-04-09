@@ -58,8 +58,15 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size={"lg"}>
-          {selectedCustomer ? selectedCustomer.owner_name : "Select Customer"}
+        <Button
+          variant="outline"
+          size={"lg"}
+          className="flex gap-2 items-center"
+        >
+          <Search className="h-4 w-4" />
+          {selectedCustomer
+            ? `${selectedCustomer.company_name} - ${selectedCustomer.owner_name}`
+            : "Select Customer"}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">

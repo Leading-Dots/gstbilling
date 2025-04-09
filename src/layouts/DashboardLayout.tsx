@@ -12,7 +12,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <div className="flex min-h-screen">
         <AppSidebar />
         <SidebarTrigger className="lg:hidden p-4" />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 
+        ">{children}</main>
       </div>
     </SidebarProvider>
   );
