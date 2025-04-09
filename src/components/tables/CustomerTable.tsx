@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
 } from "../ui/dropdown-menu";
 import { Mail, Phone, MoreHorizontal, Download } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CustomerTable = ({ customers }: { customers: Customer[] }) => {
   return (
@@ -81,7 +82,12 @@ const CustomerTable = ({ customers }: { customers: Customer[] }) => {
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem>Edit Customer</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={`/customers/${customer.id}/edit`}>
+                        Edit Customer
+                      </Link>
+                    </DropdownMenuItem>
+
                     <DropdownMenuItem>Create Invoice</DropdownMenuItem>
                     <DropdownMenuItem>Create Quotation</DropdownMenuItem>
                   </DropdownMenuContent>
@@ -95,7 +101,6 @@ const CustomerTable = ({ customers }: { customers: Customer[] }) => {
         <span className="text-sm text-muted-foreground">
           Showing {customers.length} customers
         </span>
-        
       </div>
     </div>
   );

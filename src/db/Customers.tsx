@@ -1,6 +1,6 @@
-import { CreateCustomerInput } from "@/API";
-import { createCustomer } from "@/graphql/mutations";
-import { listCustomers } from "@/graphql/queries";
+import { CreateCustomerInput, UpdateCustomerInput } from "@/API";
+import { createCustomer, updateCustomer } from "@/graphql/mutations";
+import { getCustomer, listCustomers } from "@/graphql/queries";
 import client from "@/lib/apiClient";
 
 export const getAllCustomers = async () => {
@@ -29,7 +29,7 @@ export const addCustomer = async (customer: CreateCustomerInput) => {
       console.log("Customer created successfully:", data);
       return data.createCustomer;
     }
-    if(errors) {
+    if (errors) {
       console.error("Error creating customer:", errors);
       return null;
     }
@@ -38,3 +38,44 @@ export const addCustomer = async (customer: CreateCustomerInput) => {
     console.error("Error creating customer:", error);
   }
 };
+
+export const editCustomer = async (customer: UpdateCustomerInput) => {
+  try {
+    console.log("Editing customer:", customer);
+    const { data, errors } = await client.graphql({
+      query: updateCustomer,
+      variables: { input: customer },
+    });
+    if (data) {
+      console.log("Customer edited successfully:", data);
+      return data.updateCustomer;
+    }
+    if (errors) {
+      console.error("Error editing customer:", errors);
+      return null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error editing customer:", error);
+  }
+};
+
+
+export const getCustomerById = async (customerId: string) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: getCustomer,
+      variables: { id: customerId },
+    });
+
+    if (data) {
+      return data.getCustomer;
+    }
+    if (errors) {
+      console.error("Error fetching customer:", errors);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching customer:", error);
+  }
+}

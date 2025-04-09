@@ -12,6 +12,7 @@ import NewCustomerPage from "@/pages/new/CreateCustomerPage";
 import NewVendorPage from "@/pages/new/CreateVendorPage";
 import EditInvoicePage from "@/pages/edit/EditInvoicePage";
 import UpdateQuotationPage from "@/pages/edit/EditQuotationPage";
+import EditCustomerPage from "@/pages/edit/EditCustomerPage";
 
 const routes = [
   {
@@ -67,6 +68,14 @@ const routes = [
     element: (
       <DashboardLayout>
         <EditInvoicePage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/customers/:id/edit",
+    element: (
+      <DashboardLayout>
+        <EditCustomerPage />
       </DashboardLayout>
     ),
   },
