@@ -1,8 +1,7 @@
 import client from "@/lib/apiClient";
-import { CreateInvoiceInput } from "@/API";
-import { createInvoice } from "@/graphql/mutations";
-import { listInvoices } from "@/graphql/queries";
-
+import { CreateInvoiceInput, InvoiceStatus, UpdateInvoiceInput } from "@/API";
+import { createInvoice, updateInvoice } from "@/graphql/mutations";
+import { getInvoice, listInvoices } from "@/graphql/queries";
 
 export const getAllInvoices = async () => {
   try {
@@ -21,10 +20,8 @@ export const getAllInvoices = async () => {
     return [];
   } catch (error) {
     console.error("Error fetching invoices:", error);
-
   }
 };
-
 
 export const addInvoice = async (invoice: CreateInvoiceInput) => {
   try {
@@ -47,3 +44,71 @@ export const addInvoice = async (invoice: CreateInvoiceInput) => {
   }
 };
 
+export const getInvoiceById = async (id: string) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: getInvoice,
+      variables: { id },
+    });
+
+    if (data) {
+      return data.getInvoice;
+    }
+    if (errors) {
+      console.error("Error fetching invoice:", errors);
+      return null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching invoice:", error);
+  }
+};
+export const editInvoice = async (invoice: UpdateInvoiceInput) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: updateInvoice,
+      variables: {
+        input: {
+          id: invoice.id,
+          ...invoice,
+        },
+      },
+    });
+    if (data) {
+      console.log("Invoice updated successfully:", data);
+      return data.updateInvoice;
+    }
+    if (errors) {
+      console.error("Error updating invoice:", errors);
+      return null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error updating invoice:", error);
+  }
+};
+
+export const updateInvoiceStatus = async (id: string, status: InvoiceStatus) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: updateInvoice,
+      variables: {
+        input: {
+          id,
+          invoice_status: status,
+        },
+      },
+    });
+    if (data) {
+      console.log("Invoice status updated successfully:", data);
+      return data.updateInvoice;
+    }
+    if (errors) {
+      console.error("Error updating invoice status:", errors);
+      return null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error updating invoice status:", error);
+  }
+};

@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "../ui/dropdown-menu";
+import { Link } from "react-router-dom";
 
 const QuotationTable = ({ quotations }: { quotations: Quotation[] }) => {
   return (
@@ -61,7 +62,8 @@ const QuotationTable = ({ quotations }: { quotations: Quotation[] }) => {
                       ? "bg-gray-100 text-gray-800"
                       : quotation.quotation_status === QuotationStatus.CONVERTED
                       ? "bg-purple-100 text-purple-800"
-                      : quotation.quotation_status === QuotationStatus.EXPIRED ||
+                      : quotation.quotation_status ===
+                          QuotationStatus.EXPIRED ||
                         quotation.quotation_status === QuotationStatus.REJECTED
                       ? "bg-red-100 text-red-800"
                       : "bg-yellow-100 text-yellow-800"
@@ -82,7 +84,11 @@ const QuotationTable = ({ quotations }: { quotations: Quotation[] }) => {
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem>Edit Quotation</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={`/quotations/${quotation.id}/edit`}>
+                        Edit Quotation
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem>View Customer Details</DropdownMenuItem>
                     <DropdownMenuItem>Share Quotation</DropdownMenuItem>
                   </DropdownMenuContent>

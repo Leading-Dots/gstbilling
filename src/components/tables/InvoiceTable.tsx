@@ -18,6 +18,7 @@ import {
 }
 from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 const InvoiceTable = ({ invoices }: { invoices: Invoice[] }) => {
   return (
@@ -78,7 +79,7 @@ const InvoiceTable = ({ invoices }: { invoices: Invoice[] }) => {
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem>Edit Invoice</DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to={`/invoices/${invoice.id}/edit`} >Edit Invoice</Link></DropdownMenuItem>
                     <DropdownMenuItem>View Customer Details</DropdownMenuItem>
                     <DropdownMenuItem>Share Invoice</DropdownMenuItem>
                   </DropdownMenuContent>

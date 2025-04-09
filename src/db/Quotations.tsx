@@ -1,7 +1,7 @@
 import client from "@/lib/apiClient";
-import { CreateQuotationInput } from "@/API";
-import { createQuotation } from "@/graphql/mutations";
-import { listQuotations } from "@/graphql/queries";
+import { CreateQuotationInput, UpdateQuotationInput } from "@/API";
+import { createQuotation, updateQuotation } from "@/graphql/mutations";
+import { getQuotation, listQuotations } from "@/graphql/queries";
 import { Quotation } from "@/API";
 
 export const getAllQuotations = async () => {
@@ -42,3 +42,44 @@ export const addQuotation = async (quotation: CreateQuotationInput) => {
     console.error("Error creating quotation:", error);
   }
 };
+
+
+export const getQuotationById = async (id: string) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: getQuotation,
+      variables: { id },
+    });
+
+    if (data) {
+      return data.getQuotation;
+    }
+    if (errors) {
+      console.error("Error fetching quotation:", errors);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching quotation:", error);
+  }
+}
+
+export const editQuotation = async (quotation: UpdateQuotationInput) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: updateQuotation,
+      variables: { input: quotation },
+    });
+
+    if (data) {
+      return data.updateQuotation;
+    }
+    if (errors) {
+      console.error("Error updating quotation:", errors);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error updating quotation:", error);
+  }
+};
+
+export const changeQuotationStatus = async (quotation: Quotation) => {}
