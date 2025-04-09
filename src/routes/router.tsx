@@ -15,6 +15,7 @@ import UpdateQuotationPage from "@/pages/edit/EditQuotationPage";
 import EditCustomerPage from "@/pages/edit/EditCustomerPage";
 import CustomerDetailsPage from "@/pages/view/CustomerViewPage";
 import InvoiceDetailsPage from "@/pages/view/InvoiceViewPage";
+import QuotationPage from "@/pages/view/QuotationViewPage";
 
 const routes = [
   {
@@ -102,6 +103,14 @@ const routes = [
     element: (
       <DashboardLayout>
         <UpdateQuotationPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/quotations/:id/view",
+    element: (
+      <DashboardLayout>
+        <QuotationPage />
       </DashboardLayout>
     ),
   },

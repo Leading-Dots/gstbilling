@@ -83,7 +83,11 @@ const QuotationTable = ({ quotations }: { quotations: Quotation[] }) => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>View Details</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={`/quotations/${quotation.id}/view`}>
+                        View Details
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to={`/quotations/${quotation.id}/edit`}>
                         Edit Quotation
