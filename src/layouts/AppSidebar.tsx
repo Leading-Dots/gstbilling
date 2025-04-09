@@ -11,6 +11,7 @@ import {
   FileCheck,
   UserCircle,
   Building,
+  LayoutDashboard,
 } from "lucide-react";
 
 import {
@@ -48,7 +49,7 @@ const navigationItems = [
   {
     title: "Dashboard",
     href: "/",
-    icon: Home,
+    icon: LayoutDashboard,
     section: "Overview",
   },
   {

@@ -113,6 +113,8 @@ export const createCustomer = /* GraphQL */ `mutation CreateCustomer(
     country
     pan_number
     credit_limit
+    note
+    printColor
     createdAt
     updatedAt
     __typename
@@ -152,6 +154,8 @@ export const updateCustomer = /* GraphQL */ `mutation UpdateCustomer(
     country
     pan_number
     credit_limit
+    note
+    printColor
     createdAt
     updatedAt
     __typename
@@ -191,6 +195,8 @@ export const deleteCustomer = /* GraphQL */ `mutation DeleteCustomer(
     country
     pan_number
     credit_limit
+    note
+    printColor
     createdAt
     updatedAt
     __typename

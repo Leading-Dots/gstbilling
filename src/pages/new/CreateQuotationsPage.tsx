@@ -351,7 +351,7 @@ export default function NewQuotationPage() {
   const onSubmit = async (data: QuotationFormValues) => {
     try {
       const newQuotation = await addQuotation({
-        customerID: selectedCustomer?.id,
+        customerID: selectedCustomer?.id!!,
         quotation_number: data.quotationNumber,
         quotation_status: QuotationStatus.SENT,
         items: JSON.stringify(data.items),

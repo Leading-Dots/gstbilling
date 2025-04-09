@@ -101,6 +101,8 @@ export const onCreateCustomer = /* GraphQL */ `subscription OnCreateCustomer($fi
     country
     pan_number
     credit_limit
+    note
+    printColor
     createdAt
     updatedAt
     __typename
@@ -137,6 +139,8 @@ export const onUpdateCustomer = /* GraphQL */ `subscription OnUpdateCustomer($fi
     country
     pan_number
     credit_limit
+    note
+    printColor
     createdAt
     updatedAt
     __typename
@@ -173,6 +177,8 @@ export const onDeleteCustomer = /* GraphQL */ `subscription OnDeleteCustomer($fi
     country
     pan_number
     credit_limit
+    note
+    printColor
     createdAt
     updatedAt
     __typename

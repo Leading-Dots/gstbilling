@@ -52,6 +52,8 @@ type Customer @model @auth(rules: [{allow: public}]) {
   country: String
   pan_number: String
   credit_limit: String
+  note: String
+  printColor: String
 }
 
 type Quotation @model @auth(rules: [{allow: public}]) {

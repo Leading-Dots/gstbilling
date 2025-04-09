@@ -84,6 +84,8 @@ export const getCustomer = /* GraphQL */ `query GetCustomer($id: ID!) {
     country
     pan_number
     credit_limit
+    note
+    printColor
     createdAt
     updatedAt
     __typename
@@ -117,6 +119,8 @@ export const listCustomers = /* GraphQL */ `query ListCustomers(
       country
       pan_number
       credit_limit
+      note
+      printColor
       createdAt
       updatedAt
       __typename

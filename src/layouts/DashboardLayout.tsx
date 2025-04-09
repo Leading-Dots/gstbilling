@@ -11,9 +11,13 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <SidebarProvider>
       <div className="flex min-h-screen">
         <AppSidebar />
-        <SidebarTrigger className="lg:hidden p-4" />
-        <main className="flex-1 
-        ">{children}</main>
+        <SidebarTrigger className="lg:hidden" />
+        <main
+          className="flex-1 
+        "
+        >
+          {children}
+        </main>
       </div>
     </SidebarProvider>
   );

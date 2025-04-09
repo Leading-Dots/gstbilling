@@ -170,6 +170,7 @@ const invoiceThemes = [
 ];
 
 export default function EditInvoicePage() {
+  console.log("EditInvoicePage---------");
   const router = useNavigate();
   const params = useParams();
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(

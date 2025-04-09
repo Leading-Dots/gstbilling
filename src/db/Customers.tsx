@@ -1,4 +1,4 @@
-import { CreateCustomerInput, UpdateCustomerInput } from "@/API";
+import { CreateCustomerInput, Customer, UpdateCustomerInput } from "@/API";
 import { createCustomer, updateCustomer } from "@/graphql/mutations";
 import { getCustomer, listCustomers } from "@/graphql/queries";
 import client from "@/lib/apiClient";
@@ -69,7 +69,7 @@ export const getCustomerById = async (customerId: string) => {
     });
 
     if (data) {
-      return data.getCustomer;
+      return data.getCustomer as Customer;
     }
     if (errors) {
       console.error("Error fetching customer:", errors);

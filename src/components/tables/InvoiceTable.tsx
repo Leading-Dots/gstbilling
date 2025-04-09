@@ -15,8 +15,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem,
-}
-from "../ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 
@@ -26,9 +25,7 @@ const InvoiceTable = ({ invoices }: { invoices: Invoice[] }) => {
       <Table className="w-full  table-auto">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-12"> 
-              S.No
-            </TableHead>
+            <TableHead className="w-12">S.No</TableHead>
             <TableHead className="w-48">Invoice</TableHead>
             <TableHead className="w-48">Customer</TableHead>
             <TableHead className="w-32">Invoice Date</TableHead>
@@ -36,7 +33,6 @@ const InvoiceTable = ({ invoices }: { invoices: Invoice[] }) => {
             <TableHead className="">Status</TableHead>
             <TableHead className="">Amount</TableHead>
             <TableHead className="w-32"></TableHead>
-
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -78,8 +74,16 @@ const InvoiceTable = ({ invoices }: { invoices: Invoice[] }) => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to={`/invoices/${invoice.id}/edit`} >Edit Invoice</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={`/invoices/${invoice.id}/view`}>
+                        View Details
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={`/invoices/${invoice.id}/edit`}>
+                        Edit Invoice
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem>View Customer Details</DropdownMenuItem>
                     <DropdownMenuItem>Share Invoice</DropdownMenuItem>
                   </DropdownMenuContent>
@@ -93,7 +97,6 @@ const InvoiceTable = ({ invoices }: { invoices: Invoice[] }) => {
         <span className="text-sm text-muted-foreground">
           Showing {invoices.length} invoices
         </span>
-       
       </div>
     </div>
   );
