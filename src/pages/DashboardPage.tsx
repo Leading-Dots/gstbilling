@@ -622,7 +622,7 @@ export default function DashboardPage() {
                                       Amount
                                     </span>
                                     <span className="font-bold">
-                                      ₹{payload[0].value.toFixed(2)}
+                                      ₹{typeof payload[0].value === 'number' ? payload[0].value.toFixed(2) : payload[0].value}
                                     </span>
                                   </div>
                                 </div>
