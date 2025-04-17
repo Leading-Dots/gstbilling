@@ -1,25 +1,55 @@
 import { createBrowserRouter } from "react-router-dom";
-import DashboardPage from "@/pages/DashboardPage";
+import DashboardPage from "@/pages/root/DashboardPage";
 import DashboardLayout from "@/layouts/DashboardLayout";
-import CustomersPage from "@/pages/CustomersPage";
-import InvoicesPage from "@/pages/InvoicesPage";
-import QuotationsPage from "@/pages/QuotationsPage";
-import VendorsPage from "@/pages/VendorsPage";
-import ReportsPage from "@/pages/ReportsPage";
-import NewInvoicePage from "@/pages/new/CreateInvoicePage";
-import NewQuotationPage from "@/pages/new/CreateQuotationsPage";
-import NewCustomerPage from "@/pages/new/CreateCustomerPage";
-import NewVendorPage from "@/pages/new/CreateVendorPage";
-import EditInvoicePage from "@/pages/edit/EditInvoicePage";
-import UpdateQuotationPage from "@/pages/edit/EditQuotationPage";
-import EditCustomerPage from "@/pages/edit/EditCustomerPage";
-import CustomerDetailsPage from "@/pages/view/CustomerViewPage";
-import InvoiceDetailsPage from "@/pages/view/InvoiceViewPage";
-import QuotationPage from "@/pages/view/QuotationViewPage";
+import CustomersPage from "@/pages/root/CustomersPage";
+import InvoicesPage from "@/pages/root/InvoicesPage";
+import QuotationsPage from "@/pages/root/QuotationsPage";
+import VendorsPage from "@/pages/root/VendorsPage";
+import ReportsPage from "@/pages/root/ReportsPage";
+import NewInvoicePage from "@/pages/root/new/CreateInvoicePage";
+import NewQuotationPage from "@/pages/root/new/CreateQuotationsPage";
+import NewCustomerPage from "@/pages/root/new/CreateCustomerPage";
+import NewVendorPage from "@/pages/root/new/CreateVendorPage";
+import EditInvoicePage from "@/pages/root/edit/EditInvoicePage";
+import UpdateQuotationPage from "@/pages/root/edit/EditQuotationPage";
+import EditCustomerPage from "@/pages/root/edit/EditCustomerPage";
+import CustomerDetailsPage from "@/pages/root/view/CustomerViewPage";
+import InvoiceDetailsPage from "@/pages/root/view/InvoiceViewPage";
+import QuotationPage from "@/pages/root/view/QuotationViewPage";
+import InventoryPage from "@/pages/root/InventoryPage";
+import HomeRouter from "@/pages/public/HomeRouter";
+import AuthLayout from "@/layouts/AuthLayout";
+import LoginPage from "@/pages/auth/LoginPage";
+import RegisterPage from "@/pages/auth/RegisterPage";
 
 const routes = [
   {
     path: "/",
+    element: (
+      <DashboardLayout>
+        <HomeRouter />
+      </DashboardLayout>
+    ),
+  },
+
+  {
+    path: "/login",
+    element: (
+      <AuthLayout>
+        <LoginPage />
+      </AuthLayout>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <AuthLayout>
+        <RegisterPage />
+      </AuthLayout>
+    ),
+  },
+  {
+    path: "/dashboard",
     element: (
       <DashboardLayout>
         <DashboardPage />
@@ -47,6 +77,14 @@ const routes = [
     element: (
       <DashboardLayout>
         <InvoicesPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/inventory",
+    element: (
+      <DashboardLayout>
+        <InventoryPage />
       </DashboardLayout>
     ),
   },

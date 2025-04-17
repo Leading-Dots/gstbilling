@@ -8,6 +8,363 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getInventoryItem = /* GraphQL */ `query GetInventoryItem($id: ID!) {
+  getInventoryItem(id: $id) {
+    id
+    item_code
+    hsn_number
+    name
+    description
+    unit
+    tax_rate
+    current_stock
+    stock_status
+    category
+    brand
+    cgst
+    sgst
+    igst
+    companyID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetInventoryItemQueryVariables,
+  APITypes.GetInventoryItemQuery
+>;
+export const listInventoryItems = /* GraphQL */ `query ListInventoryItems(
+  $filter: ModelInventoryItemFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listInventoryItems(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      item_code
+      hsn_number
+      name
+      description
+      unit
+      tax_rate
+      current_stock
+      stock_status
+      category
+      brand
+      cgst
+      sgst
+      igst
+      companyID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListInventoryItemsQueryVariables,
+  APITypes.ListInventoryItemsQuery
+>;
+export const inventoryItemsByCompanyID = /* GraphQL */ `query InventoryItemsByCompanyID(
+  $companyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelInventoryItemFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  inventoryItemsByCompanyID(
+    companyID: $companyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      item_code
+      hsn_number
+      name
+      description
+      unit
+      tax_rate
+      current_stock
+      stock_status
+      category
+      brand
+      cgst
+      sgst
+      igst
+      companyID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.InventoryItemsByCompanyIDQueryVariables,
+  APITypes.InventoryItemsByCompanyIDQuery
+>;
+export const getCompanyEmployee = /* GraphQL */ `query GetCompanyEmployee($id: ID!) {
+  getCompanyEmployee(id: $id) {
+    id
+    name
+    adminID
+    companyID
+    email
+    userID
+    profile_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetCompanyEmployeeQueryVariables,
+  APITypes.GetCompanyEmployeeQuery
+>;
+export const listCompanyEmployees = /* GraphQL */ `query ListCompanyEmployees(
+  $filter: ModelCompanyEmployeeFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCompanyEmployees(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      adminID
+      companyID
+      email
+      userID
+      profile_status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListCompanyEmployeesQueryVariables,
+  APITypes.ListCompanyEmployeesQuery
+>;
+export const companyEmployeesByAdminID = /* GraphQL */ `query CompanyEmployeesByAdminID(
+  $adminID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelCompanyEmployeeFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  companyEmployeesByAdminID(
+    adminID: $adminID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      name
+      adminID
+      companyID
+      email
+      userID
+      profile_status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.CompanyEmployeesByAdminIDQueryVariables,
+  APITypes.CompanyEmployeesByAdminIDQuery
+>;
+export const companyEmployeesByCompanyID = /* GraphQL */ `query CompanyEmployeesByCompanyID(
+  $companyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelCompanyEmployeeFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  companyEmployeesByCompanyID(
+    companyID: $companyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      name
+      adminID
+      companyID
+      email
+      userID
+      profile_status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.CompanyEmployeesByCompanyIDQueryVariables,
+  APITypes.CompanyEmployeesByCompanyIDQuery
+>;
+export const getSubscriptionPlan = /* GraphQL */ `query GetSubscriptionPlan($id: ID!) {
+  getSubscriptionPlan(id: $id) {
+    id
+    title
+    description
+    cost
+    users
+    isPaid
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetSubscriptionPlanQueryVariables,
+  APITypes.GetSubscriptionPlanQuery
+>;
+export const listSubscriptionPlans = /* GraphQL */ `query ListSubscriptionPlans(
+  $filter: ModelSubscriptionPlanFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listSubscriptionPlans(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      title
+      description
+      cost
+      users
+      isPaid
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListSubscriptionPlansQueryVariables,
+  APITypes.ListSubscriptionPlansQuery
+>;
+export const getAdmin = /* GraphQL */ `query GetAdmin($id: ID!) {
+  getAdmin(id: $id) {
+    id
+    name
+    email
+    phone
+    subscriptionPlanID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    company_id
+    userID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<APITypes.GetAdminQueryVariables, APITypes.GetAdminQuery>;
+export const listAdmins = /* GraphQL */ `query ListAdmins(
+  $filter: ModelAdminFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listAdmins(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      email
+      phone
+      subscriptionPlanID
+      company_id
+      userID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListAdminsQueryVariables,
+  APITypes.ListAdminsQuery
+>;
+export const getCompany = /* GraphQL */ `query GetCompany($id: ID!) {
+  getCompany(id: $id) {
+    id
+    company_name
+    owner_name
+    gstin
+    address
+    email
+    phone
+    gst_category
+    adminID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    InventoryItems {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetCompanyQueryVariables,
+  APITypes.GetCompanyQuery
+>;
+export const listCompanies = /* GraphQL */ `query ListCompanies(
+  $filter: ModelCompanyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCompanies(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      company_name
+      owner_name
+      gstin
+      address
+      email
+      phone
+      gst_category
+      adminID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListCompaniesQueryVariables,
+  APITypes.ListCompaniesQuery
+>;
 export const getVendor = /* GraphQL */ `query GetVendor($id: ID!) {
   getVendor(id: $id) {
     id
@@ -19,7 +376,7 @@ export const getVendor = /* GraphQL */ `query GetVendor($id: ID!) {
     payable_amount
     billing_address
     vendor_status
-    garin
+    gstin
     shipping_address
     createdAt
     updatedAt
@@ -43,7 +400,7 @@ export const listVendors = /* GraphQL */ `query ListVendors(
       payable_amount
       billing_address
       vendor_status
-      garin
+      gstin
       shipping_address
       createdAt
       updatedAt

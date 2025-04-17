@@ -30,7 +30,7 @@ export declare type VendorCreateFormInputValues = {
     payable_amount?: number;
     billing_address?: string;
     vendor_status?: string;
-    garin?: string;
+    gstin?: string;
     shipping_address?: string;
 };
 export declare type VendorCreateFormValidationValues = {
@@ -42,7 +42,7 @@ export declare type VendorCreateFormValidationValues = {
     payable_amount?: ValidationFunction<number>;
     billing_address?: ValidationFunction<string>;
     vendor_status?: ValidationFunction<string>;
-    garin?: ValidationFunction<string>;
+    gstin?: ValidationFunction<string>;
     shipping_address?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -56,7 +56,7 @@ export declare type VendorCreateFormOverridesProps = {
     payable_amount?: PrimitiveOverrideProps<TextFieldProps>;
     billing_address?: PrimitiveOverrideProps<TextFieldProps>;
     vendor_status?: PrimitiveOverrideProps<SelectFieldProps>;
-    garin?: PrimitiveOverrideProps<TextFieldProps>;
+    gstin?: PrimitiveOverrideProps<TextFieldProps>;
     shipping_address?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type VendorCreateFormProps = React.PropsWithChildren<{

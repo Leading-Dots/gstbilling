@@ -39,7 +39,7 @@ export default function VendorUpdateForm(props) {
     payable_amount: "",
     billing_address: "",
     vendor_status: "",
-    garin: "",
+    gstin: "",
     shipping_address: "",
   };
   const [vendor_id, setVendor_id] = React.useState(initialValues.vendor_id);
@@ -58,7 +58,7 @@ export default function VendorUpdateForm(props) {
   const [vendor_status, setVendor_status] = React.useState(
     initialValues.vendor_status
   );
-  const [garin, setGarin] = React.useState(initialValues.garin);
+  const [gstin, setGstin] = React.useState(initialValues.gstin);
   const [shipping_address, setShipping_address] = React.useState(
     initialValues.shipping_address
   );
@@ -75,7 +75,7 @@ export default function VendorUpdateForm(props) {
     setPayable_amount(cleanValues.payable_amount);
     setBilling_address(cleanValues.billing_address);
     setVendor_status(cleanValues.vendor_status);
-    setGarin(cleanValues.garin);
+    setGstin(cleanValues.gstin);
     setShipping_address(cleanValues.shipping_address);
     setErrors({});
   };
@@ -104,7 +104,7 @@ export default function VendorUpdateForm(props) {
     payable_amount: [],
     billing_address: [],
     vendor_status: [],
-    garin: [],
+    gstin: [],
     shipping_address: [],
   };
   const runValidationTasks = async (
@@ -141,7 +141,7 @@ export default function VendorUpdateForm(props) {
           payable_amount: payable_amount ?? null,
           billing_address: billing_address ?? null,
           vendor_status: vendor_status ?? null,
-          garin: garin ?? null,
+          gstin: gstin ?? null,
           shipping_address: shipping_address ?? null,
         };
         const validationResponses = await Promise.all(
@@ -211,7 +211,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -244,7 +244,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -277,7 +277,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -310,7 +310,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -343,7 +343,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -380,7 +380,7 @@ export default function VendorUpdateForm(props) {
               payable_amount: value,
               billing_address,
               vendor_status,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -413,7 +413,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address: value,
               vendor_status,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -446,7 +446,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status: value,
-              garin,
+              gstin,
               shipping_address,
             };
             const result = onChange(modelFields);
@@ -474,10 +474,10 @@ export default function VendorUpdateForm(props) {
         ></option>
       </SelectField>
       <TextField
-        label="Garin"
+        label="Gstin"
         isRequired={false}
         isReadOnly={false}
-        value={garin}
+        value={gstin}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -490,21 +490,21 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status,
-              garin: value,
+              gstin: value,
               shipping_address,
             };
             const result = onChange(modelFields);
-            value = result?.garin ?? value;
+            value = result?.gstin ?? value;
           }
-          if (errors.garin?.hasError) {
-            runValidationTasks("garin", value);
+          if (errors.gstin?.hasError) {
+            runValidationTasks("gstin", value);
           }
-          setGarin(value);
+          setGstin(value);
         }}
-        onBlur={() => runValidationTasks("garin", garin)}
-        errorMessage={errors.garin?.errorMessage}
-        hasError={errors.garin?.hasError}
-        {...getOverrideProps(overrides, "garin")}
+        onBlur={() => runValidationTasks("gstin", gstin)}
+        errorMessage={errors.gstin?.errorMessage}
+        hasError={errors.gstin?.hasError}
+        {...getOverrideProps(overrides, "gstin")}
       ></TextField>
       <TextField
         label="Shipping address"
@@ -523,7 +523,7 @@ export default function VendorUpdateForm(props) {
               payable_amount,
               billing_address,
               vendor_status,
-              garin,
+              gstin,
               shipping_address: value,
             };
             const result = onChange(modelFields);

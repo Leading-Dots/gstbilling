@@ -6,18 +6,12 @@
 
 /* eslint-disable */
 import * as React from "react";
-import {
-  Button,
-  Flex,
-  Grid,
-  SelectField,
-  TextField,
-} from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { createVendor } from "../graphql/mutations";
+import { createCompany } from "../graphql/mutations";
 const client = generateClient();
-export default function VendorCreateForm(props) {
+export default function CompanyCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -29,62 +23,48 @@ export default function VendorCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    vendor_id: "",
     company_name: "",
     owner_name: "",
+    gstin: "",
+    address: "",
     email: "",
     phone: "",
-    payable_amount: "",
-    billing_address: "",
-    vendor_status: "",
-    gstin: "",
-    shipping_address: "",
+    gst_category: "",
+    adminID: "",
   };
-  const [vendor_id, setVendor_id] = React.useState(initialValues.vendor_id);
   const [company_name, setCompany_name] = React.useState(
     initialValues.company_name
   );
   const [owner_name, setOwner_name] = React.useState(initialValues.owner_name);
+  const [gstin, setGstin] = React.useState(initialValues.gstin);
+  const [address, setAddress] = React.useState(initialValues.address);
   const [email, setEmail] = React.useState(initialValues.email);
   const [phone, setPhone] = React.useState(initialValues.phone);
-  const [payable_amount, setPayable_amount] = React.useState(
-    initialValues.payable_amount
+  const [gst_category, setGst_category] = React.useState(
+    initialValues.gst_category
   );
-  const [billing_address, setBilling_address] = React.useState(
-    initialValues.billing_address
-  );
-  const [vendor_status, setVendor_status] = React.useState(
-    initialValues.vendor_status
-  );
-  const [gstin, setGstin] = React.useState(initialValues.gstin);
-  const [shipping_address, setShipping_address] = React.useState(
-    initialValues.shipping_address
-  );
+  const [adminID, setAdminID] = React.useState(initialValues.adminID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setVendor_id(initialValues.vendor_id);
     setCompany_name(initialValues.company_name);
     setOwner_name(initialValues.owner_name);
+    setGstin(initialValues.gstin);
+    setAddress(initialValues.address);
     setEmail(initialValues.email);
     setPhone(initialValues.phone);
-    setPayable_amount(initialValues.payable_amount);
-    setBilling_address(initialValues.billing_address);
-    setVendor_status(initialValues.vendor_status);
-    setGstin(initialValues.gstin);
-    setShipping_address(initialValues.shipping_address);
+    setGst_category(initialValues.gst_category);
+    setAdminID(initialValues.adminID);
     setErrors({});
   };
   const validations = {
-    vendor_id: [],
     company_name: [],
     owner_name: [],
+    gstin: [],
+    address: [],
     email: [],
     phone: [],
-    payable_amount: [],
-    billing_address: [],
-    vendor_status: [],
-    gstin: [],
-    shipping_address: [],
+    gst_category: [],
+    adminID: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -112,16 +92,14 @@ export default function VendorCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          vendor_id,
           company_name,
           owner_name,
+          gstin,
+          address,
           email,
           phone,
-          payable_amount,
-          billing_address,
-          vendor_status,
-          gstin,
-          shipping_address,
+          gst_category,
+          adminID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -152,7 +130,7 @@ export default function VendorCreateForm(props) {
             }
           });
           await client.graphql({
-            query: createVendor.replaceAll("__typename", ""),
+            query: createCompany.replaceAll("__typename", ""),
             variables: {
               input: {
                 ...modelFields,
@@ -172,42 +150,9 @@ export default function VendorCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "VendorCreateForm")}
+      {...getOverrideProps(overrides, "CompanyCreateForm")}
       {...rest}
     >
-      <TextField
-        label="Vendor id"
-        isRequired={false}
-        isReadOnly={false}
-        value={vendor_id}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              vendor_id: value,
-              company_name,
-              owner_name,
-              email,
-              phone,
-              payable_amount,
-              billing_address,
-              vendor_status,
-              gstin,
-              shipping_address,
-            };
-            const result = onChange(modelFields);
-            value = result?.vendor_id ?? value;
-          }
-          if (errors.vendor_id?.hasError) {
-            runValidationTasks("vendor_id", value);
-          }
-          setVendor_id(value);
-        }}
-        onBlur={() => runValidationTasks("vendor_id", vendor_id)}
-        errorMessage={errors.vendor_id?.errorMessage}
-        hasError={errors.vendor_id?.hasError}
-        {...getOverrideProps(overrides, "vendor_id")}
-      ></TextField>
       <TextField
         label="Company name"
         isRequired={false}
@@ -217,16 +162,14 @@ export default function VendorCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              vendor_id,
               company_name: value,
               owner_name,
+              gstin,
+              address,
               email,
               phone,
-              payable_amount,
-              billing_address,
-              vendor_status,
-              gstin,
-              shipping_address,
+              gst_category,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.company_name ?? value;
@@ -250,16 +193,14 @@ export default function VendorCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              vendor_id,
               company_name,
               owner_name: value,
+              gstin,
+              address,
               email,
               phone,
-              payable_amount,
-              billing_address,
-              vendor_status,
-              gstin,
-              shipping_address,
+              gst_category,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.owner_name ?? value;
@@ -275,6 +216,68 @@ export default function VendorCreateForm(props) {
         {...getOverrideProps(overrides, "owner_name")}
       ></TextField>
       <TextField
+        label="Gstin"
+        isRequired={false}
+        isReadOnly={false}
+        value={gstin}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              company_name,
+              owner_name,
+              gstin: value,
+              address,
+              email,
+              phone,
+              gst_category,
+              adminID,
+            };
+            const result = onChange(modelFields);
+            value = result?.gstin ?? value;
+          }
+          if (errors.gstin?.hasError) {
+            runValidationTasks("gstin", value);
+          }
+          setGstin(value);
+        }}
+        onBlur={() => runValidationTasks("gstin", gstin)}
+        errorMessage={errors.gstin?.errorMessage}
+        hasError={errors.gstin?.hasError}
+        {...getOverrideProps(overrides, "gstin")}
+      ></TextField>
+      <TextField
+        label="Address"
+        isRequired={false}
+        isReadOnly={false}
+        value={address}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              company_name,
+              owner_name,
+              gstin,
+              address: value,
+              email,
+              phone,
+              gst_category,
+              adminID,
+            };
+            const result = onChange(modelFields);
+            value = result?.address ?? value;
+          }
+          if (errors.address?.hasError) {
+            runValidationTasks("address", value);
+          }
+          setAddress(value);
+        }}
+        onBlur={() => runValidationTasks("address", address)}
+        errorMessage={errors.address?.errorMessage}
+        hasError={errors.address?.hasError}
+        {...getOverrideProps(overrides, "address")}
+      ></TextField>
+      <TextField
         label="Email"
         isRequired={false}
         isReadOnly={false}
@@ -283,16 +286,14 @@ export default function VendorCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              vendor_id,
               company_name,
               owner_name,
+              gstin,
+              address,
               email: value,
               phone,
-              payable_amount,
-              billing_address,
-              vendor_status,
-              gstin,
-              shipping_address,
+              gst_category,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -316,16 +317,14 @@ export default function VendorCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              vendor_id,
               company_name,
               owner_name,
+              gstin,
+              address,
               email,
               phone: value,
-              payable_amount,
-              billing_address,
-              vendor_status,
-              gstin,
-              shipping_address,
+              gst_category,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.phone ?? value;
@@ -341,184 +340,66 @@ export default function VendorCreateForm(props) {
         {...getOverrideProps(overrides, "phone")}
       ></TextField>
       <TextField
-        label="Payable amount"
+        label="Gst category"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
-        value={payable_amount}
+        value={gst_category}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              vendor_id,
               company_name,
               owner_name,
+              gstin,
+              address,
               email,
               phone,
-              payable_amount: value,
-              billing_address,
-              vendor_status,
-              gstin,
-              shipping_address,
+              gst_category: value,
+              adminID,
             };
             const result = onChange(modelFields);
-            value = result?.payable_amount ?? value;
+            value = result?.gst_category ?? value;
           }
-          if (errors.payable_amount?.hasError) {
-            runValidationTasks("payable_amount", value);
+          if (errors.gst_category?.hasError) {
+            runValidationTasks("gst_category", value);
           }
-          setPayable_amount(value);
+          setGst_category(value);
         }}
-        onBlur={() => runValidationTasks("payable_amount", payable_amount)}
-        errorMessage={errors.payable_amount?.errorMessage}
-        hasError={errors.payable_amount?.hasError}
-        {...getOverrideProps(overrides, "payable_amount")}
+        onBlur={() => runValidationTasks("gst_category", gst_category)}
+        errorMessage={errors.gst_category?.errorMessage}
+        hasError={errors.gst_category?.hasError}
+        {...getOverrideProps(overrides, "gst_category")}
       ></TextField>
       <TextField
-        label="Billing address"
+        label="Admin id"
         isRequired={false}
         isReadOnly={false}
-        value={billing_address}
+        value={adminID}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              vendor_id,
               company_name,
               owner_name,
-              email,
-              phone,
-              payable_amount,
-              billing_address: value,
-              vendor_status,
               gstin,
-              shipping_address,
-            };
-            const result = onChange(modelFields);
-            value = result?.billing_address ?? value;
-          }
-          if (errors.billing_address?.hasError) {
-            runValidationTasks("billing_address", value);
-          }
-          setBilling_address(value);
-        }}
-        onBlur={() => runValidationTasks("billing_address", billing_address)}
-        errorMessage={errors.billing_address?.errorMessage}
-        hasError={errors.billing_address?.hasError}
-        {...getOverrideProps(overrides, "billing_address")}
-      ></TextField>
-      <SelectField
-        label="Vendor status"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={vendor_status}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              vendor_id,
-              company_name,
-              owner_name,
+              address,
               email,
               phone,
-              payable_amount,
-              billing_address,
-              vendor_status: value,
-              gstin,
-              shipping_address,
+              gst_category,
+              adminID: value,
             };
             const result = onChange(modelFields);
-            value = result?.vendor_status ?? value;
+            value = result?.adminID ?? value;
           }
-          if (errors.vendor_status?.hasError) {
-            runValidationTasks("vendor_status", value);
+          if (errors.adminID?.hasError) {
+            runValidationTasks("adminID", value);
           }
-          setVendor_status(value);
+          setAdminID(value);
         }}
-        onBlur={() => runValidationTasks("vendor_status", vendor_status)}
-        errorMessage={errors.vendor_status?.errorMessage}
-        hasError={errors.vendor_status?.hasError}
-        {...getOverrideProps(overrides, "vendor_status")}
-      >
-        <option
-          children="Active"
-          value="ACTIVE"
-          {...getOverrideProps(overrides, "vendor_statusoption0")}
-        ></option>
-        <option
-          children="Inactive"
-          value="INACTIVE"
-          {...getOverrideProps(overrides, "vendor_statusoption1")}
-        ></option>
-      </SelectField>
-      <TextField
-        label="Gstin"
-        isRequired={false}
-        isReadOnly={false}
-        value={gstin}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              vendor_id,
-              company_name,
-              owner_name,
-              email,
-              phone,
-              payable_amount,
-              billing_address,
-              vendor_status,
-              gstin: value,
-              shipping_address,
-            };
-            const result = onChange(modelFields);
-            value = result?.gstin ?? value;
-          }
-          if (errors.gstin?.hasError) {
-            runValidationTasks("gstin", value);
-          }
-          setGstin(value);
-        }}
-        onBlur={() => runValidationTasks("gstin", gstin)}
-        errorMessage={errors.gstin?.errorMessage}
-        hasError={errors.gstin?.hasError}
-        {...getOverrideProps(overrides, "gstin")}
-      ></TextField>
-      <TextField
-        label="Shipping address"
-        isRequired={false}
-        isReadOnly={false}
-        value={shipping_address}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              vendor_id,
-              company_name,
-              owner_name,
-              email,
-              phone,
-              payable_amount,
-              billing_address,
-              vendor_status,
-              gstin,
-              shipping_address: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.shipping_address ?? value;
-          }
-          if (errors.shipping_address?.hasError) {
-            runValidationTasks("shipping_address", value);
-          }
-          setShipping_address(value);
-        }}
-        onBlur={() => runValidationTasks("shipping_address", shipping_address)}
-        errorMessage={errors.shipping_address?.errorMessage}
-        hasError={errors.shipping_address?.hasError}
-        {...getOverrideProps(overrides, "shipping_address")}
+        onBlur={() => runValidationTasks("adminID", adminID)}
+        errorMessage={errors.adminID?.errorMessage}
+        hasError={errors.adminID?.hasError}
+        {...getOverrideProps(overrides, "adminID")}
       ></TextField>
       <Flex
         justifyContent="space-between"

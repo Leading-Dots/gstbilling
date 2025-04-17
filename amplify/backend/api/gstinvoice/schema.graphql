@@ -1,3 +1,71 @@
+enum StockStatus {
+  IN_STOCK
+  OUT_OF_STOCK
+  LOW_STOCK
+}
+
+type InventoryItem @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  item_code: String
+  hsn_number: String
+  name: String
+  description: String
+  unit: String
+  tax_rate: String
+  current_stock: String
+  stock_status: StockStatus
+  category: String
+  brand: String
+  cgst: String
+  sgst: String
+  igst: String
+  companyID: ID! @index(name: "byCompany")
+}
+
+type CompanyEmployee @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  adminID: ID! @index(name: "byAdmin")
+  companyID: ID! @index(name: "byCompany")
+  email: String
+  userID: String
+  profile_status: ProfileStatus
+}
+
+type SubscriptionPlan @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  title: String
+  description: String
+  cost: String
+  users: Int
+  isPaid: Boolean
+}
+
+type Admin @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  email: String
+  phone: String
+  subscriptionPlanID: String
+  CompanyEmployees: [CompanyEmployee] @hasMany(indexName: "byAdmin", fields: ["id"])
+  company_id: String
+  userID: String
+}
+
+type Company @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  company_name: String
+  owner_name: String
+  gstin: String
+  address: String
+  email: String
+  phone: String
+  gst_category: String
+  adminID: String
+  CompanyEmployees: [CompanyEmployee] @hasMany(indexName: "byCompany", fields: ["id"])
+  InventoryItems: [InventoryItem] @hasMany(indexName: "byCompany", fields: ["id"])
+}
+
 enum QuotationStatus {
   SENT
   DRAFT
@@ -28,7 +96,7 @@ type Vendor @model @auth(rules: [{allow: public}]) {
   payable_amount: Float
   billing_address: String
   vendor_status: ProfileStatus
-  garin: String
+  gstin: String
   shipping_address: String
 }
 

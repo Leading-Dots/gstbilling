@@ -2,40 +2,49 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateVendorInput = {
+export type CreateInventoryItemInput = {
   id?: string | null,
-  vendor_id?: string | null,
-  company_name?: string | null,
-  owner_name?: string | null,
-  email?: string | null,
-  phone?: string | null,
-  payable_amount?: number | null,
-  billing_address?: string | null,
-  vendor_status?: ProfileStatus | null,
-  garin?: string | null,
-  shipping_address?: string | null,
+  item_code?: string | null,
+  hsn_number?: string | null,
+  name?: string | null,
+  description?: string | null,
+  unit?: string | null,
+  tax_rate?: string | null,
+  current_stock?: string | null,
+  stock_status?: StockStatus | null,
+  category?: string | null,
+  brand?: string | null,
+  cgst?: string | null,
+  sgst?: string | null,
+  igst?: string | null,
+  companyID: string,
 };
 
-export enum ProfileStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
+export enum StockStatus {
+  IN_STOCK = "IN_STOCK",
+  OUT_OF_STOCK = "OUT_OF_STOCK",
+  LOW_STOCK = "LOW_STOCK",
 }
 
 
-export type ModelVendorConditionInput = {
-  vendor_id?: ModelStringInput | null,
-  company_name?: ModelStringInput | null,
-  owner_name?: ModelStringInput | null,
-  email?: ModelStringInput | null,
-  phone?: ModelStringInput | null,
-  payable_amount?: ModelFloatInput | null,
-  billing_address?: ModelStringInput | null,
-  vendor_status?: ModelProfileStatusInput | null,
-  garin?: ModelStringInput | null,
-  shipping_address?: ModelStringInput | null,
-  and?: Array< ModelVendorConditionInput | null > | null,
-  or?: Array< ModelVendorConditionInput | null > | null,
-  not?: ModelVendorConditionInput | null,
+export type ModelInventoryItemConditionInput = {
+  item_code?: ModelStringInput | null,
+  hsn_number?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  unit?: ModelStringInput | null,
+  tax_rate?: ModelStringInput | null,
+  current_stock?: ModelStringInput | null,
+  stock_status?: ModelStockStatusInput | null,
+  category?: ModelStringInput | null,
+  brand?: ModelStringInput | null,
+  cgst?: ModelStringInput | null,
+  sgst?: ModelStringInput | null,
+  igst?: ModelStringInput | null,
+  companyID?: ModelIDInput | null,
+  and?: Array< ModelInventoryItemConditionInput | null > | null,
+  or?: Array< ModelInventoryItemConditionInput | null > | null,
+  not?: ModelInventoryItemConditionInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
 };
@@ -80,7 +89,155 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type ModelFloatInput = {
+export type ModelStockStatusInput = {
+  eq?: StockStatus | null,
+  ne?: StockStatus | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type InventoryItem = {
+  __typename: "InventoryItem",
+  id: string,
+  item_code?: string | null,
+  hsn_number?: string | null,
+  name?: string | null,
+  description?: string | null,
+  unit?: string | null,
+  tax_rate?: string | null,
+  current_stock?: string | null,
+  stock_status?: StockStatus | null,
+  category?: string | null,
+  brand?: string | null,
+  cgst?: string | null,
+  sgst?: string | null,
+  igst?: string | null,
+  companyID: string,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateInventoryItemInput = {
+  id: string,
+  item_code?: string | null,
+  hsn_number?: string | null,
+  name?: string | null,
+  description?: string | null,
+  unit?: string | null,
+  tax_rate?: string | null,
+  current_stock?: string | null,
+  stock_status?: StockStatus | null,
+  category?: string | null,
+  brand?: string | null,
+  cgst?: string | null,
+  sgst?: string | null,
+  igst?: string | null,
+  companyID?: string | null,
+};
+
+export type DeleteInventoryItemInput = {
+  id: string,
+};
+
+export type CreateCompanyEmployeeInput = {
+  id?: string | null,
+  name?: string | null,
+  adminID: string,
+  companyID: string,
+  email?: string | null,
+  userID?: string | null,
+  profile_status?: ProfileStatus | null,
+};
+
+export enum ProfileStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}
+
+
+export type ModelCompanyEmployeeConditionInput = {
+  name?: ModelStringInput | null,
+  adminID?: ModelIDInput | null,
+  companyID?: ModelIDInput | null,
+  email?: ModelStringInput | null,
+  userID?: ModelStringInput | null,
+  profile_status?: ModelProfileStatusInput | null,
+  and?: Array< ModelCompanyEmployeeConditionInput | null > | null,
+  or?: Array< ModelCompanyEmployeeConditionInput | null > | null,
+  not?: ModelCompanyEmployeeConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type ModelProfileStatusInput = {
+  eq?: ProfileStatus | null,
+  ne?: ProfileStatus | null,
+};
+
+export type CompanyEmployee = {
+  __typename: "CompanyEmployee",
+  id: string,
+  name?: string | null,
+  adminID: string,
+  companyID: string,
+  email?: string | null,
+  userID?: string | null,
+  profile_status?: ProfileStatus | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateCompanyEmployeeInput = {
+  id: string,
+  name?: string | null,
+  adminID?: string | null,
+  companyID?: string | null,
+  email?: string | null,
+  userID?: string | null,
+  profile_status?: ProfileStatus | null,
+};
+
+export type DeleteCompanyEmployeeInput = {
+  id: string,
+};
+
+export type CreateSubscriptionPlanInput = {
+  id?: string | null,
+  title?: string | null,
+  description?: string | null,
+  cost?: string | null,
+  users?: number | null,
+  isPaid?: boolean | null,
+};
+
+export type ModelSubscriptionPlanConditionInput = {
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  cost?: ModelStringInput | null,
+  users?: ModelIntInput | null,
+  isPaid?: ModelBooleanInput | null,
+  and?: Array< ModelSubscriptionPlanConditionInput | null > | null,
+  or?: Array< ModelSubscriptionPlanConditionInput | null > | null,
+  not?: ModelSubscriptionPlanConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type ModelIntInput = {
   ne?: number | null,
   eq?: number | null,
   le?: number | null,
@@ -92,9 +249,205 @@ export type ModelFloatInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type ModelProfileStatusInput = {
-  eq?: ProfileStatus | null,
-  ne?: ProfileStatus | null,
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type SubscriptionPlan = {
+  __typename: "SubscriptionPlan",
+  id: string,
+  title?: string | null,
+  description?: string | null,
+  cost?: string | null,
+  users?: number | null,
+  isPaid?: boolean | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateSubscriptionPlanInput = {
+  id: string,
+  title?: string | null,
+  description?: string | null,
+  cost?: string | null,
+  users?: number | null,
+  isPaid?: boolean | null,
+};
+
+export type DeleteSubscriptionPlanInput = {
+  id: string,
+};
+
+export type CreateAdminInput = {
+  id?: string | null,
+  name?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  subscriptionPlanID?: string | null,
+  company_id?: string | null,
+  userID?: string | null,
+};
+
+export type ModelAdminConditionInput = {
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  subscriptionPlanID?: ModelStringInput | null,
+  company_id?: ModelStringInput | null,
+  userID?: ModelStringInput | null,
+  and?: Array< ModelAdminConditionInput | null > | null,
+  or?: Array< ModelAdminConditionInput | null > | null,
+  not?: ModelAdminConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type Admin = {
+  __typename: "Admin",
+  id: string,
+  name?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  subscriptionPlanID?: string | null,
+  CompanyEmployees?: ModelCompanyEmployeeConnection | null,
+  company_id?: string | null,
+  userID?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelCompanyEmployeeConnection = {
+  __typename: "ModelCompanyEmployeeConnection",
+  items:  Array<CompanyEmployee | null >,
+  nextToken?: string | null,
+};
+
+export type UpdateAdminInput = {
+  id: string,
+  name?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  subscriptionPlanID?: string | null,
+  company_id?: string | null,
+  userID?: string | null,
+};
+
+export type DeleteAdminInput = {
+  id: string,
+};
+
+export type CreateCompanyInput = {
+  id?: string | null,
+  company_name?: string | null,
+  owner_name?: string | null,
+  gstin?: string | null,
+  address?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  gst_category?: string | null,
+  adminID?: string | null,
+};
+
+export type ModelCompanyConditionInput = {
+  company_name?: ModelStringInput | null,
+  owner_name?: ModelStringInput | null,
+  gstin?: ModelStringInput | null,
+  address?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  gst_category?: ModelStringInput | null,
+  adminID?: ModelStringInput | null,
+  and?: Array< ModelCompanyConditionInput | null > | null,
+  or?: Array< ModelCompanyConditionInput | null > | null,
+  not?: ModelCompanyConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type Company = {
+  __typename: "Company",
+  id: string,
+  company_name?: string | null,
+  owner_name?: string | null,
+  gstin?: string | null,
+  address?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  gst_category?: string | null,
+  adminID?: string | null,
+  CompanyEmployees?: ModelCompanyEmployeeConnection | null,
+  InventoryItems?: ModelInventoryItemConnection | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type ModelInventoryItemConnection = {
+  __typename: "ModelInventoryItemConnection",
+  items:  Array<InventoryItem | null >,
+  nextToken?: string | null,
+};
+
+export type UpdateCompanyInput = {
+  id: string,
+  company_name?: string | null,
+  owner_name?: string | null,
+  gstin?: string | null,
+  address?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  gst_category?: string | null,
+  adminID?: string | null,
+};
+
+export type DeleteCompanyInput = {
+  id: string,
+};
+
+export type CreateVendorInput = {
+  id?: string | null,
+  vendor_id?: string | null,
+  company_name?: string | null,
+  owner_name?: string | null,
+  email?: string | null,
+  phone?: string | null,
+  payable_amount?: number | null,
+  billing_address?: string | null,
+  vendor_status?: ProfileStatus | null,
+  gstin?: string | null,
+  shipping_address?: string | null,
+};
+
+export type ModelVendorConditionInput = {
+  vendor_id?: ModelStringInput | null,
+  company_name?: ModelStringInput | null,
+  owner_name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  payable_amount?: ModelFloatInput | null,
+  billing_address?: ModelStringInput | null,
+  vendor_status?: ModelProfileStatusInput | null,
+  gstin?: ModelStringInput | null,
+  shipping_address?: ModelStringInput | null,
+  and?: Array< ModelVendorConditionInput | null > | null,
+  or?: Array< ModelVendorConditionInput | null > | null,
+  not?: ModelVendorConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type ModelFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type Vendor = {
@@ -108,7 +461,7 @@ export type Vendor = {
   payable_amount?: number | null,
   billing_address?: string | null,
   vendor_status?: ProfileStatus | null,
-  garin?: string | null,
+  gstin?: string | null,
   shipping_address?: string | null,
   createdAt: string,
   updatedAt: string,
@@ -124,7 +477,7 @@ export type UpdateVendorInput = {
   payable_amount?: number | null,
   billing_address?: string | null,
   vendor_status?: ProfileStatus | null,
-  garin?: string | null,
+  gstin?: string | null,
   shipping_address?: string | null,
 };
 
@@ -389,22 +742,6 @@ export type ModelQuotationStatusInput = {
   ne?: QuotationStatus | null,
 };
 
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
 export type UpdateQuotationInput = {
   id: string,
   quotation_id?: string | null,
@@ -534,6 +871,114 @@ export type DeleteInvoiceInput = {
   id: string,
 };
 
+export type ModelInventoryItemFilterInput = {
+  id?: ModelIDInput | null,
+  item_code?: ModelStringInput | null,
+  hsn_number?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  unit?: ModelStringInput | null,
+  tax_rate?: ModelStringInput | null,
+  current_stock?: ModelStringInput | null,
+  stock_status?: ModelStockStatusInput | null,
+  category?: ModelStringInput | null,
+  brand?: ModelStringInput | null,
+  cgst?: ModelStringInput | null,
+  sgst?: ModelStringInput | null,
+  igst?: ModelStringInput | null,
+  companyID?: ModelIDInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelInventoryItemFilterInput | null > | null,
+  or?: Array< ModelInventoryItemFilterInput | null > | null,
+  not?: ModelInventoryItemFilterInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
+export type ModelCompanyEmployeeFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  adminID?: ModelIDInput | null,
+  companyID?: ModelIDInput | null,
+  email?: ModelStringInput | null,
+  userID?: ModelStringInput | null,
+  profile_status?: ModelProfileStatusInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelCompanyEmployeeFilterInput | null > | null,
+  or?: Array< ModelCompanyEmployeeFilterInput | null > | null,
+  not?: ModelCompanyEmployeeFilterInput | null,
+};
+
+export type ModelSubscriptionPlanFilterInput = {
+  id?: ModelIDInput | null,
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  cost?: ModelStringInput | null,
+  users?: ModelIntInput | null,
+  isPaid?: ModelBooleanInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelSubscriptionPlanFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPlanFilterInput | null > | null,
+  not?: ModelSubscriptionPlanFilterInput | null,
+};
+
+export type ModelSubscriptionPlanConnection = {
+  __typename: "ModelSubscriptionPlanConnection",
+  items:  Array<SubscriptionPlan | null >,
+  nextToken?: string | null,
+};
+
+export type ModelAdminFilterInput = {
+  id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  subscriptionPlanID?: ModelStringInput | null,
+  company_id?: ModelStringInput | null,
+  userID?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelAdminFilterInput | null > | null,
+  or?: Array< ModelAdminFilterInput | null > | null,
+  not?: ModelAdminFilterInput | null,
+};
+
+export type ModelAdminConnection = {
+  __typename: "ModelAdminConnection",
+  items:  Array<Admin | null >,
+  nextToken?: string | null,
+};
+
+export type ModelCompanyFilterInput = {
+  id?: ModelIDInput | null,
+  company_name?: ModelStringInput | null,
+  owner_name?: ModelStringInput | null,
+  gstin?: ModelStringInput | null,
+  address?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  phone?: ModelStringInput | null,
+  gst_category?: ModelStringInput | null,
+  adminID?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelCompanyFilterInput | null > | null,
+  or?: Array< ModelCompanyFilterInput | null > | null,
+  not?: ModelCompanyFilterInput | null,
+};
+
+export type ModelCompanyConnection = {
+  __typename: "ModelCompanyConnection",
+  items:  Array<Company | null >,
+  nextToken?: string | null,
+};
+
 export type ModelVendorFilterInput = {
   id?: ModelIDInput | null,
   vendor_id?: ModelStringInput | null,
@@ -544,7 +989,7 @@ export type ModelVendorFilterInput = {
   payable_amount?: ModelFloatInput | null,
   billing_address?: ModelStringInput | null,
   vendor_status?: ModelProfileStatusInput | null,
-  garin?: ModelStringInput | null,
+  gstin?: ModelStringInput | null,
   shipping_address?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
@@ -625,12 +1070,6 @@ export type ModelQuotationFilterInput = {
   not?: ModelQuotationFilterInput | null,
 };
 
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
 export type ModelInvoiceFilterInput = {
   id?: ModelIDInput | null,
   invoice_id?: ModelStringInput | null,
@@ -664,22 +1103,26 @@ export type ModelInvoiceFilterInput = {
   not?: ModelInvoiceFilterInput | null,
 };
 
-export type ModelSubscriptionVendorFilterInput = {
+export type ModelSubscriptionInventoryItemFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  vendor_id?: ModelSubscriptionStringInput | null,
-  company_name?: ModelSubscriptionStringInput | null,
-  owner_name?: ModelSubscriptionStringInput | null,
-  email?: ModelSubscriptionStringInput | null,
-  phone?: ModelSubscriptionStringInput | null,
-  payable_amount?: ModelSubscriptionFloatInput | null,
-  billing_address?: ModelSubscriptionStringInput | null,
-  vendor_status?: ModelSubscriptionStringInput | null,
-  garin?: ModelSubscriptionStringInput | null,
-  shipping_address?: ModelSubscriptionStringInput | null,
+  item_code?: ModelSubscriptionStringInput | null,
+  hsn_number?: ModelSubscriptionStringInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  unit?: ModelSubscriptionStringInput | null,
+  tax_rate?: ModelSubscriptionStringInput | null,
+  current_stock?: ModelSubscriptionStringInput | null,
+  stock_status?: ModelSubscriptionStringInput | null,
+  category?: ModelSubscriptionStringInput | null,
+  brand?: ModelSubscriptionStringInput | null,
+  cgst?: ModelSubscriptionStringInput | null,
+  sgst?: ModelSubscriptionStringInput | null,
+  igst?: ModelSubscriptionStringInput | null,
+  companyID?: ModelSubscriptionIDInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionVendorFilterInput | null > | null,
-  or?: Array< ModelSubscriptionVendorFilterInput | null > | null,
+  and?: Array< ModelSubscriptionInventoryItemFilterInput | null > | null,
+  or?: Array< ModelSubscriptionInventoryItemFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -710,6 +1153,98 @@ export type ModelSubscriptionStringInput = {
   beginsWith?: string | null,
   in?: Array< string | null > | null,
   notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionCompanyEmployeeFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  adminID?: ModelSubscriptionIDInput | null,
+  companyID?: ModelSubscriptionIDInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  userID?: ModelSubscriptionStringInput | null,
+  profile_status?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionCompanyEmployeeFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCompanyEmployeeFilterInput | null > | null,
+};
+
+export type ModelSubscriptionSubscriptionPlanFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  cost?: ModelSubscriptionStringInput | null,
+  users?: ModelSubscriptionIntInput | null,
+  isPaid?: ModelSubscriptionBooleanInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionSubscriptionPlanFilterInput | null > | null,
+  or?: Array< ModelSubscriptionSubscriptionPlanFilterInput | null > | null,
+};
+
+export type ModelSubscriptionIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  in?: Array< number | null > | null,
+  notIn?: Array< number | null > | null,
+};
+
+export type ModelSubscriptionBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+};
+
+export type ModelSubscriptionAdminFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  phone?: ModelSubscriptionStringInput | null,
+  subscriptionPlanID?: ModelSubscriptionStringInput | null,
+  company_id?: ModelSubscriptionStringInput | null,
+  userID?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionAdminFilterInput | null > | null,
+  or?: Array< ModelSubscriptionAdminFilterInput | null > | null,
+};
+
+export type ModelSubscriptionCompanyFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  company_name?: ModelSubscriptionStringInput | null,
+  owner_name?: ModelSubscriptionStringInput | null,
+  gstin?: ModelSubscriptionStringInput | null,
+  address?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  phone?: ModelSubscriptionStringInput | null,
+  gst_category?: ModelSubscriptionStringInput | null,
+  adminID?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionCompanyFilterInput | null > | null,
+  or?: Array< ModelSubscriptionCompanyFilterInput | null > | null,
+};
+
+export type ModelSubscriptionVendorFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  vendor_id?: ModelSubscriptionStringInput | null,
+  company_name?: ModelSubscriptionStringInput | null,
+  owner_name?: ModelSubscriptionStringInput | null,
+  email?: ModelSubscriptionStringInput | null,
+  phone?: ModelSubscriptionStringInput | null,
+  payable_amount?: ModelSubscriptionFloatInput | null,
+  billing_address?: ModelSubscriptionStringInput | null,
+  vendor_status?: ModelSubscriptionStringInput | null,
+  gstin?: ModelSubscriptionStringInput | null,
+  shipping_address?: ModelSubscriptionStringInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionVendorFilterInput | null > | null,
+  or?: Array< ModelSubscriptionVendorFilterInput | null > | null,
 };
 
 export type ModelSubscriptionFloatInput = {
@@ -814,6 +1349,369 @@ export type ModelSubscriptionInvoiceFilterInput = {
   or?: Array< ModelSubscriptionInvoiceFilterInput | null > | null,
 };
 
+export type CreateInventoryItemMutationVariables = {
+  input: CreateInventoryItemInput,
+  condition?: ModelInventoryItemConditionInput | null,
+};
+
+export type CreateInventoryItemMutation = {
+  createInventoryItem?:  {
+    __typename: "InventoryItem",
+    id: string,
+    item_code?: string | null,
+    hsn_number?: string | null,
+    name?: string | null,
+    description?: string | null,
+    unit?: string | null,
+    tax_rate?: string | null,
+    current_stock?: string | null,
+    stock_status?: StockStatus | null,
+    category?: string | null,
+    brand?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    companyID: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateInventoryItemMutationVariables = {
+  input: UpdateInventoryItemInput,
+  condition?: ModelInventoryItemConditionInput | null,
+};
+
+export type UpdateInventoryItemMutation = {
+  updateInventoryItem?:  {
+    __typename: "InventoryItem",
+    id: string,
+    item_code?: string | null,
+    hsn_number?: string | null,
+    name?: string | null,
+    description?: string | null,
+    unit?: string | null,
+    tax_rate?: string | null,
+    current_stock?: string | null,
+    stock_status?: StockStatus | null,
+    category?: string | null,
+    brand?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    companyID: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteInventoryItemMutationVariables = {
+  input: DeleteInventoryItemInput,
+  condition?: ModelInventoryItemConditionInput | null,
+};
+
+export type DeleteInventoryItemMutation = {
+  deleteInventoryItem?:  {
+    __typename: "InventoryItem",
+    id: string,
+    item_code?: string | null,
+    hsn_number?: string | null,
+    name?: string | null,
+    description?: string | null,
+    unit?: string | null,
+    tax_rate?: string | null,
+    current_stock?: string | null,
+    stock_status?: StockStatus | null,
+    category?: string | null,
+    brand?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    companyID: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateCompanyEmployeeMutationVariables = {
+  input: CreateCompanyEmployeeInput,
+  condition?: ModelCompanyEmployeeConditionInput | null,
+};
+
+export type CreateCompanyEmployeeMutation = {
+  createCompanyEmployee?:  {
+    __typename: "CompanyEmployee",
+    id: string,
+    name?: string | null,
+    adminID: string,
+    companyID: string,
+    email?: string | null,
+    userID?: string | null,
+    profile_status?: ProfileStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCompanyEmployeeMutationVariables = {
+  input: UpdateCompanyEmployeeInput,
+  condition?: ModelCompanyEmployeeConditionInput | null,
+};
+
+export type UpdateCompanyEmployeeMutation = {
+  updateCompanyEmployee?:  {
+    __typename: "CompanyEmployee",
+    id: string,
+    name?: string | null,
+    adminID: string,
+    companyID: string,
+    email?: string | null,
+    userID?: string | null,
+    profile_status?: ProfileStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCompanyEmployeeMutationVariables = {
+  input: DeleteCompanyEmployeeInput,
+  condition?: ModelCompanyEmployeeConditionInput | null,
+};
+
+export type DeleteCompanyEmployeeMutation = {
+  deleteCompanyEmployee?:  {
+    __typename: "CompanyEmployee",
+    id: string,
+    name?: string | null,
+    adminID: string,
+    companyID: string,
+    email?: string | null,
+    userID?: string | null,
+    profile_status?: ProfileStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateSubscriptionPlanMutationVariables = {
+  input: CreateSubscriptionPlanInput,
+  condition?: ModelSubscriptionPlanConditionInput | null,
+};
+
+export type CreateSubscriptionPlanMutation = {
+  createSubscriptionPlan?:  {
+    __typename: "SubscriptionPlan",
+    id: string,
+    title?: string | null,
+    description?: string | null,
+    cost?: string | null,
+    users?: number | null,
+    isPaid?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateSubscriptionPlanMutationVariables = {
+  input: UpdateSubscriptionPlanInput,
+  condition?: ModelSubscriptionPlanConditionInput | null,
+};
+
+export type UpdateSubscriptionPlanMutation = {
+  updateSubscriptionPlan?:  {
+    __typename: "SubscriptionPlan",
+    id: string,
+    title?: string | null,
+    description?: string | null,
+    cost?: string | null,
+    users?: number | null,
+    isPaid?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteSubscriptionPlanMutationVariables = {
+  input: DeleteSubscriptionPlanInput,
+  condition?: ModelSubscriptionPlanConditionInput | null,
+};
+
+export type DeleteSubscriptionPlanMutation = {
+  deleteSubscriptionPlan?:  {
+    __typename: "SubscriptionPlan",
+    id: string,
+    title?: string | null,
+    description?: string | null,
+    cost?: string | null,
+    users?: number | null,
+    isPaid?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateAdminMutationVariables = {
+  input: CreateAdminInput,
+  condition?: ModelAdminConditionInput | null,
+};
+
+export type CreateAdminMutation = {
+  createAdmin?:  {
+    __typename: "Admin",
+    id: string,
+    name?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    subscriptionPlanID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    company_id?: string | null,
+    userID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAdminMutationVariables = {
+  input: UpdateAdminInput,
+  condition?: ModelAdminConditionInput | null,
+};
+
+export type UpdateAdminMutation = {
+  updateAdmin?:  {
+    __typename: "Admin",
+    id: string,
+    name?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    subscriptionPlanID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    company_id?: string | null,
+    userID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAdminMutationVariables = {
+  input: DeleteAdminInput,
+  condition?: ModelAdminConditionInput | null,
+};
+
+export type DeleteAdminMutation = {
+  deleteAdmin?:  {
+    __typename: "Admin",
+    id: string,
+    name?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    subscriptionPlanID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    company_id?: string | null,
+    userID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateCompanyMutationVariables = {
+  input: CreateCompanyInput,
+  condition?: ModelCompanyConditionInput | null,
+};
+
+export type CreateCompanyMutation = {
+  createCompany?:  {
+    __typename: "Company",
+    id: string,
+    company_name?: string | null,
+    owner_name?: string | null,
+    gstin?: string | null,
+    address?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    gst_category?: string | null,
+    adminID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    InventoryItems?:  {
+      __typename: "ModelInventoryItemConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateCompanyMutationVariables = {
+  input: UpdateCompanyInput,
+  condition?: ModelCompanyConditionInput | null,
+};
+
+export type UpdateCompanyMutation = {
+  updateCompany?:  {
+    __typename: "Company",
+    id: string,
+    company_name?: string | null,
+    owner_name?: string | null,
+    gstin?: string | null,
+    address?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    gst_category?: string | null,
+    adminID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    InventoryItems?:  {
+      __typename: "ModelInventoryItemConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteCompanyMutationVariables = {
+  input: DeleteCompanyInput,
+  condition?: ModelCompanyConditionInput | null,
+};
+
+export type DeleteCompanyMutation = {
+  deleteCompany?:  {
+    __typename: "Company",
+    id: string,
+    company_name?: string | null,
+    owner_name?: string | null,
+    gstin?: string | null,
+    address?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    gst_category?: string | null,
+    adminID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    InventoryItems?:  {
+      __typename: "ModelInventoryItemConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateVendorMutationVariables = {
   input: CreateVendorInput,
   condition?: ModelVendorConditionInput | null,
@@ -831,7 +1729,7 @@ export type CreateVendorMutation = {
     payable_amount?: number | null,
     billing_address?: string | null,
     vendor_status?: ProfileStatus | null,
-    garin?: string | null,
+    gstin?: string | null,
     shipping_address?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -855,7 +1753,7 @@ export type UpdateVendorMutation = {
     payable_amount?: number | null,
     billing_address?: string | null,
     vendor_status?: ProfileStatus | null,
-    garin?: string | null,
+    gstin?: string | null,
     shipping_address?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -879,7 +1777,7 @@ export type DeleteVendorMutation = {
     payable_amount?: number | null,
     billing_address?: string | null,
     vendor_status?: ProfileStatus | null,
-    garin?: string | null,
+    gstin?: string | null,
     shipping_address?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1234,6 +2132,345 @@ export type DeleteInvoiceMutation = {
   } | null,
 };
 
+export type GetInventoryItemQueryVariables = {
+  id: string,
+};
+
+export type GetInventoryItemQuery = {
+  getInventoryItem?:  {
+    __typename: "InventoryItem",
+    id: string,
+    item_code?: string | null,
+    hsn_number?: string | null,
+    name?: string | null,
+    description?: string | null,
+    unit?: string | null,
+    tax_rate?: string | null,
+    current_stock?: string | null,
+    stock_status?: StockStatus | null,
+    category?: string | null,
+    brand?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    companyID: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListInventoryItemsQueryVariables = {
+  filter?: ModelInventoryItemFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListInventoryItemsQuery = {
+  listInventoryItems?:  {
+    __typename: "ModelInventoryItemConnection",
+    items:  Array< {
+      __typename: "InventoryItem",
+      id: string,
+      item_code?: string | null,
+      hsn_number?: string | null,
+      name?: string | null,
+      description?: string | null,
+      unit?: string | null,
+      tax_rate?: string | null,
+      current_stock?: string | null,
+      stock_status?: StockStatus | null,
+      category?: string | null,
+      brand?: string | null,
+      cgst?: string | null,
+      sgst?: string | null,
+      igst?: string | null,
+      companyID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type InventoryItemsByCompanyIDQueryVariables = {
+  companyID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelInventoryItemFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type InventoryItemsByCompanyIDQuery = {
+  inventoryItemsByCompanyID?:  {
+    __typename: "ModelInventoryItemConnection",
+    items:  Array< {
+      __typename: "InventoryItem",
+      id: string,
+      item_code?: string | null,
+      hsn_number?: string | null,
+      name?: string | null,
+      description?: string | null,
+      unit?: string | null,
+      tax_rate?: string | null,
+      current_stock?: string | null,
+      stock_status?: StockStatus | null,
+      category?: string | null,
+      brand?: string | null,
+      cgst?: string | null,
+      sgst?: string | null,
+      igst?: string | null,
+      companyID: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetCompanyEmployeeQueryVariables = {
+  id: string,
+};
+
+export type GetCompanyEmployeeQuery = {
+  getCompanyEmployee?:  {
+    __typename: "CompanyEmployee",
+    id: string,
+    name?: string | null,
+    adminID: string,
+    companyID: string,
+    email?: string | null,
+    userID?: string | null,
+    profile_status?: ProfileStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCompanyEmployeesQueryVariables = {
+  filter?: ModelCompanyEmployeeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCompanyEmployeesQuery = {
+  listCompanyEmployees?:  {
+    __typename: "ModelCompanyEmployeeConnection",
+    items:  Array< {
+      __typename: "CompanyEmployee",
+      id: string,
+      name?: string | null,
+      adminID: string,
+      companyID: string,
+      email?: string | null,
+      userID?: string | null,
+      profile_status?: ProfileStatus | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type CompanyEmployeesByAdminIDQueryVariables = {
+  adminID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelCompanyEmployeeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type CompanyEmployeesByAdminIDQuery = {
+  companyEmployeesByAdminID?:  {
+    __typename: "ModelCompanyEmployeeConnection",
+    items:  Array< {
+      __typename: "CompanyEmployee",
+      id: string,
+      name?: string | null,
+      adminID: string,
+      companyID: string,
+      email?: string | null,
+      userID?: string | null,
+      profile_status?: ProfileStatus | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type CompanyEmployeesByCompanyIDQueryVariables = {
+  companyID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelCompanyEmployeeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type CompanyEmployeesByCompanyIDQuery = {
+  companyEmployeesByCompanyID?:  {
+    __typename: "ModelCompanyEmployeeConnection",
+    items:  Array< {
+      __typename: "CompanyEmployee",
+      id: string,
+      name?: string | null,
+      adminID: string,
+      companyID: string,
+      email?: string | null,
+      userID?: string | null,
+      profile_status?: ProfileStatus | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetSubscriptionPlanQueryVariables = {
+  id: string,
+};
+
+export type GetSubscriptionPlanQuery = {
+  getSubscriptionPlan?:  {
+    __typename: "SubscriptionPlan",
+    id: string,
+    title?: string | null,
+    description?: string | null,
+    cost?: string | null,
+    users?: number | null,
+    isPaid?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListSubscriptionPlansQueryVariables = {
+  filter?: ModelSubscriptionPlanFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListSubscriptionPlansQuery = {
+  listSubscriptionPlans?:  {
+    __typename: "ModelSubscriptionPlanConnection",
+    items:  Array< {
+      __typename: "SubscriptionPlan",
+      id: string,
+      title?: string | null,
+      description?: string | null,
+      cost?: string | null,
+      users?: number | null,
+      isPaid?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetAdminQueryVariables = {
+  id: string,
+};
+
+export type GetAdminQuery = {
+  getAdmin?:  {
+    __typename: "Admin",
+    id: string,
+    name?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    subscriptionPlanID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    company_id?: string | null,
+    userID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAdminsQueryVariables = {
+  filter?: ModelAdminFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAdminsQuery = {
+  listAdmins?:  {
+    __typename: "ModelAdminConnection",
+    items:  Array< {
+      __typename: "Admin",
+      id: string,
+      name?: string | null,
+      email?: string | null,
+      phone?: string | null,
+      subscriptionPlanID?: string | null,
+      company_id?: string | null,
+      userID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetCompanyQueryVariables = {
+  id: string,
+};
+
+export type GetCompanyQuery = {
+  getCompany?:  {
+    __typename: "Company",
+    id: string,
+    company_name?: string | null,
+    owner_name?: string | null,
+    gstin?: string | null,
+    address?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    gst_category?: string | null,
+    adminID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    InventoryItems?:  {
+      __typename: "ModelInventoryItemConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListCompaniesQueryVariables = {
+  filter?: ModelCompanyFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListCompaniesQuery = {
+  listCompanies?:  {
+    __typename: "ModelCompanyConnection",
+    items:  Array< {
+      __typename: "Company",
+      id: string,
+      company_name?: string | null,
+      owner_name?: string | null,
+      gstin?: string | null,
+      address?: string | null,
+      email?: string | null,
+      phone?: string | null,
+      gst_category?: string | null,
+      adminID?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
 export type GetVendorQueryVariables = {
   id: string,
 };
@@ -1250,7 +2487,7 @@ export type GetVendorQuery = {
     payable_amount?: number | null,
     billing_address?: string | null,
     vendor_status?: ProfileStatus | null,
-    garin?: string | null,
+    gstin?: string | null,
     shipping_address?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1277,7 +2514,7 @@ export type ListVendorsQuery = {
       payable_amount?: number | null,
       billing_address?: string | null,
       vendor_status?: ProfileStatus | null,
-      garin?: string | null,
+      gstin?: string | null,
       shipping_address?: string | null,
       createdAt: string,
       updatedAt: string,
@@ -1612,6 +2849,354 @@ export type InvoicesByCustomerIDQuery = {
   } | null,
 };
 
+export type OnCreateInventoryItemSubscriptionVariables = {
+  filter?: ModelSubscriptionInventoryItemFilterInput | null,
+};
+
+export type OnCreateInventoryItemSubscription = {
+  onCreateInventoryItem?:  {
+    __typename: "InventoryItem",
+    id: string,
+    item_code?: string | null,
+    hsn_number?: string | null,
+    name?: string | null,
+    description?: string | null,
+    unit?: string | null,
+    tax_rate?: string | null,
+    current_stock?: string | null,
+    stock_status?: StockStatus | null,
+    category?: string | null,
+    brand?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    companyID: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateInventoryItemSubscriptionVariables = {
+  filter?: ModelSubscriptionInventoryItemFilterInput | null,
+};
+
+export type OnUpdateInventoryItemSubscription = {
+  onUpdateInventoryItem?:  {
+    __typename: "InventoryItem",
+    id: string,
+    item_code?: string | null,
+    hsn_number?: string | null,
+    name?: string | null,
+    description?: string | null,
+    unit?: string | null,
+    tax_rate?: string | null,
+    current_stock?: string | null,
+    stock_status?: StockStatus | null,
+    category?: string | null,
+    brand?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    companyID: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteInventoryItemSubscriptionVariables = {
+  filter?: ModelSubscriptionInventoryItemFilterInput | null,
+};
+
+export type OnDeleteInventoryItemSubscription = {
+  onDeleteInventoryItem?:  {
+    __typename: "InventoryItem",
+    id: string,
+    item_code?: string | null,
+    hsn_number?: string | null,
+    name?: string | null,
+    description?: string | null,
+    unit?: string | null,
+    tax_rate?: string | null,
+    current_stock?: string | null,
+    stock_status?: StockStatus | null,
+    category?: string | null,
+    brand?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    companyID: string,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateCompanyEmployeeSubscriptionVariables = {
+  filter?: ModelSubscriptionCompanyEmployeeFilterInput | null,
+};
+
+export type OnCreateCompanyEmployeeSubscription = {
+  onCreateCompanyEmployee?:  {
+    __typename: "CompanyEmployee",
+    id: string,
+    name?: string | null,
+    adminID: string,
+    companyID: string,
+    email?: string | null,
+    userID?: string | null,
+    profile_status?: ProfileStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCompanyEmployeeSubscriptionVariables = {
+  filter?: ModelSubscriptionCompanyEmployeeFilterInput | null,
+};
+
+export type OnUpdateCompanyEmployeeSubscription = {
+  onUpdateCompanyEmployee?:  {
+    __typename: "CompanyEmployee",
+    id: string,
+    name?: string | null,
+    adminID: string,
+    companyID: string,
+    email?: string | null,
+    userID?: string | null,
+    profile_status?: ProfileStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCompanyEmployeeSubscriptionVariables = {
+  filter?: ModelSubscriptionCompanyEmployeeFilterInput | null,
+};
+
+export type OnDeleteCompanyEmployeeSubscription = {
+  onDeleteCompanyEmployee?:  {
+    __typename: "CompanyEmployee",
+    id: string,
+    name?: string | null,
+    adminID: string,
+    companyID: string,
+    email?: string | null,
+    userID?: string | null,
+    profile_status?: ProfileStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateSubscriptionPlanSubscriptionVariables = {
+  filter?: ModelSubscriptionSubscriptionPlanFilterInput | null,
+};
+
+export type OnCreateSubscriptionPlanSubscription = {
+  onCreateSubscriptionPlan?:  {
+    __typename: "SubscriptionPlan",
+    id: string,
+    title?: string | null,
+    description?: string | null,
+    cost?: string | null,
+    users?: number | null,
+    isPaid?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateSubscriptionPlanSubscriptionVariables = {
+  filter?: ModelSubscriptionSubscriptionPlanFilterInput | null,
+};
+
+export type OnUpdateSubscriptionPlanSubscription = {
+  onUpdateSubscriptionPlan?:  {
+    __typename: "SubscriptionPlan",
+    id: string,
+    title?: string | null,
+    description?: string | null,
+    cost?: string | null,
+    users?: number | null,
+    isPaid?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteSubscriptionPlanSubscriptionVariables = {
+  filter?: ModelSubscriptionSubscriptionPlanFilterInput | null,
+};
+
+export type OnDeleteSubscriptionPlanSubscription = {
+  onDeleteSubscriptionPlan?:  {
+    __typename: "SubscriptionPlan",
+    id: string,
+    title?: string | null,
+    description?: string | null,
+    cost?: string | null,
+    users?: number | null,
+    isPaid?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateAdminSubscriptionVariables = {
+  filter?: ModelSubscriptionAdminFilterInput | null,
+};
+
+export type OnCreateAdminSubscription = {
+  onCreateAdmin?:  {
+    __typename: "Admin",
+    id: string,
+    name?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    subscriptionPlanID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    company_id?: string | null,
+    userID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAdminSubscriptionVariables = {
+  filter?: ModelSubscriptionAdminFilterInput | null,
+};
+
+export type OnUpdateAdminSubscription = {
+  onUpdateAdmin?:  {
+    __typename: "Admin",
+    id: string,
+    name?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    subscriptionPlanID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    company_id?: string | null,
+    userID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAdminSubscriptionVariables = {
+  filter?: ModelSubscriptionAdminFilterInput | null,
+};
+
+export type OnDeleteAdminSubscription = {
+  onDeleteAdmin?:  {
+    __typename: "Admin",
+    id: string,
+    name?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    subscriptionPlanID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    company_id?: string | null,
+    userID?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateCompanySubscriptionVariables = {
+  filter?: ModelSubscriptionCompanyFilterInput | null,
+};
+
+export type OnCreateCompanySubscription = {
+  onCreateCompany?:  {
+    __typename: "Company",
+    id: string,
+    company_name?: string | null,
+    owner_name?: string | null,
+    gstin?: string | null,
+    address?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    gst_category?: string | null,
+    adminID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    InventoryItems?:  {
+      __typename: "ModelInventoryItemConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateCompanySubscriptionVariables = {
+  filter?: ModelSubscriptionCompanyFilterInput | null,
+};
+
+export type OnUpdateCompanySubscription = {
+  onUpdateCompany?:  {
+    __typename: "Company",
+    id: string,
+    company_name?: string | null,
+    owner_name?: string | null,
+    gstin?: string | null,
+    address?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    gst_category?: string | null,
+    adminID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    InventoryItems?:  {
+      __typename: "ModelInventoryItemConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteCompanySubscriptionVariables = {
+  filter?: ModelSubscriptionCompanyFilterInput | null,
+};
+
+export type OnDeleteCompanySubscription = {
+  onDeleteCompany?:  {
+    __typename: "Company",
+    id: string,
+    company_name?: string | null,
+    owner_name?: string | null,
+    gstin?: string | null,
+    address?: string | null,
+    email?: string | null,
+    phone?: string | null,
+    gst_category?: string | null,
+    adminID?: string | null,
+    CompanyEmployees?:  {
+      __typename: "ModelCompanyEmployeeConnection",
+      nextToken?: string | null,
+    } | null,
+    InventoryItems?:  {
+      __typename: "ModelInventoryItemConnection",
+      nextToken?: string | null,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateVendorSubscriptionVariables = {
   filter?: ModelSubscriptionVendorFilterInput | null,
 };
@@ -1628,7 +3213,7 @@ export type OnCreateVendorSubscription = {
     payable_amount?: number | null,
     billing_address?: string | null,
     vendor_status?: ProfileStatus | null,
-    garin?: string | null,
+    gstin?: string | null,
     shipping_address?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1651,7 +3236,7 @@ export type OnUpdateVendorSubscription = {
     payable_amount?: number | null,
     billing_address?: string | null,
     vendor_status?: ProfileStatus | null,
-    garin?: string | null,
+    gstin?: string | null,
     shipping_address?: string | null,
     createdAt: string,
     updatedAt: string,
@@ -1674,7 +3259,7 @@ export type OnDeleteVendorSubscription = {
     payable_amount?: number | null,
     billing_address?: string | null,
     vendor_status?: ProfileStatus | null,
-    garin?: string | null,
+    gstin?: string | null,
     shipping_address?: string | null,
     createdAt: string,
     updatedAt: string,

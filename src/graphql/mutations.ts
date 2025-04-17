@@ -8,6 +8,384 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createInventoryItem = /* GraphQL */ `mutation CreateInventoryItem(
+  $input: CreateInventoryItemInput!
+  $condition: ModelInventoryItemConditionInput
+) {
+  createInventoryItem(input: $input, condition: $condition) {
+    id
+    item_code
+    hsn_number
+    name
+    description
+    unit
+    tax_rate
+    current_stock
+    stock_status
+    category
+    brand
+    cgst
+    sgst
+    igst
+    companyID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateInventoryItemMutationVariables,
+  APITypes.CreateInventoryItemMutation
+>;
+export const updateInventoryItem = /* GraphQL */ `mutation UpdateInventoryItem(
+  $input: UpdateInventoryItemInput!
+  $condition: ModelInventoryItemConditionInput
+) {
+  updateInventoryItem(input: $input, condition: $condition) {
+    id
+    item_code
+    hsn_number
+    name
+    description
+    unit
+    tax_rate
+    current_stock
+    stock_status
+    category
+    brand
+    cgst
+    sgst
+    igst
+    companyID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateInventoryItemMutationVariables,
+  APITypes.UpdateInventoryItemMutation
+>;
+export const deleteInventoryItem = /* GraphQL */ `mutation DeleteInventoryItem(
+  $input: DeleteInventoryItemInput!
+  $condition: ModelInventoryItemConditionInput
+) {
+  deleteInventoryItem(input: $input, condition: $condition) {
+    id
+    item_code
+    hsn_number
+    name
+    description
+    unit
+    tax_rate
+    current_stock
+    stock_status
+    category
+    brand
+    cgst
+    sgst
+    igst
+    companyID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteInventoryItemMutationVariables,
+  APITypes.DeleteInventoryItemMutation
+>;
+export const createCompanyEmployee = /* GraphQL */ `mutation CreateCompanyEmployee(
+  $input: CreateCompanyEmployeeInput!
+  $condition: ModelCompanyEmployeeConditionInput
+) {
+  createCompanyEmployee(input: $input, condition: $condition) {
+    id
+    name
+    adminID
+    companyID
+    email
+    userID
+    profile_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateCompanyEmployeeMutationVariables,
+  APITypes.CreateCompanyEmployeeMutation
+>;
+export const updateCompanyEmployee = /* GraphQL */ `mutation UpdateCompanyEmployee(
+  $input: UpdateCompanyEmployeeInput!
+  $condition: ModelCompanyEmployeeConditionInput
+) {
+  updateCompanyEmployee(input: $input, condition: $condition) {
+    id
+    name
+    adminID
+    companyID
+    email
+    userID
+    profile_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateCompanyEmployeeMutationVariables,
+  APITypes.UpdateCompanyEmployeeMutation
+>;
+export const deleteCompanyEmployee = /* GraphQL */ `mutation DeleteCompanyEmployee(
+  $input: DeleteCompanyEmployeeInput!
+  $condition: ModelCompanyEmployeeConditionInput
+) {
+  deleteCompanyEmployee(input: $input, condition: $condition) {
+    id
+    name
+    adminID
+    companyID
+    email
+    userID
+    profile_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteCompanyEmployeeMutationVariables,
+  APITypes.DeleteCompanyEmployeeMutation
+>;
+export const createSubscriptionPlan = /* GraphQL */ `mutation CreateSubscriptionPlan(
+  $input: CreateSubscriptionPlanInput!
+  $condition: ModelSubscriptionPlanConditionInput
+) {
+  createSubscriptionPlan(input: $input, condition: $condition) {
+    id
+    title
+    description
+    cost
+    users
+    isPaid
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateSubscriptionPlanMutationVariables,
+  APITypes.CreateSubscriptionPlanMutation
+>;
+export const updateSubscriptionPlan = /* GraphQL */ `mutation UpdateSubscriptionPlan(
+  $input: UpdateSubscriptionPlanInput!
+  $condition: ModelSubscriptionPlanConditionInput
+) {
+  updateSubscriptionPlan(input: $input, condition: $condition) {
+    id
+    title
+    description
+    cost
+    users
+    isPaid
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateSubscriptionPlanMutationVariables,
+  APITypes.UpdateSubscriptionPlanMutation
+>;
+export const deleteSubscriptionPlan = /* GraphQL */ `mutation DeleteSubscriptionPlan(
+  $input: DeleteSubscriptionPlanInput!
+  $condition: ModelSubscriptionPlanConditionInput
+) {
+  deleteSubscriptionPlan(input: $input, condition: $condition) {
+    id
+    title
+    description
+    cost
+    users
+    isPaid
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteSubscriptionPlanMutationVariables,
+  APITypes.DeleteSubscriptionPlanMutation
+>;
+export const createAdmin = /* GraphQL */ `mutation CreateAdmin(
+  $input: CreateAdminInput!
+  $condition: ModelAdminConditionInput
+) {
+  createAdmin(input: $input, condition: $condition) {
+    id
+    name
+    email
+    phone
+    subscriptionPlanID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    company_id
+    userID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateAdminMutationVariables,
+  APITypes.CreateAdminMutation
+>;
+export const updateAdmin = /* GraphQL */ `mutation UpdateAdmin(
+  $input: UpdateAdminInput!
+  $condition: ModelAdminConditionInput
+) {
+  updateAdmin(input: $input, condition: $condition) {
+    id
+    name
+    email
+    phone
+    subscriptionPlanID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    company_id
+    userID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateAdminMutationVariables,
+  APITypes.UpdateAdminMutation
+>;
+export const deleteAdmin = /* GraphQL */ `mutation DeleteAdmin(
+  $input: DeleteAdminInput!
+  $condition: ModelAdminConditionInput
+) {
+  deleteAdmin(input: $input, condition: $condition) {
+    id
+    name
+    email
+    phone
+    subscriptionPlanID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    company_id
+    userID
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteAdminMutationVariables,
+  APITypes.DeleteAdminMutation
+>;
+export const createCompany = /* GraphQL */ `mutation CreateCompany(
+  $input: CreateCompanyInput!
+  $condition: ModelCompanyConditionInput
+) {
+  createCompany(input: $input, condition: $condition) {
+    id
+    company_name
+    owner_name
+    gstin
+    address
+    email
+    phone
+    gst_category
+    adminID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    InventoryItems {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreateCompanyMutationVariables,
+  APITypes.CreateCompanyMutation
+>;
+export const updateCompany = /* GraphQL */ `mutation UpdateCompany(
+  $input: UpdateCompanyInput!
+  $condition: ModelCompanyConditionInput
+) {
+  updateCompany(input: $input, condition: $condition) {
+    id
+    company_name
+    owner_name
+    gstin
+    address
+    email
+    phone
+    gst_category
+    adminID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    InventoryItems {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdateCompanyMutationVariables,
+  APITypes.UpdateCompanyMutation
+>;
+export const deleteCompany = /* GraphQL */ `mutation DeleteCompany(
+  $input: DeleteCompanyInput!
+  $condition: ModelCompanyConditionInput
+) {
+  deleteCompany(input: $input, condition: $condition) {
+    id
+    company_name
+    owner_name
+    gstin
+    address
+    email
+    phone
+    gst_category
+    adminID
+    CompanyEmployees {
+      nextToken
+      __typename
+    }
+    InventoryItems {
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeleteCompanyMutationVariables,
+  APITypes.DeleteCompanyMutation
+>;
 export const createVendor = /* GraphQL */ `mutation CreateVendor(
   $input: CreateVendorInput!
   $condition: ModelVendorConditionInput
@@ -22,7 +400,7 @@ export const createVendor = /* GraphQL */ `mutation CreateVendor(
     payable_amount
     billing_address
     vendor_status
-    garin
+    gstin
     shipping_address
     createdAt
     updatedAt
@@ -47,7 +425,7 @@ export const updateVendor = /* GraphQL */ `mutation UpdateVendor(
     payable_amount
     billing_address
     vendor_status
-    garin
+    gstin
     shipping_address
     createdAt
     updatedAt
@@ -72,7 +450,7 @@ export const deleteVendor = /* GraphQL */ `mutation DeleteVendor(
     payable_amount
     billing_address
     vendor_status
-    garin
+    gstin
     shipping_address
     createdAt
     updatedAt
