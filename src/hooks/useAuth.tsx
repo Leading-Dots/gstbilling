@@ -112,10 +112,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       const { isSignUpComplete } = await handleConfirmSignUp(email, code);
-      const fcm_token = localStorage.getItem("fcm_token") || null;
+      console.log("Attempting to confirm sign up", isSignUpComplete);
 
       if (isSignUpComplete) {
-        const newUser = await createUser(role, email, userId, fcm_token);
+        const newUser = await createUser(role, email, userId);
         if (!newUser) {
           await signOut();
           throw new Error("User not created");
@@ -182,7 +182,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  //Todo: This is not working and will be used for switching roles for the same user in the future
 
   const value = useMemo(
     () => ({

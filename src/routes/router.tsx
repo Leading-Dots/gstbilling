@@ -21,6 +21,7 @@ import HomeRouter from "@/pages/public/HomeRouter";
 import AuthLayout from "@/layouts/AuthLayout";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
+import ConfirmSignUpPage from "@/pages/auth/ConfirmRegisterPage";
 
 const routes = [
   {
@@ -45,6 +46,14 @@ const routes = [
     element: (
       <AuthLayout>
         <RegisterPage />
+      </AuthLayout>
+    ),
+  },
+  {
+    path: "/confirm-signup",
+    element: (
+      <AuthLayout>
+        <ConfirmSignUpPage />
       </AuthLayout>
     ),
   },

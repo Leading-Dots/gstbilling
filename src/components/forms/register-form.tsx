@@ -32,7 +32,6 @@ const signUpSchema = z
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
-    role: z.enum(["mentee", "mentor"] as const),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -51,7 +50,6 @@ export default function RegisterForm({ userRole }: { userRole: UserRole }) {
       email: "",
       password: "",
       confirmPassword: "",
-      role: "mentee",
     },
   });
 
@@ -72,7 +70,7 @@ export default function RegisterForm({ userRole }: { userRole: UserRole }) {
         router("/confirm-signup", {
           state: {
             email: values.email,
-            role: values.role,
+            role: userRole,
             userId: response!.userId,
           },
         });

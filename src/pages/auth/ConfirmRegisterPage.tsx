@@ -1,4 +1,3 @@
-"use client";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -68,7 +67,7 @@ export default function ConfirmSignUpPage() {
                 autoComplete="off"
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" size="lg"  className="w-full font-bold text-lg">
               Verify
             </Button>
           </form>

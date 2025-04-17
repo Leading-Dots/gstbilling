@@ -6,7 +6,7 @@ import LoginForm from "@/components/forms/signin-form";
 const LoginPage = () => {
   return (
     <div className="flex w-full max-w-sm flex-col gap-6">
-      <Tabs defaultValue="employee" className="w-full">
+      <Tabs defaultValue="admin" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="admin">Admin</TabsTrigger>
 

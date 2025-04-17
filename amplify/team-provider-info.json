@@ -10,6 +10,11 @@
       "StackName": "amplify-gstinvoice-staging-fd2f2",
       "StackId": "arn:aws:cloudformation:ap-south-1:517223944896:stack/amplify-gstinvoice-staging-fd2f2/ed5e5d60-0bc6-11f0-a6ec-066eb39dac57",
       "AmplifyAppId": "dezumgb27m50l"
+    },
+    "categories": {
+      "auth": {
+        "gstinvoice": {}
+      }
     }
   }
 }
