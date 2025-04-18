@@ -29,6 +29,12 @@ import { cn } from "@/lib/utils";
 import { OwnerInfoForm } from "./owner-info-form";
 import { CompanyInfoForm } from "./company-info-form";
 import { SubscriptionPlanForm } from "./subscription-plan-form";
+import { useAuth } from "@/hooks/useAuth";
+import { CreateCompanyInput, UpdateAdminInput } from "@/API";
+import { addCompany } from "@/db/Company";
+import { editAdminUser } from "@/db/Users";
+import { showToast } from "@/lib/toast";
+import { useNavigate } from "react-router-dom";
 
 // Define the schema for all steps
 const formSchema = z.object({
@@ -72,6 +78,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function OnboardingFlow() {
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const { user , refreshUser} = useAuth();
+  const router = useNavigate();
   const totalSteps = 3;
 
   const steps = [
@@ -96,7 +105,7 @@ export default function OnboardingFlow() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       ownerName: "",
-      ownerEmail: "",
+      ownerEmail: user?.email || "",
       ownerPhone: "",
       companyName: "",
       companyOwnerName: "",
@@ -155,11 +164,79 @@ export default function OnboardingFlow() {
     }
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     console.log("Form submitted:", data);
-    // Here you would typically send the data to your backend
-    alert("Onboarding completed successfully!");
+
+    setLoading(true);
+    try {
+      const newCompanyData: CreateCompanyInput = {
+        company_name: data.companyName,
+        owner_name: data.companyOwnerName,
+        address: data.companyAddress,
+        gst_category: data.gstCategory,
+        gstin: data.gstin,
+        email: data.companyEmail,
+        phone: data.companyPhone,
+        adminID: user?.id,
+      };
+
+      const newCompany = await addCompany(newCompanyData);
+      if (newCompany) {
+        console.log("Company created successfully:", newCompany);
+
+        //now we update our user information
+        const adminData: UpdateAdminInput = {
+          id: user?.id,
+          company_id: newCompany.id,
+          name: data.ownerName,
+          email: data.ownerEmail,
+          phone: data.ownerPhone,
+          subscriptionPlanID: data.subscriptionPlan,
+        };
+
+        console.log("Admin data to be updated:", adminData);
+
+        const updatedAdmin = await editAdminUser(adminData);
+        if (updatedAdmin) {
+          console.log("Admin updated successfully:", updatedAdmin);
+          
+          await refreshUser();
+          router("/dashboard");
+
+
+          showToast(
+            "Onboarding completed successfully",
+            "success",
+            "You can now access your dashboard"
+           
+          );
+        } else {
+          console.error("Failed to update admin");
+          throw new Error("Failed to update admin");
+          // Handle error in admin update
+        }
+      } else {
+        console.error("Failed to create company");
+        throw new Error("Failed to create company");
+        // Handle error
+        //  in company creation
+      }
+    } catch (error) {
+      console.error("Error during onboarding:", error);
+      // Handle error during the entire process
+      showToast("Error during onboarding", "error");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if(loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -169,19 +246,19 @@ export default function OnboardingFlow() {
         </h1>
 
         {/* New Stepper Component */}
-        <div className="w-full mb-8 flex justify-center">
-          <Stepper value={step} className="w-full max-w-2xl ml-12">
+        <div className="w-full mb-8 flex justify-center ml-12">
+          <Stepper value={step} className="w-full max-w-2xl ">
             {steps.map(({ step: stepNum, title, description }) => (
               <StepperItem key={stepNum} step={stepNum} className="flex-1">
-          <StepperTrigger className="flex-col gap-3 rounded">
-            <StepperIndicator />
-            <div className="space-y-0.5 text-center">
-              <StepperTitle>{title}</StepperTitle>
-              <StepperDescription className="max-sm:hidden">
-                {description}
-              </StepperDescription>
-            </div>
-          </StepperTrigger>
+                <StepperTrigger className="flex-col gap-3 rounded">
+                  <StepperIndicator />
+                  <div className="space-y-0.5 text-center">
+                    <StepperTitle>{title}</StepperTitle>
+                    <StepperDescription className="max-sm:hidden">
+                      {description}
+                    </StepperDescription>
+                  </div>
+                </StepperTrigger>
               </StepperItem>
             ))}
           </Stepper>
@@ -215,18 +292,26 @@ export default function OnboardingFlow() {
           </FormProvider>
         </CardContent>
         <CardFooter className="flex justify-between mt-2">
-         {
-          step > 1 && (
-            <Button variant="outline" onClick={handleBack} className="w-full mr-2">
+          {step > 1 && (
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              className="w-full mr-2"
+            >
               Back
             </Button>
-          )
-         }
+          )}
           <div className="w-full">
             {step < totalSteps ? (
-              <Button className="w-full" onClick={handleNext}>Continue</Button>
+              <Button className="w-full" onClick={handleNext}>
+                Continue
+              </Button>
             ) : (
-              <Button onClick={form.handleSubmit(onSubmit)} className="w-full" type="submit">
+              <Button
+                onClick={form.handleSubmit(onSubmit)}
+                className="w-full"
+                type="submit"
+              >
                 Complete Onboarding
               </Button>
             )}

@@ -117,7 +117,7 @@ export function AppSidebar() {
   }, []);
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader className="flex flex-col items-center justify-center py-4">
         <SidebarMenuButton
           size="lg"

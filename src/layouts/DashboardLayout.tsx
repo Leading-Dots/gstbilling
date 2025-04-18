@@ -16,18 +16,27 @@ const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   const { user } = useAuth();
 
+  const navigate = useNavigate();
+
   const userRole = user?.role;
 
   if (!user) {
     return <Navigate to="/login" />;
   }
+  useEffect(() => {
+    //we need to check for   onboarding step
+    if (user && user.company_id === null) {
+      //redirect to onboarding page
+      navigate("/onboarding");
+    }
+  }, [user]);
   return (
     <SidebarProvider>
-      <div className={cn(`flex min-h-screen`, {
-        'mx-auto': sidebarDisabled,
-        "w-full": sidebarDisabled,
-        
-      })}
+      <div
+        className={cn(`flex min-h-screen`, {
+          "mx-auto": sidebarDisabled,
+          "w-full": sidebarDisabled,
+        })}
       >
         {!sidebarDisabled ? (
           <>

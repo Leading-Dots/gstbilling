@@ -1,51 +1,62 @@
-"use client"
+"use client";
 
-import type { UseFormReturn } from "react-hook-form"
-import { CheckIcon, Users } from "lucide-react"
+import type { UseFormReturn } from "react-hook-form";
+import { CheckIcon, Users } from "lucide-react";
 
-import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { cn } from "@/lib/utils"
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { getSubscriptionPlans } from "@/db/SubscriptionPlans";
+import { SubscriptionPlan } from "@/API";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface SubscriptionPlanFormProps {
-  form: UseFormReturn<any>
+  form: UseFormReturn<any>;
 }
 
-const plans = [
-  {
-    id: "starter",
-    title: "Starter",
-    description: "Perfect for small businesses just getting started.",
-    cost: "$29/month",
-    users: 5,
-    features: ["Basic reporting", "Customer management", "Up to 5 team members"],
-  },
-  {
-    id: "professional",
-    title: "Professional",
-    description: "Ideal for growing businesses with more advanced needs.",
-    cost: "$79/month",
-    users: 10,
-    features: ["Advanced reporting", "Customer management", "Up to 10 team members", "Invoice customization"],
-  },
-  {
-    id: "enterprise",
-    title: "Enterprise",
-    description: "For large organizations requiring comprehensive solutions.",
-    cost: "$149/month",
-    users: 25,
-    features: [
-      "Custom reporting",
-      "Customer management",
-      "Up to 25 team members",
-      "Invoice customization",
-      "API access",
-      "Dedicated support",
-    ],
-  },
-]
-
 export function SubscriptionPlanForm({ form }: SubscriptionPlanFormProps) {
+  const [loading, setLoading] = useState(true);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<
+    SubscriptionPlan[]
+  >([]);
+
+  useEffect(() => {
+    const fetchSubscriptionPlans = async () => {
+      try {
+        setLoading(true);
+        const plans = await getSubscriptionPlans();
+        //sort the plans by cost
+        console.log(plans);
+        plans.sort((a, b) => {
+          return Number(a.cost) - Number(b.cost);
+        });
+      
+        setSubscriptionPlans(plans);
+      } catch (error) {
+        console.error("Error fetching subscription plans", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSubscriptionPlans();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <FormField
       control={form.control}
@@ -53,51 +64,65 @@ export function SubscriptionPlanForm({ form }: SubscriptionPlanFormProps) {
       render={({ field }) => (
         <FormItem className="space-y-6">
           <FormControl>
-            <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="space-y-4">
-              {plans.map((plan) => (
+            <RadioGroup
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              className="space-y-4"
+            >
+              {subscriptionPlans.map((plan) => (
                 <div key={plan.id} className="relative">
-                  <RadioGroupItem value={plan.id} id={plan.id} className="peer sr-only" />
-                  <label
-                    htmlFor={plan.id}
-                    className={cn(
-                      "flex flex-col md:flex-row items-start p-4 md:p-6 rounded-lg border-2 cursor-pointer transition-all",
-                      "hover:border-primary hover:bg-muted",
-                      "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring",
-                      "peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5",
-                    )}
-                  >
-                    {field.value === plan.id && (
-                      <div className="absolute top-4 right-4 h-5 w-5 text-primary">
-                        <CheckIcon className="h-5 w-5" />
-                      </div>
-                    )}
+                  <RadioGroupItem
+                    value={plan.id}
+                    id={plan.id}
+                    className="peer sr-only"
+                  />
+                  <label htmlFor={plan.id} className="block">
+                    <Card
+                      className={cn(
+                        "cursor-pointer transition-all",
+                        "hover:border-primary hover:bg-muted/50",
+                        "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring",
+                        "peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5",
+                        Number(plan.cost) === 0 ? "border-dashed" : ""
+                      )}
+                    >
+                      <CardHeader className="pb-2">
+                        {field.value === plan.id && (
+                          <div className="absolute top-4 right-4 text-primary">
+                            <CheckIcon className="h-6 w-6" />
+                          </div>
+                        )}
 
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-lg">{plan.title}</h3>
-                      </div>
-                      <p className="text-muted-foreground">{plan.description}</p>
-
-                      <div className="mt-4 space-y-4">
-                        <div className="flex items-baseline">
-                          <span className="text-2xl font-bold">{plan.cost}</span>
+                        {Number(plan.cost) === 0 && (
+                          <div className="absolute -top-3 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                            Free Plan
+                          </div>
+                        )}
+                        <CardTitle>{plan.title}</CardTitle>
+                        <CardDescription>{plan.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="pt-2 border-t">
+                          <span className="text-xl font-bold">
+                            {plan.isPaid ? `₹${plan.cost}` : null}
+                          </span>
+                          {Number(plan.cost) > 0 && (
+                            <span className="text-muted-foreground ml-1 text-sm">
+                              /month
+                            </span>
+                          )}
                         </div>
 
-                        <div className="flex items-center text-muted-foreground">
-                          <Users className="mr-2 h-4 w-4" />
-                          <span>Up to {plan.users} users</span>
+                        <div className="flex items-center text-muted-foreground bg-muted/50 p-2 rounded-md">
+                          <Users className="mr-2 h-4 w-4 text-primary" />
+                          <span>
+                            {plan.users === 1
+                              ? "Single user"
+                              : `Up to ${plan.users} users`}
+                          </span>
                         </div>
-
-                        <ul className="space-y-2 text-sm">
-                          {plan.features.map((feature, index) => (
-                            <li key={index} className="flex items-center">
-                              <CheckIcon className="mr-2 h-4 w-4 text-primary" />
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   </label>
                 </div>
               ))}
@@ -107,5 +132,5 @@ export function SubscriptionPlanForm({ form }: SubscriptionPlanFormProps) {
         </FormItem>
       )}
     />
-  )
+  );
 }

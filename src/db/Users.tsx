@@ -2,8 +2,9 @@ import {
   CreateAdminInput,
   CreateCompanyEmployeeInput,
   ProfileStatus,
+  UpdateAdminInput,
 } from "@/API";
-import { createAdmin, createCompanyEmployee } from "@/graphql/mutations";
+import { createAdmin, createCompanyEmployee, updateAdmin } from "@/graphql/mutations";
 import { listAdmins, listCompanyEmployees } from "@/graphql/queries";
 import client from "@/lib/apiClient";
 import { showToast } from "@/lib/toast";
@@ -73,6 +74,27 @@ export const addAdminUser = async (
     console.error(error);
   }
 };
+
+
+export const editAdminUser = async (adminData : UpdateAdminInput) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: updateAdmin,
+      variables: {
+        input: {
+          ...adminData,
+        },
+      },
+    });
+
+    if (errors) {
+      console.error(errors);
+    }
+    return data.updateAdmin;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export const getAdminUser = async (userId: string) => {
   try {
