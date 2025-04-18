@@ -107,6 +107,8 @@ export const createCompanyEmployee = /* GraphQL */ `mutation CreateCompanyEmploy
     email
     userID
     profile_status
+    department
+    employeeID
     createdAt
     updatedAt
     __typename
@@ -128,6 +130,8 @@ export const updateCompanyEmployee = /* GraphQL */ `mutation UpdateCompanyEmploy
     email
     userID
     profile_status
+    department
+    employeeID
     createdAt
     updatedAt
     __typename
@@ -149,6 +153,8 @@ export const deleteCompanyEmployee = /* GraphQL */ `mutation DeleteCompanyEmploy
     email
     userID
     profile_status
+    department
+    employeeID
     createdAt
     updatedAt
     __typename
@@ -302,7 +308,7 @@ export const createCompany = /* GraphQL */ `mutation CreateCompany(
     company_name
     owner_name
     gstin
-    address
+    billing_address
     email
     phone
     gst_category
@@ -315,6 +321,11 @@ export const createCompany = /* GraphQL */ `mutation CreateCompany(
       nextToken
       __typename
     }
+    shipping_address
+    pincode
+    city
+    state
+    country
     createdAt
     updatedAt
     __typename
@@ -333,7 +344,7 @@ export const updateCompany = /* GraphQL */ `mutation UpdateCompany(
     company_name
     owner_name
     gstin
-    address
+    billing_address
     email
     phone
     gst_category
@@ -346,6 +357,11 @@ export const updateCompany = /* GraphQL */ `mutation UpdateCompany(
       nextToken
       __typename
     }
+    shipping_address
+    pincode
+    city
+    state
+    country
     createdAt
     updatedAt
     __typename
@@ -364,7 +380,7 @@ export const deleteCompany = /* GraphQL */ `mutation DeleteCompany(
     company_name
     owner_name
     gstin
-    address
+    billing_address
     email
     phone
     gst_category
@@ -377,6 +393,11 @@ export const deleteCompany = /* GraphQL */ `mutation DeleteCompany(
       nextToken
       __typename
     }
+    shipping_address
+    pincode
+    city
+    state
+    country
     createdAt
     updatedAt
     __typename

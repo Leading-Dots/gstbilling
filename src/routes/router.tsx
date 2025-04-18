@@ -23,6 +23,8 @@ import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import ConfirmSignUpPage from "@/pages/auth/ConfirmRegisterPage";
 import OnboardingPage from "@/pages/root/onboarding/OnboardingPage";
+import EmployeesPage from "@/pages/root/EmployeesPage";
+import CreateEmployeePage from "@/pages/root/new/CreateEmployeePage";
 
 const routes = [
   {
@@ -71,6 +73,22 @@ const routes = [
     element: (
       <DashboardLayout sidebarDisabled>
         <OnboardingPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/employees",
+    element: (
+      <DashboardLayout >
+        <EmployeesPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/employees/new",
+    element: (
+      <DashboardLayout >
+        <CreateEmployeePage />
       </DashboardLayout>
     ),
   },

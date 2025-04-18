@@ -1,6 +1,7 @@
 import {
   CreateAdminInput,
   CreateCompanyEmployeeInput,
+  EmployeeStatus,
   ProfileStatus,
   UpdateAdminInput,
 } from "@/API";
@@ -155,7 +156,7 @@ export const addCompanyEmployee = async (
       userID: userId,
       adminID: adminID,
       companyID: companyID,
-      profile_status: ProfileStatus.ACTIVE,
+      profile_status: EmployeeStatus.ACTIVE,
     };
     const { data, errors } = await client.graphql({
       query: createCompanyEmployee,

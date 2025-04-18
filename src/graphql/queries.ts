@@ -119,6 +119,8 @@ export const getCompanyEmployee = /* GraphQL */ `query GetCompanyEmployee($id: I
     email
     userID
     profile_status
+    department
+    employeeID
     createdAt
     updatedAt
     __typename
@@ -142,6 +144,8 @@ export const listCompanyEmployees = /* GraphQL */ `query ListCompanyEmployees(
       email
       userID
       profile_status
+      department
+      employeeID
       createdAt
       updatedAt
       __typename
@@ -176,6 +180,8 @@ export const companyEmployeesByAdminID = /* GraphQL */ `query CompanyEmployeesBy
       email
       userID
       profile_status
+      department
+      employeeID
       createdAt
       updatedAt
       __typename
@@ -210,6 +216,8 @@ export const companyEmployeesByCompanyID = /* GraphQL */ `query CompanyEmployees
       email
       userID
       profile_status
+      department
+      employeeID
       createdAt
       updatedAt
       __typename
@@ -315,7 +323,7 @@ export const getCompany = /* GraphQL */ `query GetCompany($id: ID!) {
     company_name
     owner_name
     gstin
-    address
+    billing_address
     email
     phone
     gst_category
@@ -328,6 +336,11 @@ export const getCompany = /* GraphQL */ `query GetCompany($id: ID!) {
       nextToken
       __typename
     }
+    shipping_address
+    pincode
+    city
+    state
+    country
     createdAt
     updatedAt
     __typename
@@ -348,11 +361,16 @@ export const listCompanies = /* GraphQL */ `query ListCompanies(
       company_name
       owner_name
       gstin
-      address
+      billing_address
       email
       phone
       gst_category
       adminID
+      shipping_address
+      pincode
+      city
+      state
+      country
       createdAt
       updatedAt
       __typename

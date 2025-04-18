@@ -103,6 +103,8 @@ export const onCreateCompanyEmployee = /* GraphQL */ `subscription OnCreateCompa
     email
     userID
     profile_status
+    department
+    employeeID
     createdAt
     updatedAt
     __typename
@@ -123,6 +125,8 @@ export const onUpdateCompanyEmployee = /* GraphQL */ `subscription OnUpdateCompa
     email
     userID
     profile_status
+    department
+    employeeID
     createdAt
     updatedAt
     __typename
@@ -143,6 +147,8 @@ export const onDeleteCompanyEmployee = /* GraphQL */ `subscription OnDeleteCompa
     email
     userID
     profile_status
+    department
+    employeeID
     createdAt
     updatedAt
     __typename
@@ -281,7 +287,7 @@ export const onCreateCompany = /* GraphQL */ `subscription OnCreateCompany($filt
     company_name
     owner_name
     gstin
-    address
+    billing_address
     email
     phone
     gst_category
@@ -294,6 +300,11 @@ export const onCreateCompany = /* GraphQL */ `subscription OnCreateCompany($filt
       nextToken
       __typename
     }
+    shipping_address
+    pincode
+    city
+    state
+    country
     createdAt
     updatedAt
     __typename
@@ -309,7 +320,7 @@ export const onUpdateCompany = /* GraphQL */ `subscription OnUpdateCompany($filt
     company_name
     owner_name
     gstin
-    address
+    billing_address
     email
     phone
     gst_category
@@ -322,6 +333,11 @@ export const onUpdateCompany = /* GraphQL */ `subscription OnUpdateCompany($filt
       nextToken
       __typename
     }
+    shipping_address
+    pincode
+    city
+    state
+    country
     createdAt
     updatedAt
     __typename
@@ -337,7 +353,7 @@ export const onDeleteCompany = /* GraphQL */ `subscription OnDeleteCompany($filt
     company_name
     owner_name
     gstin
-    address
+    billing_address
     email
     phone
     gst_category
@@ -350,6 +366,11 @@ export const onDeleteCompany = /* GraphQL */ `subscription OnDeleteCompany($filt
       nextToken
       __typename
     }
+    shipping_address
+    pincode
+    city
+    state
+    country
     createdAt
     updatedAt
     __typename

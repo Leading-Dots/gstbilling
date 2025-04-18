@@ -26,45 +26,69 @@ export default function CompanyCreateForm(props) {
     company_name: "",
     owner_name: "",
     gstin: "",
-    address: "",
+    billing_address: "",
     email: "",
     phone: "",
     gst_category: "",
     adminID: "",
+    shipping_address: "",
+    pincode: "",
+    city: "",
+    state: "",
+    country: "",
   };
   const [company_name, setCompany_name] = React.useState(
     initialValues.company_name
   );
   const [owner_name, setOwner_name] = React.useState(initialValues.owner_name);
   const [gstin, setGstin] = React.useState(initialValues.gstin);
-  const [address, setAddress] = React.useState(initialValues.address);
+  const [billing_address, setBilling_address] = React.useState(
+    initialValues.billing_address
+  );
   const [email, setEmail] = React.useState(initialValues.email);
   const [phone, setPhone] = React.useState(initialValues.phone);
   const [gst_category, setGst_category] = React.useState(
     initialValues.gst_category
   );
   const [adminID, setAdminID] = React.useState(initialValues.adminID);
+  const [shipping_address, setShipping_address] = React.useState(
+    initialValues.shipping_address
+  );
+  const [pincode, setPincode] = React.useState(initialValues.pincode);
+  const [city, setCity] = React.useState(initialValues.city);
+  const [state, setState] = React.useState(initialValues.state);
+  const [country, setCountry] = React.useState(initialValues.country);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setCompany_name(initialValues.company_name);
     setOwner_name(initialValues.owner_name);
     setGstin(initialValues.gstin);
-    setAddress(initialValues.address);
+    setBilling_address(initialValues.billing_address);
     setEmail(initialValues.email);
     setPhone(initialValues.phone);
     setGst_category(initialValues.gst_category);
     setAdminID(initialValues.adminID);
+    setShipping_address(initialValues.shipping_address);
+    setPincode(initialValues.pincode);
+    setCity(initialValues.city);
+    setState(initialValues.state);
+    setCountry(initialValues.country);
     setErrors({});
   };
   const validations = {
     company_name: [],
     owner_name: [],
     gstin: [],
-    address: [],
+    billing_address: [],
     email: [],
     phone: [],
     gst_category: [],
     adminID: [],
+    shipping_address: [],
+    pincode: [],
+    city: [],
+    state: [],
+    country: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -95,11 +119,16 @@ export default function CompanyCreateForm(props) {
           company_name,
           owner_name,
           gstin,
-          address,
+          billing_address,
           email,
           phone,
           gst_category,
           adminID,
+          shipping_address,
+          pincode,
+          city,
+          state,
+          country,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -165,11 +194,16 @@ export default function CompanyCreateForm(props) {
               company_name: value,
               owner_name,
               gstin,
-              address,
+              billing_address,
               email,
               phone,
               gst_category,
               adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
             value = result?.company_name ?? value;
@@ -196,11 +230,16 @@ export default function CompanyCreateForm(props) {
               company_name,
               owner_name: value,
               gstin,
-              address,
+              billing_address,
               email,
               phone,
               gst_category,
               adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
             value = result?.owner_name ?? value;
@@ -227,11 +266,16 @@ export default function CompanyCreateForm(props) {
               company_name,
               owner_name,
               gstin: value,
-              address,
+              billing_address,
               email,
               phone,
               gst_category,
               adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
             value = result?.gstin ?? value;
@@ -247,10 +291,10 @@ export default function CompanyCreateForm(props) {
         {...getOverrideProps(overrides, "gstin")}
       ></TextField>
       <TextField
-        label="Address"
+        label="Billing address"
         isRequired={false}
         isReadOnly={false}
-        value={address}
+        value={billing_address}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -258,24 +302,29 @@ export default function CompanyCreateForm(props) {
               company_name,
               owner_name,
               gstin,
-              address: value,
+              billing_address: value,
               email,
               phone,
               gst_category,
               adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
-            value = result?.address ?? value;
+            value = result?.billing_address ?? value;
           }
-          if (errors.address?.hasError) {
-            runValidationTasks("address", value);
+          if (errors.billing_address?.hasError) {
+            runValidationTasks("billing_address", value);
           }
-          setAddress(value);
+          setBilling_address(value);
         }}
-        onBlur={() => runValidationTasks("address", address)}
-        errorMessage={errors.address?.errorMessage}
-        hasError={errors.address?.hasError}
-        {...getOverrideProps(overrides, "address")}
+        onBlur={() => runValidationTasks("billing_address", billing_address)}
+        errorMessage={errors.billing_address?.errorMessage}
+        hasError={errors.billing_address?.hasError}
+        {...getOverrideProps(overrides, "billing_address")}
       ></TextField>
       <TextField
         label="Email"
@@ -289,11 +338,16 @@ export default function CompanyCreateForm(props) {
               company_name,
               owner_name,
               gstin,
-              address,
+              billing_address,
               email: value,
               phone,
               gst_category,
               adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -320,11 +374,16 @@ export default function CompanyCreateForm(props) {
               company_name,
               owner_name,
               gstin,
-              address,
+              billing_address,
               email,
               phone: value,
               gst_category,
               adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
             value = result?.phone ?? value;
@@ -351,11 +410,16 @@ export default function CompanyCreateForm(props) {
               company_name,
               owner_name,
               gstin,
-              address,
+              billing_address,
               email,
               phone,
               gst_category: value,
               adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
             value = result?.gst_category ?? value;
@@ -382,11 +446,16 @@ export default function CompanyCreateForm(props) {
               company_name,
               owner_name,
               gstin,
-              address,
+              billing_address,
               email,
               phone,
               gst_category,
               adminID: value,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country,
             };
             const result = onChange(modelFields);
             value = result?.adminID ?? value;
@@ -400,6 +469,186 @@ export default function CompanyCreateForm(props) {
         errorMessage={errors.adminID?.errorMessage}
         hasError={errors.adminID?.hasError}
         {...getOverrideProps(overrides, "adminID")}
+      ></TextField>
+      <TextField
+        label="Shipping address"
+        isRequired={false}
+        isReadOnly={false}
+        value={shipping_address}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              company_name,
+              owner_name,
+              gstin,
+              billing_address,
+              email,
+              phone,
+              gst_category,
+              adminID,
+              shipping_address: value,
+              pincode,
+              city,
+              state,
+              country,
+            };
+            const result = onChange(modelFields);
+            value = result?.shipping_address ?? value;
+          }
+          if (errors.shipping_address?.hasError) {
+            runValidationTasks("shipping_address", value);
+          }
+          setShipping_address(value);
+        }}
+        onBlur={() => runValidationTasks("shipping_address", shipping_address)}
+        errorMessage={errors.shipping_address?.errorMessage}
+        hasError={errors.shipping_address?.hasError}
+        {...getOverrideProps(overrides, "shipping_address")}
+      ></TextField>
+      <TextField
+        label="Pincode"
+        isRequired={false}
+        isReadOnly={false}
+        value={pincode}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              company_name,
+              owner_name,
+              gstin,
+              billing_address,
+              email,
+              phone,
+              gst_category,
+              adminID,
+              shipping_address,
+              pincode: value,
+              city,
+              state,
+              country,
+            };
+            const result = onChange(modelFields);
+            value = result?.pincode ?? value;
+          }
+          if (errors.pincode?.hasError) {
+            runValidationTasks("pincode", value);
+          }
+          setPincode(value);
+        }}
+        onBlur={() => runValidationTasks("pincode", pincode)}
+        errorMessage={errors.pincode?.errorMessage}
+        hasError={errors.pincode?.hasError}
+        {...getOverrideProps(overrides, "pincode")}
+      ></TextField>
+      <TextField
+        label="City"
+        isRequired={false}
+        isReadOnly={false}
+        value={city}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              company_name,
+              owner_name,
+              gstin,
+              billing_address,
+              email,
+              phone,
+              gst_category,
+              adminID,
+              shipping_address,
+              pincode,
+              city: value,
+              state,
+              country,
+            };
+            const result = onChange(modelFields);
+            value = result?.city ?? value;
+          }
+          if (errors.city?.hasError) {
+            runValidationTasks("city", value);
+          }
+          setCity(value);
+        }}
+        onBlur={() => runValidationTasks("city", city)}
+        errorMessage={errors.city?.errorMessage}
+        hasError={errors.city?.hasError}
+        {...getOverrideProps(overrides, "city")}
+      ></TextField>
+      <TextField
+        label="State"
+        isRequired={false}
+        isReadOnly={false}
+        value={state}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              company_name,
+              owner_name,
+              gstin,
+              billing_address,
+              email,
+              phone,
+              gst_category,
+              adminID,
+              shipping_address,
+              pincode,
+              city,
+              state: value,
+              country,
+            };
+            const result = onChange(modelFields);
+            value = result?.state ?? value;
+          }
+          if (errors.state?.hasError) {
+            runValidationTasks("state", value);
+          }
+          setState(value);
+        }}
+        onBlur={() => runValidationTasks("state", state)}
+        errorMessage={errors.state?.errorMessage}
+        hasError={errors.state?.hasError}
+        {...getOverrideProps(overrides, "state")}
+      ></TextField>
+      <TextField
+        label="Country"
+        isRequired={false}
+        isReadOnly={false}
+        value={country}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              company_name,
+              owner_name,
+              gstin,
+              billing_address,
+              email,
+              phone,
+              gst_category,
+              adminID,
+              shipping_address,
+              pincode,
+              city,
+              state,
+              country: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.country ?? value;
+          }
+          if (errors.country?.hasError) {
+            runValidationTasks("country", value);
+          }
+          setCountry(value);
+        }}
+        onBlur={() => runValidationTasks("country", country)}
+        errorMessage={errors.country?.errorMessage}
+        hasError={errors.country?.hasError}
+        {...getOverrideProps(overrides, "country")}
       ></TextField>
       <Flex
         justifyContent="space-between"

@@ -1,3 +1,9 @@
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  INVITED
+}
+
 enum StockStatus {
   IN_STOCK
   OUT_OF_STOCK
@@ -29,7 +35,9 @@ type CompanyEmployee @model @auth(rules: [{allow: public}]) {
   companyID: ID! @index(name: "byCompany")
   email: String
   userID: String
-  profile_status: ProfileStatus
+  profile_status: EmployeeStatus
+  department: String
+  employeeID: String
 }
 
 type SubscriptionPlan @model @auth(rules: [{allow: public}]) {
@@ -57,13 +65,18 @@ type Company @model @auth(rules: [{allow: public}]) {
   company_name: String
   owner_name: String
   gstin: String
-  address: String
+  billing_address: String
   email: String
   phone: String
   gst_category: String
   adminID: String
   CompanyEmployees: [CompanyEmployee] @hasMany(indexName: "byCompany", fields: ["id"])
   InventoryItems: [InventoryItem] @hasMany(indexName: "byCompany", fields: ["id"])
+  shipping_address: String
+  pincode: String
+  city: String
+  state: String
+  country: String
 }
 
 enum QuotationStatus {

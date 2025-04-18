@@ -4,7 +4,6 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
-import { CheckIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +33,7 @@ import { CreateCompanyInput, UpdateAdminInput } from "@/API";
 import { addCompany } from "@/db/Company";
 import { editAdminUser } from "@/db/Users";
 import { showToast } from "@/lib/toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 // Define the schema for all steps
 const formSchema = z.object({
@@ -50,15 +49,16 @@ const formSchema = z.object({
     .min(10, { message: "Please enter a valid phone number" }),
 
   // Company Info
+  billingAddress: z.string().min(1, "Billing address is required"),
+  shippingAddress: z.string().optional(),
+
   companyName: z
     .string()
     .min(2, { message: "Company name must be at least 2 characters" }),
   companyOwnerName: z
     .string()
     .min(2, { message: "Owner name must be at least 2 characters" }),
-  companyAddress: z
-    .string()
-    .min(5, { message: "Address must be at least 5 characters" }),
+
   gstCategory: z.string().min(1, { message: "Please select a GST category" }),
   gstin: z.string().optional(),
   companyEmail: z
@@ -67,6 +67,10 @@ const formSchema = z.object({
   companyPhone: z
     .string()
     .min(10, { message: "Please enter a valid phone number" }),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  pincode: z.string().min(6, "PIN code must be 6 digits").max(6),
+  country: z.string().min(1, "Country is required"),
 
   // Subscription Plan
   subscriptionPlan: z
@@ -79,7 +83,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function OnboardingFlow() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const { user , refreshUser} = useAuth();
+  const { user, refreshUser } = useAuth();
   const router = useNavigate();
   const totalSteps = 3;
 
@@ -107,9 +111,13 @@ export default function OnboardingFlow() {
       ownerName: "",
       ownerEmail: user?.email || "",
       ownerPhone: "",
+      billingAddress: "",
+      shippingAddress: "",
+      state: "",
+      city: "",
+      pincode: "",
       companyName: "",
       companyOwnerName: "",
-      companyAddress: "",
       gstCategory: "",
       gstin: "",
       companyEmail: "",
@@ -126,7 +134,7 @@ export default function OnboardingFlow() {
 
     switch (step) {
       case 1:
-        fieldsToValidate = ["ownerName", "ownerEmail", "ownerPhone"];
+        fieldsToValidate = ["ownerName", "ownerPhone"];
         break;
       case 2:
         fieldsToValidate = [
@@ -172,7 +180,12 @@ export default function OnboardingFlow() {
       const newCompanyData: CreateCompanyInput = {
         company_name: data.companyName,
         owner_name: data.companyOwnerName,
-        address: data.companyAddress,
+        billing_address: data.billingAddress,
+        shipping_address: data.shippingAddress,
+        state: data.state,
+        city: data.city,
+        pincode: data.pincode,
+        country: data.country,
         gst_category: data.gstCategory,
         gstin: data.gstin,
         email: data.companyEmail,
@@ -199,16 +212,14 @@ export default function OnboardingFlow() {
         const updatedAdmin = await editAdminUser(adminData);
         if (updatedAdmin) {
           console.log("Admin updated successfully:", updatedAdmin);
-          
+
           await refreshUser();
           router("/dashboard");
-
 
           showToast(
             "Onboarding completed successfully",
             "success",
             "You can now access your dashboard"
-           
           );
         } else {
           console.error("Failed to update admin");
@@ -230,7 +241,7 @@ export default function OnboardingFlow() {
     }
   };
 
-  if(loading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <p className="text-lg">Loading...</p>
@@ -238,6 +249,9 @@ export default function OnboardingFlow() {
     );
   }
 
+  if (user.company_id) {
+    return <Navigate to="/dashboard" />;
+  }
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8 ">

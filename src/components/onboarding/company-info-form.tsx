@@ -1,6 +1,5 @@
-
 import type { UseFormReturn } from "react-hook-form";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   FormControl,
@@ -19,13 +18,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-
+import { Switch } from "../ui/switch";
+import { Separator } from "../ui/separator";
+import { Combobox } from "../ui/combobox";
 interface CompanyInfoFormProps {
   form: UseFormReturn<any>;
 }
 
 export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
   const gstCategory = form.watch("gstCategory");
+  const [sameAsBilling, setSameAsBilling] = useState(true);
+
+  const billingAddress = form.watch("billingAddress");
+
+  // Update shipping address when billing address changes and sameAsBilling is true
+  React.useEffect(() => {
+    if (sameAsBilling) {
+      form.setValue("shippingAddress", billingAddress);
+    }
+  }, [billingAddress, sameAsBilling, form]);
 
   // Reset GSTIN when category changes to Unregistered
   useEffect(() => {
@@ -33,6 +44,15 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
       form.setValue("gstin", "");
     }
   }, [gstCategory, form]);
+
+  const handleSameAsBillingChange = (checked: boolean) => {
+    setSameAsBilling(checked);
+    if (checked) {
+      form.setValue("shippingAddress", billingAddress);
+    } else {
+      form.setValue("shippingAddress", "");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -58,7 +78,7 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
         name="companyOwnerName"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Owner Name</FormLabel>
+            <FormLabel>Primary Contact Name</FormLabel>
             <FormControl>
               <Input placeholder="John Doe" {...field} />
             </FormControl>
@@ -70,27 +90,151 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
         )}
       />
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          control={form.control}
+          name="companyEmail"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Company Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="info@acmeinc.com" {...field} />
+              </FormControl>
+              <FormDescription>
+                Enter the official email address for your company.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="companyPhone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Company Phone</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="9876543210"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  inputMode="numeric"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Enter your company's contact number.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        <FormField
+          control={form.control}
+          name="state"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>State</FormLabel>
+              <FormControl>
+                <Combobox {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="city"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>City</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="pincode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>PIN Code</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
       <FormField
         control={form.control}
-        name="companyAddress"
+        name="country"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Company Address</FormLabel>
+            <FormLabel>Country</FormLabel>
             <FormControl>
-              <Textarea
-                placeholder="123 Business Street, Suite 456, City, State, ZIP"
-                className="resize-none"
-                {...field}
-              />
+              <Input {...field} />
             </FormControl>
-            <FormDescription>
-              Enter the complete registered address of your company.
-            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
       />
 
+      <FormField
+        control={form.control}
+        name="billingAddress"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Billing Address</FormLabel>
+            <FormControl>
+              <Textarea {...field} rows={3} />
+            </FormControl>
+
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="same-as-billing"
+          checked={sameAsBilling}
+          onCheckedChange={handleSameAsBillingChange}
+        />
+        <label
+          htmlFor="same-as-billing"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Shipping address same as billing
+        </label>
+      </div>
+
+      <FormField
+        control={form.control}
+        name="shippingAddress"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Shipping Address</FormLabel>
+            <FormControl>
+              <Textarea {...field} rows={3} disabled={sameAsBilling} />
+            </FormControl>
+            <FormDescription>
+              Complete shipping address if different from billing address
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           control={form.control}
@@ -153,42 +297,6 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
             )}
           />
         )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          control={form.control}
-          name="companyEmail"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Company Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="info@acmeinc.com" {...field} />
-              </FormControl>
-              <FormDescription>
-                Enter the official email address for your company.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="companyPhone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Company Phone</FormLabel>
-              <FormControl>
-                <Input placeholder="+1 (555) 987-6543" {...field} />
-              </FormControl>
-              <FormDescription>
-                Enter your company's contact number.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </div>
     </div>
   );

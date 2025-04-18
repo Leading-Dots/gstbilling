@@ -144,7 +144,7 @@ const COLORS = [
 
 export default function DashboardPage() {
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 max-w-5xl container">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <div className="flex items-center gap-2">
@@ -153,7 +153,7 @@ export default function DashboardPage() {
           </span>
         </div>
       </div>
-      <Card className="">
+      <Card className="max-w-5xl">
         <CardHeader>
           <CardTitle>
             What would you like to do today?
@@ -163,7 +163,7 @@ export default function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
             <Link to="/invoices/new" className="block">
               <Card className="h-full cursor-pointer hover:bg-accent transition-colors">
                 <CardContent className="flex flex-col items-center justify-center p-4 md:p-6 space-y-2">
@@ -209,15 +209,16 @@ export default function DashboardPage() {
           </div>
         </CardContent>
       </Card>
+      <div className="w-full">
 
-      <Tabs defaultValue="overview" className="space-y-4">
+      <Tabs defaultValue="overview" className="space-y-4 ">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 max-w-5xl">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -383,7 +384,7 @@ export default function DashboardPage() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 max-w-5xl mx-auto">
             <Card className="col-span-4">
               <CardHeader>
                 <CardTitle>Monthly Revenue</CardTitle>
@@ -641,6 +642,7 @@ export default function DashboardPage() {
           </div>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

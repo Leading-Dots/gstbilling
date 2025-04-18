@@ -26,21 +26,31 @@ export declare type CompanyUpdateFormInputValues = {
     company_name?: string;
     owner_name?: string;
     gstin?: string;
-    address?: string;
+    billing_address?: string;
     email?: string;
     phone?: string;
     gst_category?: string;
     adminID?: string;
+    shipping_address?: string;
+    pincode?: string;
+    city?: string;
+    state?: string;
+    country?: string;
 };
 export declare type CompanyUpdateFormValidationValues = {
     company_name?: ValidationFunction<string>;
     owner_name?: ValidationFunction<string>;
     gstin?: ValidationFunction<string>;
-    address?: ValidationFunction<string>;
+    billing_address?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     phone?: ValidationFunction<string>;
     gst_category?: ValidationFunction<string>;
     adminID?: ValidationFunction<string>;
+    shipping_address?: ValidationFunction<string>;
+    pincode?: ValidationFunction<string>;
+    city?: ValidationFunction<string>;
+    state?: ValidationFunction<string>;
+    country?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CompanyUpdateFormOverridesProps = {
@@ -48,11 +58,16 @@ export declare type CompanyUpdateFormOverridesProps = {
     company_name?: PrimitiveOverrideProps<TextFieldProps>;
     owner_name?: PrimitiveOverrideProps<TextFieldProps>;
     gstin?: PrimitiveOverrideProps<TextFieldProps>;
-    address?: PrimitiveOverrideProps<TextFieldProps>;
+    billing_address?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     phone?: PrimitiveOverrideProps<TextFieldProps>;
     gst_category?: PrimitiveOverrideProps<TextFieldProps>;
     adminID?: PrimitiveOverrideProps<TextFieldProps>;
+    shipping_address?: PrimitiveOverrideProps<TextFieldProps>;
+    pincode?: PrimitiveOverrideProps<TextFieldProps>;
+    city?: PrimitiveOverrideProps<TextFieldProps>;
+    state?: PrimitiveOverrideProps<TextFieldProps>;
+    country?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CompanyUpdateFormProps = React.PropsWithChildren<{
     overrides?: CompanyUpdateFormOverridesProps | undefined | null;
