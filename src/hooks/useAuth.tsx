@@ -12,9 +12,19 @@ import {
 
 import { useLocalStorage } from "./useLocalStorage";
 
-import { getCurrentUser } from "aws-amplify/auth";
+import {
+  fetchUserAttributes,
+  getCurrentUser,
+  updateUserAttribute,
+  updateUserAttributes,
+} from "aws-amplify/auth";
 import { UserRole } from "@/types";
-import { createUser, getUser } from "@/db/Users";
+import {
+  checkEmployeeByEmail,
+  createUser,
+  findUserByEmail,
+  getUser,
+} from "@/db/Users";
 import Loader1 from "@/components/loaders/Loader1";
 
 type AuthContextType = {
@@ -22,12 +32,7 @@ type AuthContextType = {
   loading: boolean;
   signIn: (email: string, password: string, role: UserRole) => Promise<any>;
   signUp: (email: string, password: string, role: UserRole) => Promise<any>;
-  confirmSignUp: (
-    email: string,
-    code: string,
-    role: UserRole,
-    userId: string
-  ) => Promise<any>;
+  confirmSignUp: (email: string, code: string, userId: string) => Promise<any>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -57,7 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       //   const fcm_token = localStorage.getItem("fcm_token") || null;
 
-      const existingUser = await getUser(userId, role);
+      const { profile } = await fetchUserAttributes();
+
+      const existingUser = await getUser(
+        currentUser.userId,
+        profile as UserRole
+      );
 
       if (!existingUser) {
         const newUser = await createUser(role, email, userId);
@@ -83,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = async (email: string, password: string, role: UserRole) => {
     try {
       setLoading(true);
+
       const { isSignUpComplete, userId, nextStep, existingUnconfirmedUser } =
         await handleSignUp({
           username: email,
@@ -103,25 +114,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const confirmSignUp = async (
-    email: string,
-    code: string,
-    role: UserRole,
-    userId: string
-  ) => {
+  const confirmSignUp = async (email: string, code: string, userId: string) => {
     try {
       setLoading(true);
       const { isSignUpComplete } = await handleConfirmSignUp(email, code);
       console.log("Attempting to confirm sign up", isSignUpComplete);
 
       if (isSignUpComplete) {
-        const newUser = await createUser(role, email, userId);
+        //check for employee table if this is a employee added by admin if yes then we  link this user
+        const existingUser = await checkEmployeeByEmail(email);
+        if (existingUser) {
+          //this is a employee added by admin
+
+          console.log("Employee found", existingUser);
+          await updateUserAttributes({
+            userAttributes: {
+              profile: "employee",
+            },
+          });
+          setUser({ ...existingUser, role: "employee" });
+
+          return isSignUpComplete;
+        }
+
+        console.log("Employee not found, creating new admin");
+        const newUser = await createUser("admin", email, userId);
         if (!newUser) {
           await signOut();
           throw new Error("User not created");
         }
+
+        await updateUserAttributes({
+          userAttributes: {
+            profile: "admin",
+          },
+        });
         console.log("newUser", newUser);
-        setUser({ ...newUser, role });
+        setUser({ ...newUser, role: "admin" });
       }
 
       return isSignUpComplete;
@@ -181,7 +210,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     }
   };
-
 
   const value = useMemo(
     () => ({

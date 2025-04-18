@@ -25,7 +25,7 @@ const DashboardLayout = ({
   }
   useEffect(() => {
     //we need to check for   onboarding step
-    if (user && user.company_id === null) {
+    if (user && user.company_id === null && userRole === "admin") {
       //redirect to onboarding page
       navigate("/onboarding");
     }

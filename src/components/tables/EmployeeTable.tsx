@@ -28,6 +28,7 @@ const EmployeeTable = ({ employees }: { employees: CompanyEmployee[] }) => {
             <TableHead className="w-16">ID</TableHead>
             <TableHead className="w-48">Name</TableHead>
             <TableHead className="w-64">Email</TableHead>
+            <TableHead className="w-48">Department</TableHead>
             <TableHead className="w-32">Status</TableHead>
             <TableHead className="w-16"></TableHead>
           </TableRow>
@@ -45,6 +46,9 @@ const EmployeeTable = ({ employees }: { employees: CompanyEmployee[] }) => {
                   {employee.email}
                 </div>
               </TableCell>
+                <TableCell>
+                    {employee.department}
+                </TableCell>
 
               <TableCell>
                 <div

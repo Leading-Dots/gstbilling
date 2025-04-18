@@ -5,11 +5,17 @@ import {
   ProfileStatus,
   UpdateAdminInput,
 } from "@/API";
-import { createAdmin, createCompanyEmployee, updateAdmin } from "@/graphql/mutations";
+import {
+  createAdmin,
+  createCompanyEmployee,
+  updateAdmin,
+  updateCompanyEmployee,
+} from "@/graphql/mutations";
 import { listAdmins, listCompanyEmployees } from "@/graphql/queries";
 import client from "@/lib/apiClient";
 import { showToast } from "@/lib/toast";
 import { UserRole } from "@/types";
+import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
 
 export const getUser = async (userId: string, role: UserRole) => {
   if (role === "admin") {
@@ -76,8 +82,28 @@ export const addAdminUser = async (
   }
 };
 
+export const addEmployeeFromAdmin = async (
+  employeeData: CreateCompanyEmployeeInput
+) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: createCompanyEmployee,
+      variables: {
+        input: {
+          ...employeeData,
+        },
+      },
+    });
 
-export const editAdminUser = async (adminData : UpdateAdminInput) => {
+    if (errors) {
+      console.error(errors);
+    }
+    return data.createCompanyEmployee;
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const editAdminUser = async (adminData: UpdateAdminInput) => {
   try {
     const { data, errors } = await client.graphql({
       query: updateAdmin,
@@ -95,7 +121,7 @@ export const editAdminUser = async (adminData : UpdateAdminInput) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 export const getAdminUser = async (userId: string) => {
   try {
@@ -119,7 +145,92 @@ export const getAdminUser = async (userId: string) => {
   }
 };
 
-export const findCompanyByEmail = async (email: string) => {};
+//really important diffentiate between admin and employee as they both have same login screen
+export const findUserByEmail = async (email: string, userID: string) => {
+  try {
+    //get the user first
+
+    const { profile } = await fetchUserAttributes();
+
+    if (!profile) {
+      //check both
+
+      const { data, errors } = await client.graphql({
+        query: listAdmins,
+        variables: {
+          filter: {
+            email: {
+              eq: email,
+            },
+          },
+        },
+      });
+      if (errors) {
+        console.error(errors);
+      }
+      if (data.listAdmins.items.length > 0) {
+        return data.listAdmins.items[0];
+      }
+      const { data: employeeData, errors: employeeErrors } =
+        await client.graphql({
+          query: listCompanyEmployees,
+          variables: {
+            filter: {
+              userID: {
+                eq: userID,
+              },
+            },
+          },
+        });
+      if (employeeErrors) {
+        console.error(employeeErrors);
+      }
+
+      if (employeeData.listCompanyEmployees.items.length > 0) {
+        return employeeData.listCompanyEmployees.items[0];
+      }
+
+      return null;
+    }
+
+    //find Profile Atttribute which has the role
+
+    if (profile === "admin") {
+      const { data, errors } = await client.graphql({
+        query: listAdmins,
+        variables: {
+          filter: {
+            email: {
+              eq: email,
+            },
+          },
+        },
+      });
+      if (errors) {
+        console.error(errors);
+      }
+
+      return data.listAdmins.items[0];
+    } else {
+      const { data, errors } = await client.graphql({
+        query: listCompanyEmployees,
+        variables: {
+          filter: {
+            email: {
+              eq: email,
+            },
+          },
+        },
+      });
+      if (errors) {
+        console.error(errors);
+      }
+      return data.listCompanyEmployees.items[0];
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const getCompanyEmployee = async (userId: string) => {
   try {
@@ -143,6 +254,51 @@ export const getCompanyEmployee = async (userId: string) => {
   }
 };
 
+export const checkEmployeeByEmail = async (email: string) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: listCompanyEmployees,
+      variables: {
+        filter: {
+          email: {
+            eq: email,
+          },
+        },
+      },
+    });
+
+    if (errors) {
+      console.error(errors);
+    }
+    if (data.listCompanyEmployees.items.length > 0) {
+      //mark this employee as active
+
+      const employeeID = data.listCompanyEmployees.items[0].id;
+      const { userId } = await getCurrentUser();
+
+      const { data: updateData, errors: updateErrors } = await client.graphql({
+        query: updateCompanyEmployee,
+        variables: {
+          input: {
+            id: employeeID,
+            userID: userId,
+            profile_status: EmployeeStatus.ACTIVE,
+          },
+        },
+      });
+      if (updateErrors) {
+        console.error(updateErrors);
+      }
+      if (updateData) {
+        console.log("Employee updated successfully", updateData);
+      }
+      return data.listCompanyEmployees.items[0];
+    }
+    return null;
+  } catch (error) {
+    console.error(error);
+  }
+};
 export const addCompanyEmployee = async (
   email: string,
   userId: string,

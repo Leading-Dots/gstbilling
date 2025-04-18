@@ -44,6 +44,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const navigationItems = [
   {
@@ -113,6 +114,8 @@ const navigationItems = [
 export function AppSidebar() {
   const location = useLocation();
   const pathname = location.pathname;
+
+  const { signOut } = useAuth();
 
   // Group navigation items by section
   const sections = React.useMemo(() => {
@@ -223,7 +226,7 @@ export function AppSidebar() {
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => signOut()}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>

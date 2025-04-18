@@ -34,6 +34,14 @@ import {
 } from "@/components/ui/select";
 import { CopyIcon, RefreshCcw } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { CreateCompanyEmployeeInput, EmployeeStatus } from "@/API";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  addCompanyEmployee,
+  addEmployeeFromAdmin,
+  createUser,
+} from "@/db/Users";
+import { showToast } from "@/lib/toast";
 
 // Define the form schema
 const employeeFormSchema = z.object({
@@ -59,7 +67,7 @@ const departments = [
 export default function CreateEmployeePage() {
   const router = useNavigate();
   const [password, setPassword] = useState("");
-  const [copySuccess, setCopySuccess] = useState(false);
+  const { user } = useAuth();
 
   // Initialize the form with default values
   const form = useForm<EmployeeFormValues>({
@@ -71,48 +79,28 @@ export default function CreateEmployeePage() {
     },
   });
 
-  // Generate random password
-  const generatePassword = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-    let newPassword = '';
-    for (let i = 0; i < 12; i++) {
-      newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setPassword(newPassword);
-    setCopySuccess(false);
-  };
-
-  // Generate password when component mounts
-  useEffect(() => {
-    generatePassword();
-  }, []);
-
   // Copy password to clipboard
-  const copyPasswordToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(password);
-      setCopySuccess(true);
-      toast.success("Password copied to clipboard");
-      
-      // Reset copy success message after 3 seconds
-      setTimeout(() => {
-        setCopySuccess(false);
-      }, 3000);
-    } catch (err) {
-      toast.error("Failed to copy password");
-    }
-  };
 
   // Form submission
   const onSubmit = async (data: EmployeeFormValues) => {
     try {
-      // Here you would add the employee to your database with the data and generated password
-      // For example: await addEmployee({ ...data, password })
-      
-      console.log("Employee data to submit:", { ...data, password });
-      
-      // Mock successful creation
-      toast.success("Employee created successfully");
+      const employeeData: CreateCompanyEmployeeInput = {
+        name: data.name,
+        email: data.email,
+        department: data.department,
+        profile_status: EmployeeStatus.INVITED,
+        adminID: user.id,
+        companyID: user.company_id,
+      };
+
+      const newEmployee = await addEmployeeFromAdmin(employeeData);
+      if (!newEmployee) {
+        toast.error("Error creating employee");
+        return;
+      }
+
+      showToast("Employee created successfully", "success");
+
       router("/employees"); // Adjust this to your correct route
     } catch (error) {
       console.error("Error creating employee:", error);
@@ -121,145 +109,113 @@ export default function CreateEmployeePage() {
   };
 
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-      <div className="flex flex-col justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Add New Employee</h2>
-        <h3 className="text-sm text-muted-foreground">
-          Fill in the details below to create a new employee account.
-        </h3>
+    <div className="max-w-4xl mx-auto w-full py-6 px-4 md:px-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Add New Employee
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Create a new employee account with the details below
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => router("/employees")}
+          className="hidden md:flex"
+        >
+          Back to Employees
+        </Button>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Basic Information */}
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle>Employee Information</CardTitle>
               <CardDescription>
-                Enter the details for the new employee
+                Enter the personal details for the new employee
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name*</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="John Doe" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address*</FormLabel>
-                    <FormControl>
-                      <Input type="email" {...field} placeholder="john.doe@example.com" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="department"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Department*</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+            <Separator />
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select department" />
-                        </SelectTrigger>
+                        <Input {...field} placeholder="John Doe" />
                       </FormControl>
-                      <SelectContent>
-                        {departments.map((dept) => (
-                          <SelectItem key={dept} value={dept}>
-                            {dept}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
+                      <FormDescription>
+                        Enter employee's legal name
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Password Generation */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Temporary Password</CardTitle>
-              <CardDescription>
-                A temporary password will be generated for the employee
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-col space-y-2">
-                <div className="flex items-center justify-between">
-                  <FormLabel>Generated Password</FormLabel>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={generatePassword}
-                    type="button"
-                  >
-                    <RefreshCcw className="h-4 w-4 mr-2" />
-                    Regenerate
-                  </Button>
-                </div>
-                
-                <div className="flex space-x-2">
-                  <Input 
-                    value={password} 
-                    readOnly 
-                    className="font-mono bg-muted"
-                  />
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    onClick={copyPasswordToClipboard}
-                    type="button"
-                  >
-                    <CopyIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-                
-                <FormDescription>
-                  {copySuccess 
-                    ? "Password copied to clipboard!" 
-                    : "This password will need to be changed on first login."}
-                </FormDescription>
-              </div>
-              
-              <div className="bg-muted rounded-md p-3 text-sm">
-                <p>Security note: Please share this password securely with the employee.</p>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          {...field}
+                          placeholder="john.doe@example.com"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Will be used for login and communications
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="department"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Department</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select department" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {departments.map((dept) => (
+                            <SelectItem key={dept} value={dept}>
+                              {dept}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Employee's primary department
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </CardContent>
           </Card>
 
           {/* Form Actions */}
-          <div className="flex justify-end gap-4">
-            <Button 
-              variant="outline" 
-              type="button" 
-              onClick={() => router("/employees")}
-            >
-              Cancel
-            </Button>
-            <Button type="submit">
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
+            <Button type="submit" className="sm:order-2 order-1 w-full">
               Create Employee
             </Button>
           </div>

@@ -1,3 +1,4 @@
+import { UserRole } from "@/types";
 import {
   signIn,
   signUp,
@@ -13,6 +14,7 @@ export interface SignUpParams {
   username: string;
   password: string;
   email: string;
+  role ?: UserRole;
 }
 
 export interface SignInParams {
@@ -25,6 +27,7 @@ export const handleSignUp = async ({
   username,
   password,
   email,
+  role,
 }: SignUpParams) => {
   try {
     console.log("sign up", username, password, email);
@@ -35,7 +38,9 @@ export const handleSignUp = async ({
         autoSignIn: true,
         userAttributes: {
           email,
-          // "custom:role": role,
+          profile: "unconfirmed",
+          // "custom:role":
+          //  role,
         },
       },
     });

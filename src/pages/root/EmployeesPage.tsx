@@ -112,6 +112,7 @@ export default function EmployeesPage() {
       <Tabs defaultValue="all" className="space-y-4">
         <TabsList className="w-full justify-start">
           <TabsTrigger value="all">All Employees</TabsTrigger>
+            <TabsTrigger value="invited">Invited</TabsTrigger>
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="inactive">Inactive</TabsTrigger>
         </TabsList>
@@ -131,6 +132,17 @@ export default function EmployeesPage() {
                 <EmployeeTable
                   employees={employees.filter(
                     (employee) => employee.profile_status === EmployeeStatus.ACTIVE
+                  )}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="invited" className="mt-0">
+            <Card>
+              <CardContent className="p-0">
+                <EmployeeTable
+                  employees={employees.filter(
+                    (employee) => employee.profile_status === EmployeeStatus.INVITED
                   )}
                 />
               </CardContent>

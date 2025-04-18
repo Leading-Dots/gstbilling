@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,9 +19,7 @@ export default function ConfirmSignUpPage() {
   const { confirmSignUp, signIn } = useAuth();
 
   const email = location.state!.email as string;
-  const role = location.state!.role as UserRole;
   const userId = location.state!.userId as string;
-  console.log(email, role);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     try {
@@ -31,18 +28,16 @@ export default function ConfirmSignUpPage() {
       const code = formData.get("code") as string;
 
       console.log("submitting form");
-      console.log(email, code, role);
+      console.log(email, code);
 
-      const { isSignUpComplete } = await confirmSignUp(email, code, role, userId);
-
-      
+      const { isSignUpComplete } = await confirmSignUp(email, code, userId);
 
       console.log("Signed in successfully", isSignUpComplete);
 
       showToast("Successfully signed up!", "success");
 
       return isSignUpComplete;
-    } catch (error : any) {
+    } catch (error: any) {
       showToast(error.message, "error");
       console.error(error);
     }
@@ -67,7 +62,11 @@ export default function ConfirmSignUpPage() {
                 autoComplete="off"
               />
             </div>
-            <Button type="submit" size="lg"  className="w-full font-bold text-lg">
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full font-bold text-lg"
+            >
               Verify
             </Button>
           </form>

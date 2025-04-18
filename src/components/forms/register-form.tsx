@@ -70,7 +70,6 @@ export default function RegisterForm({ userRole }: { userRole: UserRole }) {
         router("/confirm-signup", {
           state: {
             email: values.email,
-            role: userRole,
             userId: response!.userId,
           },
         });
