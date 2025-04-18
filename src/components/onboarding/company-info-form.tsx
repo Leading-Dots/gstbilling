@@ -1,26 +1,38 @@
-"use client"
 
-import type { UseFormReturn } from "react-hook-form"
-import { useEffect } from "react"
+import type { UseFormReturn } from "react-hook-form";
+import { useEffect } from "react";
 
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CompanyInfoFormProps {
-  form: UseFormReturn<any>
+  form: UseFormReturn<any>;
 }
 
 export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
-  const gstCategory = form.watch("gstCategory")
+  const gstCategory = form.watch("gstCategory");
 
   // Reset GSTIN when category changes to Unregistered
   useEffect(() => {
     if (gstCategory === "Unregistered") {
-      form.setValue("gstin", "")
+      form.setValue("gstin", "");
     }
-  }, [gstCategory, form])
+  }, [gstCategory, form]);
 
   return (
     <div className="space-y-6">
@@ -33,7 +45,9 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
             <FormControl>
               <Input placeholder="Acme Inc." {...field} />
             </FormControl>
-            <FormDescription>Enter the registered name of your company.</FormDescription>
+            <FormDescription>
+              Enter the registered name of your company.
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -48,7 +62,9 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
             <FormControl>
               <Input placeholder="John Doe" {...field} />
             </FormControl>
-            <FormDescription>Enter the name of the company owner or primary contact.</FormDescription>
+            <FormDescription>
+              Enter the name of the company owner or primary contact.
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -67,7 +83,9 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
                 {...field}
               />
             </FormControl>
-            <FormDescription>Enter the complete registered address of your company.</FormDescription>
+            <FormDescription>
+              Enter the complete registered address of your company.
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -87,12 +105,31 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Regular">Regular</SelectItem>
-                  <SelectItem value="Composition">Composition</SelectItem>
+                  <SelectItem value="Regular">Regular Taxpayer</SelectItem>
+                  <SelectItem value="Composition">
+                    Composition Scheme
+                  </SelectItem>
                   <SelectItem value="Unregistered">Unregistered</SelectItem>
+                  <SelectItem value="Casual">Casual Taxable Person</SelectItem>
+                  <SelectItem value="NonResident">
+                    Non-Resident Taxable Person
+                  </SelectItem>
+                  <SelectItem value="ISD">
+                    Input Service Distributor (ISD)
+                  </SelectItem>
+                  <SelectItem value="ECommerce">E-Commerce Operator</SelectItem>
+                  <SelectItem value="TDS_TCS">
+                    TDS/TCS Deductor or Collector
+                  </SelectItem>
+                  <SelectItem value="SEZ">SEZ Unit/Developer</SelectItem>
+                  <SelectItem value="UIN">
+                    UIN Holder (Embassy/UN Body)
+                  </SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>Select your GST registration category.</FormDescription>
+              <FormDescription>
+                Select your GST registration category.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -108,7 +145,9 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
                 <FormControl>
                   <Input placeholder="22AAAAA0000A1Z5" {...field} />
                 </FormControl>
-                <FormDescription>Enter your 15-digit GST Identification Number.</FormDescription>
+                <FormDescription>
+                  Enter your 15-digit GST Identification Number.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -126,7 +165,9 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
               <FormControl>
                 <Input type="email" placeholder="info@acmeinc.com" {...field} />
               </FormControl>
-              <FormDescription>Enter the official email address for your company.</FormDescription>
+              <FormDescription>
+                Enter the official email address for your company.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -141,12 +182,14 @@ export function CompanyInfoForm({ form }: CompanyInfoFormProps) {
               <FormControl>
                 <Input placeholder="+1 (555) 987-6543" {...field} />
               </FormControl>
-              <FormDescription>Enter your company's contact number.</FormDescription>
+              <FormDescription>
+                Enter your company's contact number.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
       </div>
     </div>
-  )
+  );
 }

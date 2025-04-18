@@ -76,7 +76,7 @@ export default function InventoryTable({ inventoryItems, onRefresh }) {
 
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table className='w-full table-fixed max-w-5xl'>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Item Code</TableHead>

@@ -53,22 +53,6 @@ const navigationItems = [
     section: "Overview",
   },
   {
-    title: "Sales",
-    section: "Sales",
-    items: [
-      {
-        title: "Invoices",
-        href: "/invoices",
-        icon: FileText,
-      },
-      {
-        title: "Quotations",
-        href: "/quotations",
-        icon: FileCheck,
-      },
-    ],
-  },
-  {
     title: "Contacts",
     section: "Contacts",
     items: [
@@ -82,19 +66,47 @@ const navigationItems = [
         href: "/vendors",
         icon: Building,
       },
+      {
+        title: "Employees",
+        href: "/employees",
+        icon: UserCircle,
+      },
     ],
   },
+  {
+    title: "Sales",
+    section: "Sales",
+    items: [
+      {
+        title: "Purchase Orders",
+        href: "/purchase-orders",
+        icon: FileText,
+      },
+      {
+        title: "Invoices",
+        href: "/invoices",
+        icon: FileText,
+      },
+      {
+        title: "Quotations",
+        href: "/quotations",
+        icon: FileCheck,
+      },
+    ],
+  },
+
+  {
+    title: "Inventory",
+    href: "/inventory",
+    icon: Home, // Consider using a more appropriate icon
+    section: "Products",
+  },
+
   {
     title: "Reports",
     href: "/reports",
     icon: BarChart3,
     section: "Analytics",
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-    section: "System",
   },
 ];
 
