@@ -22,6 +22,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import ConfirmSignUpPage from "@/pages/auth/ConfirmRegisterPage";
+import OnboardingPage from "@/pages/root/onboarding/OnboardingPage";
 
 const routes = [
   {
@@ -62,6 +63,14 @@ const routes = [
     element: (
       <DashboardLayout>
         <DashboardPage />
+      </DashboardLayout>
+    ),
+  },
+  {
+    path: "/onboarding",
+    element: (
+      <DashboardLayout sidebarDisabled>
+        <OnboardingPage />
       </DashboardLayout>
     ),
   },

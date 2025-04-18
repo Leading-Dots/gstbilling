@@ -4,11 +4,16 @@ import React, { useEffect } from "react";
 import { AppSidebar } from "./AppSidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate, useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  sidebarDisabled?: boolean;
 }
-const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+const DashboardLayout = ({
+  children,
+  sidebarDisabled = false,
+}: DashboardLayoutProps) => {
   const { user } = useAuth();
 
   const userRole = user?.role;
@@ -18,9 +23,19 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   }
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
-        <AppSidebar />
-        <SidebarTrigger className="lg:hidden" />
+      <div className={cn(`flex min-h-screen`, {
+        'mx-auto': sidebarDisabled,
+        "w-full": sidebarDisabled,
+        
+      })}
+      >
+        {!sidebarDisabled ? (
+          <>
+            <AppSidebar />
+            <SidebarTrigger />
+          </>
+        ) : null}
+
         <main
           className="flex-1 
         "
