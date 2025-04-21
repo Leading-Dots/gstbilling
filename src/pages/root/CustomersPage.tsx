@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { getAllCustomers } from "@/db/Customers";
 import { Customer, ProfileStatus } from "@/API";
 import CustomerTable from "@/components/tables/CustomerTable";
+import { useAuth } from "@/hooks/useAuth";
 
 const customers = [
   {
@@ -111,11 +112,12 @@ const customers = [
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
+  const {user} = useAuth();
 
   useEffect(() => {
     const listCustomers = async () => {
       try {
-        const customerData = await getAllCustomers();
+        const customerData = await getAllCustomers(user.companyID);
         if (customerData) {
           setCustomers(customerData);
         }

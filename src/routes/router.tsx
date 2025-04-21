@@ -25,6 +25,11 @@ import ConfirmSignUpPage from "@/pages/auth/ConfirmRegisterPage";
 import OnboardingPage from "@/pages/root/onboarding/OnboardingPage";
 import EmployeesPage from "@/pages/root/EmployeesPage";
 import CreateEmployeePage from "@/pages/root/new/CreateEmployeePage";
+import CreateInventoryItem from "@/pages/root/new/CreateInventoryItemPage";
+import EditEmployeePage from "@/pages/root/edit/EditEmployeePage";
+import UnauthorizedPage from "@/pages/root/UnauthorizedPage";
+import { RESOURCES, ACTIONS } from "@/lib/permissionManager";
+import { createPermissionLoader } from "./permissionLoader";
 
 const routes = [
   {
@@ -77,21 +82,38 @@ const routes = [
     ),
   },
   {
+    path: "/unauthorized",
+    element: <UnauthorizedPage />,
+  },
+  // Employee routes with permission checks
+  {
     path: "/employees",
     element: (
-      <DashboardLayout >
+      <DashboardLayout>
         <EmployeesPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.EMPLOYEE, ACTIONS.LIST),
   },
   {
     path: "/employees/new",
     element: (
-      <DashboardLayout >
+      <DashboardLayout>
         <CreateEmployeePage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.EMPLOYEE, ACTIONS.CREATE),
   },
+  {
+    path: "/employees/:id/edit",
+    element: (
+      <DashboardLayout>
+        <EditEmployeePage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.EMPLOYEE, ACTIONS.UPDATE),
+  },
+  // Customer routes with permission checks
   {
     path: "/customers",
     element: (
@@ -99,6 +121,7 @@ const routes = [
         <CustomersPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.CUSTOMER, ACTIONS.LIST),
   },
   {
     path: "/customers/new",
@@ -107,54 +130,7 @@ const routes = [
         <NewCustomerPage />
       </DashboardLayout>
     ),
-  },
-  {
-    path: "/invoices",
-    element: (
-      <DashboardLayout>
-        <InvoicesPage />
-      </DashboardLayout>
-    ),
-  },
-  {
-    path: "/inventory",
-    element: (
-      <DashboardLayout>
-        <InventoryPage />
-      </DashboardLayout>
-    ),
-  },
-  {
-    path: "/invoices/new",
-    element: (
-      <DashboardLayout>
-        <NewInvoicePage />
-      </DashboardLayout>
-    ),
-  },
-  {
-    path: "/quotations/new",
-    element: (
-      <DashboardLayout>
-        <NewQuotationPage />
-      </DashboardLayout>
-    ),
-  },
-  {
-    path: "/invoices/:id/edit",
-    element: (
-      <DashboardLayout>
-        <EditInvoicePage />
-      </DashboardLayout>
-    ),
-  },
-  {
-    path: "/invoices/:id/view",
-    element: (
-      <DashboardLayout>
-        <InvoiceDetailsPage />
-      </DashboardLayout>
-    ),
+    loader: createPermissionLoader(RESOURCES.CUSTOMER, ACTIONS.CREATE),
   },
   {
     path: "/customers/:id/edit",
@@ -163,6 +139,7 @@ const routes = [
         <EditCustomerPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.CUSTOMER, ACTIONS.UPDATE),
   },
   {
     path: "/customers/:id/view",
@@ -171,6 +148,82 @@ const routes = [
         <CustomerDetailsPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.CUSTOMER, ACTIONS.READ),
+  },
+  // Invoice routes with permission checks
+  {
+    path: "/invoices",
+    element: (
+      <DashboardLayout>
+        <InvoicesPage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.LIST),
+  },
+  {
+    path: "/invoices/new",
+    element: (
+      <DashboardLayout>
+        <NewInvoicePage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.CREATE),
+  },
+  {
+    path: "/invoices/:id/edit",
+    element: (
+      <DashboardLayout>
+        <EditInvoicePage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.UPDATE),
+  },
+  {
+    path: "/invoices/:id/view",
+    element: (
+      <DashboardLayout>
+        <InvoiceDetailsPage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.READ),
+  },
+  // Inventory routes with permission checks
+  {
+    path: "/inventory",
+    element: (
+      <DashboardLayout>
+        <InventoryPage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.INVENTORY_ITEM, ACTIONS.LIST),
+  },
+  {
+    path: "/inventory/create",
+    element: (
+      <DashboardLayout>
+        <CreateInventoryItem/>
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.INVENTORY_ITEM, ACTIONS.CREATE),
+  },
+  // Quotation routes with permission checks
+  {
+    path: "/quotations",
+    element: (
+      <DashboardLayout>
+        <QuotationsPage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.QUOTATION, ACTIONS.LIST),
+  },
+  {
+    path: "/quotations/new",
+    element: (
+      <DashboardLayout>
+        <NewQuotationPage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.QUOTATION, ACTIONS.CREATE),
   },
   {
     path: "/quotations/:id/edit",
@@ -179,6 +232,7 @@ const routes = [
         <UpdateQuotationPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.QUOTATION, ACTIONS.UPDATE),
   },
   {
     path: "/quotations/:id/view",
@@ -187,15 +241,9 @@ const routes = [
         <QuotationPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.QUOTATION, ACTIONS.READ),
   },
-  {
-    path: "/quotations",
-    element: (
-      <DashboardLayout>
-        <QuotationsPage />
-      </DashboardLayout>
-    ),
-  },
+  // Vendor routes with permission checks
   {
     path: "/vendors",
     element: (
@@ -203,6 +251,7 @@ const routes = [
         <VendorsPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.VENDOR, ACTIONS.LIST),
   },
   {
     path: "/vendors/new",
@@ -211,7 +260,9 @@ const routes = [
         <NewVendorPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.VENDOR, ACTIONS.CREATE),
   },
+  // Reports page with company read permission
   {
     path: "/reports",
     element: (
@@ -219,6 +270,7 @@ const routes = [
         <ReportsPage />
       </DashboardLayout>
     ),
+    loader: createPermissionLoader(RESOURCES.COMPANY, ACTIONS.READ),
   },
 ];
 

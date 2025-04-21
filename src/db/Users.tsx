@@ -4,6 +4,7 @@ import {
   EmployeeStatus,
   ProfileStatus,
   UpdateAdminInput,
+  UpdateCompanyEmployeeInput,
 } from "@/API";
 import {
   createAdmin,
@@ -16,13 +17,14 @@ import client from "@/lib/apiClient";
 import { showToast } from "@/lib/toast";
 import { UserRole } from "@/types";
 import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
+import { getCompanyEmployee } from "@/graphql/queries";
 
 export const getUser = async (userId: string, role: UserRole) => {
   if (role === "admin") {
     return await getAdminUser(userId);
   }
   if (role === "employee") {
-    return await getCompanyEmployee(userId);
+    return await getCompanyEmployeeByUserId(userId);
   }
   return null;
 };
@@ -232,7 +234,7 @@ export const findUserByEmail = async (email: string, userID: string) => {
   }
 };
 
-export const getCompanyEmployee = async (userId: string) => {
+export const getCompanyEmployeeByUserId = async (userId: string) => {
   try {
     const { data, errors } = await client.graphql({
       query: listCompanyEmployees,
@@ -311,7 +313,7 @@ export const addCompanyEmployee = async (
       email: email,
       userID: userId,
       adminID: adminID,
-      companyID: companyID,
+      company_id: companyID,
       profile_status: EmployeeStatus.ACTIVE,
     };
     const { data, errors } = await client.graphql({
@@ -327,6 +329,45 @@ export const addCompanyEmployee = async (
       console.error(errors);
     }
     return data.createCompanyEmployee;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getEmployeeByID = async (employeeID: string) => {
+  try {
+    const { data, errors } = await client.graphql({
+      query: getCompanyEmployee,
+      variables: {
+        id: employeeID,
+      },
+    });
+
+    if (errors) {
+      console.error(errors);
+    }
+    return data.getCompanyEmployee;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const editCompanyEmployee = async (
+  updateEmployeeData: UpdateCompanyEmployeeInput
+) => {
+  try {
+    const updateData = await client.graphql({
+      query: updateCompanyEmployee,
+      variables: {
+        input: {
+          ...updateEmployeeData,
+        },
+      },
+    });
+    if (updateData.errors) {
+      console.error(updateData.errors);
+    }
+    return updateData.data.updateCompanyEmployee;
   } catch (error) {
     console.error(error);
   }

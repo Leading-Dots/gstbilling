@@ -72,10 +72,10 @@ const EmployeeTable = ({ employees }: { employees: CompanyEmployee[] }) => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>View Details</DropdownMenuItem>
+                   
                     <DropdownMenuItem asChild>
                       <Link to={`/employees/${employee.id}/edit`}>
-                        Edit Customer
+                        Edit Employee
                       </Link>
                     </DropdownMenuItem>
 

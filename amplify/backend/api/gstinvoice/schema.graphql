@@ -32,12 +32,14 @@ type CompanyEmployee @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String
   adminID: ID! @index(name: "byAdmin")
-  companyID: ID! @index(name: "byCompany")
+  company_id: ID! @index(name: "byCompany")
   email: String
   userID: String
   profile_status: EmployeeStatus
   department: String
   employeeID: String
+  permissionRole: String
+  permissionMatrix: AWSJSON
 }
 
 type SubscriptionPlan @model @auth(rules: [{allow: public}]) {
@@ -77,6 +79,8 @@ type Company @model @auth(rules: [{allow: public}]) {
   city: String
   state: String
   country: String
+  Customers: [Customer] @hasMany(indexName: "byCompany", fields: ["id"])
+  Vendors: [Vendor] @hasMany(indexName: "byCompany", fields: ["id"])
 }
 
 enum QuotationStatus {
@@ -111,6 +115,8 @@ type Vendor @model @auth(rules: [{allow: public}]) {
   vendor_status: ProfileStatus
   gstin: String
   shipping_address: String
+  companyID: ID! @index(name: "byCompany")
+  adminID: String
 }
 
 type Customer @model @auth(rules: [{allow: public}]) {
@@ -135,6 +141,8 @@ type Customer @model @auth(rules: [{allow: public}]) {
   credit_limit: String
   note: String
   printColor: String
+  companyID: ID! @index(name: "byCompany")
+  adminID: String
 }
 
 type Quotation @model @auth(rules: [{allow: public}]) {

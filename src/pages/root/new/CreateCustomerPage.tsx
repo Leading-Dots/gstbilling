@@ -40,6 +40,7 @@ import { toast } from "sonner";
 import { Combobox } from "@/components/ui/combobox";
 import { addCustomer } from "@/db/Customers";
 import { ProfileStatus } from "@/API";
+import { useAuth } from "@/hooks/useAuth";
 
 // Define the form schema
 const customerFormSchema = z.object({
@@ -71,6 +72,7 @@ type CustomerFormValues = z.infer<typeof customerFormSchema>;
 
 export default function NewCustomerPage() {
   const router = useNavigate();
+  const { user } = useAuth();
   const [sameAsBilling, setSameAsBilling] = useState(true);
 
   // Initialize the form with default values
@@ -119,7 +121,15 @@ export default function NewCustomerPage() {
   const onSubmit = async (data: CustomerFormValues) => {
     try {
       const newCustomer = await addCustomer({
-        customer_id: "Customer" + Math.floor(Math.random() * 10000),
+        customer_id: `CUS-${String(new Date().getFullYear()).slice(2)}${String(
+          new Date().getMonth() + 1
+        ).padStart(2, "0")}${String(Math.floor(Math.random() * 1000)).padStart(
+          3,
+          "0"
+        )}`,
+        companyID: user.company_id,
+        adminID: user.id,
+
         company_name: data.customerName,
         owner_name: data.contactPerson,
         email: data.email,
@@ -236,7 +246,7 @@ export default function NewCustomerPage() {
                     <FormItem>
                       <FormLabel>GSTIN*</FormLabel>
                       <FormControl>
-                        <Input {...field}  maxLength={15}/>
+                        <Input {...field} maxLength={15} />
                       </FormControl>
                       <FormDescription>
                         15-character Goods and Services Tax Identification
@@ -324,8 +334,6 @@ export default function NewCustomerPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              
-
               <div className="grid gap-4 md:grid-cols-4">
                 <FormField
                   control={form.control}
@@ -396,7 +404,7 @@ export default function NewCustomerPage() {
                     <FormControl>
                       <Textarea {...field} rows={3} />
                     </FormControl>
-                    
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -531,7 +539,6 @@ export default function NewCustomerPage() {
 
           {/* Form Actions */}
           <div className="flex justify-end gap-4">
-           
             <Button type="submit" className="w-full md:w-auto">
               Create Customer
             </Button>

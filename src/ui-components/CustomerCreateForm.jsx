@@ -47,6 +47,7 @@ export default function CustomerCreateForm(props) {
     credit_limit: "",
     note: "",
     printColor: "",
+    adminID: "",
   };
   const [customer_id, setCustomer_id] = React.useState(
     initialValues.customer_id
@@ -80,6 +81,7 @@ export default function CustomerCreateForm(props) {
   );
   const [note, setNote] = React.useState(initialValues.note);
   const [printColor, setPrintColor] = React.useState(initialValues.printColor);
+  const [adminID, setAdminID] = React.useState(initialValues.adminID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setCustomer_id(initialValues.customer_id);
@@ -100,6 +102,7 @@ export default function CustomerCreateForm(props) {
     setCredit_limit(initialValues.credit_limit);
     setNote(initialValues.note);
     setPrintColor(initialValues.printColor);
+    setAdminID(initialValues.adminID);
     setErrors({});
   };
   const validations = {
@@ -121,6 +124,7 @@ export default function CustomerCreateForm(props) {
     credit_limit: [],
     note: [],
     printColor: [],
+    adminID: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -166,6 +170,7 @@ export default function CustomerCreateForm(props) {
           credit_limit,
           note,
           printColor,
+          adminID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -246,6 +251,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.customer_id ?? value;
@@ -287,6 +293,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.company_name ?? value;
@@ -328,6 +335,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.owner_name ?? value;
@@ -369,6 +377,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -410,6 +419,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.phone ?? value;
@@ -455,6 +465,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.outstanding_amount ?? value;
@@ -498,6 +509,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.billing_address ?? value;
@@ -539,6 +551,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.customer_status ?? value;
@@ -591,6 +604,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.gstin ?? value;
@@ -632,6 +646,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.shipping_address ?? value;
@@ -673,6 +688,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.city ?? value;
@@ -714,6 +730,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.state ?? value;
@@ -755,6 +772,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.pincode ?? value;
@@ -796,6 +814,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.country ?? value;
@@ -837,6 +856,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.pan_number ?? value;
@@ -878,6 +898,7 @@ export default function CustomerCreateForm(props) {
               credit_limit: value,
               note,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.credit_limit ?? value;
@@ -919,6 +940,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note: value,
               printColor,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.note ?? value;
@@ -960,6 +982,7 @@ export default function CustomerCreateForm(props) {
               credit_limit,
               note,
               printColor: value,
+              adminID,
             };
             const result = onChange(modelFields);
             value = result?.printColor ?? value;
@@ -973,6 +996,48 @@ export default function CustomerCreateForm(props) {
         errorMessage={errors.printColor?.errorMessage}
         hasError={errors.printColor?.hasError}
         {...getOverrideProps(overrides, "printColor")}
+      ></TextField>
+      <TextField
+        label="Admin id"
+        isRequired={false}
+        isReadOnly={false}
+        value={adminID}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              customer_id,
+              company_name,
+              owner_name,
+              email,
+              phone,
+              outstanding_amount,
+              billing_address,
+              customer_status,
+              gstin,
+              shipping_address,
+              city,
+              state,
+              pincode,
+              country,
+              pan_number,
+              credit_limit,
+              note,
+              printColor,
+              adminID: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.adminID ?? value;
+          }
+          if (errors.adminID?.hasError) {
+            runValidationTasks("adminID", value);
+          }
+          setAdminID(value);
+        }}
+        onBlur={() => runValidationTasks("adminID", adminID)}
+        errorMessage={errors.adminID?.errorMessage}
+        hasError={errors.adminID?.hasError}
+        {...getOverrideProps(overrides, "adminID")}
       ></TextField>
       <Flex
         justifyContent="space-between"

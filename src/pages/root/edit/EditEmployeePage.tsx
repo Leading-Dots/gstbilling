@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -32,15 +32,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CopyIcon, RefreshCcw } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { CreateCompanyEmployeeInput, EmployeeStatus } from "@/API";
+import { CompanyEmployee, EmployeeStatus, UpdateCompanyEmployeeInput } from "@/API";
 import { useAuth } from "@/hooks/useAuth";
-import {
-  addCompanyEmployee,
-  addEmployeeFromAdmin,
-  createUser,
-} from "@/db/Users";
+import { getEmployeeByID, editCompanyEmployee } from "@/db/Users";
 import { showToast } from "@/lib/toast";
 import { ROLES, createPermissionJson } from "@/lib/permissionManager";
 
@@ -73,10 +69,13 @@ const roleOptions = Object.entries(ROLES).map(([key, role]) => ({
   description: role.description,
 }));
 
-export default function CreateEmployeePage() {
+export default function EditEmployeePage() {
   const router = useNavigate();
-  const [password, setPassword] = useState("");
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [employee, setEmployee] = useState<CompanyEmployee | null>(null);
   const { user } = useAuth();
+
 
   // Initialize the form with default values
   const form = useForm<EmployeeFormValues>({
@@ -89,48 +88,95 @@ export default function CreateEmployeePage() {
     },
   });
 
+  // Fetch employee data when component mounts
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      if (!id) {
+        toast.error("Employee ID is missing");
+        router("/employees");
+        return;
+      }
+
+      try {
+        const employeeData = await getEmployeeByID(id);
+        
+        if (!employeeData) {
+          toast.error("Employee not found");
+          router("/employees");
+          return;
+        }
+
+        setEmployee(employeeData);
+        
+        // Set form values
+        form.reset({
+          name: employeeData.name || "",
+          email: employeeData.email || "",
+          department: employeeData.department || "",
+          role: employeeData.permissionRole || "",
+        });
+        
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+        toast.error("Failed to load employee data");
+        router("/employees");
+      }
+    };
+
+    fetchEmployeeData();
+  }, [id, router, form]);
+
   // Form submission
   const onSubmit = async (data: EmployeeFormValues) => {
+    if (!employee) return;
+    
     try {
       // Generate permissions JSON based on the selected role
       const permissions = createPermissionJson(data.role);
       
-      const employeeData: CreateCompanyEmployeeInput = {
+      const employeeData: UpdateCompanyEmployeeInput = {
+        id: id!,
         name: data.name,
         email: data.email,
         department: data.department,
-        profile_status: EmployeeStatus.INVITED,
-        adminID: user.id,
-        company_id: user.company_id,
         permissionRole: data.role,
-        permissionMatrix : JSON.stringify(permissions),
+        permissionMatrix: JSON.stringify(permissions),
       };
 
-      console.log("Employee Data:", employeeData);
-      const newEmployee = await addEmployeeFromAdmin(employeeData);
-      if (!newEmployee) {
-        toast.error("Error creating employee");
+      const updatedEmployee = await editCompanyEmployee(employeeData);
+      
+      if (!updatedEmployee) {
+        toast.error("Error updating employee");
         return;
       }
 
-      showToast("Employee created successfully", "success");
-
-      router("/employees"); // Adjust this to your correct route
+      showToast("Employee updated successfully", "success");
+      router("/employees");
     } catch (error) {
-      console.error("Error creating employee:", error);
-      toast.error("Error creating employee");
+      console.error("Error updating employee:", error);
+      toast.error("Error updating employee");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-[70vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Loading employee data...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto w-full py-6 px-4 md:px-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Add New Employee
+            Edit Employee
           </h1>
           <p className="text-muted-foreground mt-1">
-            Create a new employee account with the details below
+            Update employee information and permissions
           </p>
         </div>
         <Button
@@ -149,7 +195,7 @@ export default function CreateEmployeePage() {
             <CardHeader className="pb-3">
               <CardTitle>Employee Information</CardTitle>
               <CardDescription>
-                Enter the personal details for the new employee
+                Update the employee's details
               </CardDescription>
             </CardHeader>
             <Separator />
@@ -165,7 +211,7 @@ export default function CreateEmployeePage() {
                         <Input {...field} placeholder="John Doe" />
                       </FormControl>
                       <FormDescription>
-                        Enter employee's legal name
+                        Employee's legal name
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -186,7 +232,7 @@ export default function CreateEmployeePage() {
                         />
                       </FormControl>
                       <FormDescription>
-                        Will be used for login and communications
+                        Used for login and communications
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -273,8 +319,16 @@ export default function CreateEmployeePage() {
 
           {/* Form Actions */}
           <div className="flex flex-col sm:flex-row justify-end gap-3">
-            <Button type="submit" className="sm:order-2 order-1 w-full">
-              Create Employee
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="sm:order-1" 
+              onClick={() => router("/employees")}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" className="sm:order-2">
+              Update Employee
             </Button>
           </div>
         </form>

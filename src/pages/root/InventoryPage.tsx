@@ -21,9 +21,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InventoryTable from "@/components/tables/InventoryTable";
 import { getInventoryItemsByCompanyID } from "@/db/InventoryItems";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function InventoryPage() {
   const navigate = useNavigate();
+  const {user} = useAuth()
   const [inventoryItems, setInventoryItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -40,7 +42,7 @@ export default function InventoryPage() {
   const fetchInventoryItems = async () => {
     setLoading(true);
     try {
-      const inventoryData = await getInventoryItemsByCompanyID("companyID");
+      const inventoryData = await getInventoryItemsByCompanyID(user.company_id);
 
       setInventoryItems(inventoryData);
 
@@ -70,7 +72,7 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="container flex-1 mx-auto p-4 max-w-4xl flex flex-col">
+    <div className="container flex-1 mx-auto p-4 max-w-4xl flex flex-col mt-4">
       <div className="flex items-center justify-between space-y-2 mb-6">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Inventory</h2>
@@ -78,19 +80,19 @@ export default function InventoryPage() {
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm" className="hidden md:flex">
-            <ArrowDownToLine className="mr-2 h-4 w-4" />
+            <ArrowDownToLine className="h-4 w-4" />
             Import
           </Button>
           <Button variant="outline" size="sm" className="hidden md:flex">
-            <ArrowUpToLine className="mr-2 h-4 w-4" />
+            <ArrowUpToLine className="h-4 w-4" />
             Export
           </Button>
           <Button variant="outline" size="sm" className="hidden md:flex">
-            <FileBarChart className="mr-2 h-4 w-4" />
+            <FileBarChart className="h-4 w-4" />
             Report
           </Button>
           <Button onClick={() => navigate("/inventory/create")}>
-            <PackagePlus className="mr-2 h-4 w-4" />
+            <PackagePlus className="h-4 w-4" />
             Add Item
           </Button>
         </div>

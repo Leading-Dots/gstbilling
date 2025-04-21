@@ -103,12 +103,14 @@ export const createCompanyEmployee = /* GraphQL */ `mutation CreateCompanyEmploy
     id
     name
     adminID
-    companyID
+    company_id
     email
     userID
     profile_status
     department
     employeeID
+    permissionRole
+    permissionMatrix
     createdAt
     updatedAt
     __typename
@@ -126,12 +128,14 @@ export const updateCompanyEmployee = /* GraphQL */ `mutation UpdateCompanyEmploy
     id
     name
     adminID
-    companyID
+    company_id
     email
     userID
     profile_status
     department
     employeeID
+    permissionRole
+    permissionMatrix
     createdAt
     updatedAt
     __typename
@@ -149,12 +153,14 @@ export const deleteCompanyEmployee = /* GraphQL */ `mutation DeleteCompanyEmploy
     id
     name
     adminID
-    companyID
+    company_id
     email
     userID
     profile_status
     department
     employeeID
+    permissionRole
+    permissionMatrix
     createdAt
     updatedAt
     __typename
@@ -326,6 +332,14 @@ export const createCompany = /* GraphQL */ `mutation CreateCompany(
     city
     state
     country
+    Customers {
+      nextToken
+      __typename
+    }
+    Vendors {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -362,6 +376,14 @@ export const updateCompany = /* GraphQL */ `mutation UpdateCompany(
     city
     state
     country
+    Customers {
+      nextToken
+      __typename
+    }
+    Vendors {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -398,6 +420,14 @@ export const deleteCompany = /* GraphQL */ `mutation DeleteCompany(
     city
     state
     country
+    Customers {
+      nextToken
+      __typename
+    }
+    Vendors {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -423,6 +453,8 @@ export const createVendor = /* GraphQL */ `mutation CreateVendor(
     vendor_status
     gstin
     shipping_address
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -448,6 +480,8 @@ export const updateVendor = /* GraphQL */ `mutation UpdateVendor(
     vendor_status
     gstin
     shipping_address
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -473,6 +507,8 @@ export const deleteVendor = /* GraphQL */ `mutation DeleteVendor(
     vendor_status
     gstin
     shipping_address
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -514,6 +550,8 @@ export const createCustomer = /* GraphQL */ `mutation CreateCustomer(
     credit_limit
     note
     printColor
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -555,6 +593,8 @@ export const updateCustomer = /* GraphQL */ `mutation UpdateCustomer(
     credit_limit
     note
     printColor
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -596,6 +636,8 @@ export const deleteCustomer = /* GraphQL */ `mutation DeleteCustomer(
     credit_limit
     note
     printColor
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename

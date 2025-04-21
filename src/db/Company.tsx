@@ -84,7 +84,7 @@ export const getEmployeesByCompany = async (companyId: string) => {
       query: listCompanyEmployees,
       variables: {
         filter: {
-            companyID: {
+            company_id: {
                 eq: companyId,
             },
         }

@@ -115,12 +115,14 @@ export const getCompanyEmployee = /* GraphQL */ `query GetCompanyEmployee($id: I
     id
     name
     adminID
-    companyID
+    company_id
     email
     userID
     profile_status
     department
     employeeID
+    permissionRole
+    permissionMatrix
     createdAt
     updatedAt
     __typename
@@ -140,12 +142,14 @@ export const listCompanyEmployees = /* GraphQL */ `query ListCompanyEmployees(
       id
       name
       adminID
-      companyID
+      company_id
       email
       userID
       profile_status
       department
       employeeID
+      permissionRole
+      permissionMatrix
       createdAt
       updatedAt
       __typename
@@ -176,12 +180,14 @@ export const companyEmployeesByAdminID = /* GraphQL */ `query CompanyEmployeesBy
       id
       name
       adminID
-      companyID
+      company_id
       email
       userID
       profile_status
       department
       employeeID
+      permissionRole
+      permissionMatrix
       createdAt
       updatedAt
       __typename
@@ -194,15 +200,15 @@ export const companyEmployeesByAdminID = /* GraphQL */ `query CompanyEmployeesBy
   APITypes.CompanyEmployeesByAdminIDQueryVariables,
   APITypes.CompanyEmployeesByAdminIDQuery
 >;
-export const companyEmployeesByCompanyID = /* GraphQL */ `query CompanyEmployeesByCompanyID(
-  $companyID: ID!
+export const companyEmployeesByCompany_id = /* GraphQL */ `query CompanyEmployeesByCompany_id(
+  $company_id: ID!
   $sortDirection: ModelSortDirection
   $filter: ModelCompanyEmployeeFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  companyEmployeesByCompanyID(
-    companyID: $companyID
+  companyEmployeesByCompany_id(
+    company_id: $company_id
     sortDirection: $sortDirection
     filter: $filter
     limit: $limit
@@ -212,12 +218,14 @@ export const companyEmployeesByCompanyID = /* GraphQL */ `query CompanyEmployees
       id
       name
       adminID
-      companyID
+      company_id
       email
       userID
       profile_status
       department
       employeeID
+      permissionRole
+      permissionMatrix
       createdAt
       updatedAt
       __typename
@@ -227,8 +235,8 @@ export const companyEmployeesByCompanyID = /* GraphQL */ `query CompanyEmployees
   }
 }
 ` as GeneratedQuery<
-  APITypes.CompanyEmployeesByCompanyIDQueryVariables,
-  APITypes.CompanyEmployeesByCompanyIDQuery
+  APITypes.CompanyEmployeesByCompany_idQueryVariables,
+  APITypes.CompanyEmployeesByCompany_idQuery
 >;
 export const getSubscriptionPlan = /* GraphQL */ `query GetSubscriptionPlan($id: ID!) {
   getSubscriptionPlan(id: $id) {
@@ -341,6 +349,14 @@ export const getCompany = /* GraphQL */ `query GetCompany($id: ID!) {
     city
     state
     country
+    Customers {
+      nextToken
+      __typename
+    }
+    Vendors {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -396,6 +412,8 @@ export const getVendor = /* GraphQL */ `query GetVendor($id: ID!) {
     vendor_status
     gstin
     shipping_address
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -420,6 +438,8 @@ export const listVendors = /* GraphQL */ `query ListVendors(
       vendor_status
       gstin
       shipping_address
+      companyID
+      adminID
       createdAt
       updatedAt
       __typename
@@ -431,6 +451,46 @@ export const listVendors = /* GraphQL */ `query ListVendors(
 ` as GeneratedQuery<
   APITypes.ListVendorsQueryVariables,
   APITypes.ListVendorsQuery
+>;
+export const vendorsByCompanyID = /* GraphQL */ `query VendorsByCompanyID(
+  $companyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelVendorFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  vendorsByCompanyID(
+    companyID: $companyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      vendor_id
+      company_name
+      owner_name
+      email
+      phone
+      payable_amount
+      billing_address
+      vendor_status
+      gstin
+      shipping_address
+      companyID
+      adminID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.VendorsByCompanyIDQueryVariables,
+  APITypes.VendorsByCompanyIDQuery
 >;
 export const getCustomer = /* GraphQL */ `query GetCustomer($id: ID!) {
   getCustomer(id: $id) {
@@ -461,6 +521,8 @@ export const getCustomer = /* GraphQL */ `query GetCustomer($id: ID!) {
     credit_limit
     note
     printColor
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -496,6 +558,8 @@ export const listCustomers = /* GraphQL */ `query ListCustomers(
       credit_limit
       note
       printColor
+      companyID
+      adminID
       createdAt
       updatedAt
       __typename
@@ -507,6 +571,54 @@ export const listCustomers = /* GraphQL */ `query ListCustomers(
 ` as GeneratedQuery<
   APITypes.ListCustomersQueryVariables,
   APITypes.ListCustomersQuery
+>;
+export const customersByCompanyID = /* GraphQL */ `query CustomersByCompanyID(
+  $companyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelCustomerFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  customersByCompanyID(
+    companyID: $companyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      customer_id
+      company_name
+      owner_name
+      email
+      phone
+      outstanding_amount
+      billing_address
+      customer_status
+      gstin
+      shipping_address
+      city
+      state
+      pincode
+      country
+      pan_number
+      credit_limit
+      note
+      printColor
+      companyID
+      adminID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.CustomersByCompanyIDQueryVariables,
+  APITypes.CustomersByCompanyIDQuery
 >;
 export const getQuotation = /* GraphQL */ `query GetQuotation($id: ID!) {
   getQuotation(id: $id) {

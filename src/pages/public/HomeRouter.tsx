@@ -10,7 +10,7 @@ const HomeRouter = () => {
     if(!user) {
         return <Navigate to="/login" />
     }
-    if(userRole === 'admin') {
+    if(user) {
         return <Navigate to="/dashboard" />
     }
 }

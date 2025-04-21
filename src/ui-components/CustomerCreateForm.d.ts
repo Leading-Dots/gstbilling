@@ -40,6 +40,7 @@ export declare type CustomerCreateFormInputValues = {
     credit_limit?: string;
     note?: string;
     printColor?: string;
+    adminID?: string;
 };
 export declare type CustomerCreateFormValidationValues = {
     customer_id?: ValidationFunction<string>;
@@ -60,6 +61,7 @@ export declare type CustomerCreateFormValidationValues = {
     credit_limit?: ValidationFunction<string>;
     note?: ValidationFunction<string>;
     printColor?: ValidationFunction<string>;
+    adminID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CustomerCreateFormOverridesProps = {
@@ -82,6 +84,7 @@ export declare type CustomerCreateFormOverridesProps = {
     credit_limit?: PrimitiveOverrideProps<TextFieldProps>;
     note?: PrimitiveOverrideProps<TextFieldProps>;
     printColor?: PrimitiveOverrideProps<TextFieldProps>;
+    adminID?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CustomerCreateFormProps = React.PropsWithChildren<{
     overrides?: CustomerCreateFormOverridesProps | undefined | null;

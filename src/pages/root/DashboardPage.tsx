@@ -36,6 +36,7 @@ import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { Button } from "@/components/ui/button";
 import { Building, FileCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 // Sample data for charts
 const revenueData = [
   { month: "Jan", revenue: 18600 },
@@ -143,17 +144,18 @@ const COLORS = [
 ];
 
 export default function DashboardPage() {
+  const {user} = useAuth();
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8 max-w-5xl container">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">
-            Welcome back, John Doe
+            Welcome back, {user?.name}!
           </span>
         </div>
       </div>
-      <Card className="max-w-5xl">
+      <Card className="max-w-5xl flex flex-col">
         <CardHeader>
           <CardTitle>
             What would you like to do today?
@@ -163,7 +165,7 @@ export default function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 w-full max-w-4xl mx-auto">
             <Link to="/invoices/new" className="block">
               <Card className="h-full cursor-pointer hover:bg-accent transition-colors">
                 <CardContent className="flex flex-col items-center justify-center p-4 md:p-6 space-y-2">

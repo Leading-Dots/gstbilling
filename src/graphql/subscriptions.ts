@@ -99,12 +99,14 @@ export const onCreateCompanyEmployee = /* GraphQL */ `subscription OnCreateCompa
     id
     name
     adminID
-    companyID
+    company_id
     email
     userID
     profile_status
     department
     employeeID
+    permissionRole
+    permissionMatrix
     createdAt
     updatedAt
     __typename
@@ -121,12 +123,14 @@ export const onUpdateCompanyEmployee = /* GraphQL */ `subscription OnUpdateCompa
     id
     name
     adminID
-    companyID
+    company_id
     email
     userID
     profile_status
     department
     employeeID
+    permissionRole
+    permissionMatrix
     createdAt
     updatedAt
     __typename
@@ -143,12 +147,14 @@ export const onDeleteCompanyEmployee = /* GraphQL */ `subscription OnDeleteCompa
     id
     name
     adminID
-    companyID
+    company_id
     email
     userID
     profile_status
     department
     employeeID
+    permissionRole
+    permissionMatrix
     createdAt
     updatedAt
     __typename
@@ -305,6 +311,14 @@ export const onCreateCompany = /* GraphQL */ `subscription OnCreateCompany($filt
     city
     state
     country
+    Customers {
+      nextToken
+      __typename
+    }
+    Vendors {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -338,6 +352,14 @@ export const onUpdateCompany = /* GraphQL */ `subscription OnUpdateCompany($filt
     city
     state
     country
+    Customers {
+      nextToken
+      __typename
+    }
+    Vendors {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -371,6 +393,14 @@ export const onDeleteCompany = /* GraphQL */ `subscription OnDeleteCompany($filt
     city
     state
     country
+    Customers {
+      nextToken
+      __typename
+    }
+    Vendors {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -393,6 +423,8 @@ export const onCreateVendor = /* GraphQL */ `subscription OnCreateVendor($filter
     vendor_status
     gstin
     shipping_address
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -415,6 +447,8 @@ export const onUpdateVendor = /* GraphQL */ `subscription OnUpdateVendor($filter
     vendor_status
     gstin
     shipping_address
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -437,6 +471,8 @@ export const onDeleteVendor = /* GraphQL */ `subscription OnDeleteVendor($filter
     vendor_status
     gstin
     shipping_address
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -475,6 +511,8 @@ export const onCreateCustomer = /* GraphQL */ `subscription OnCreateCustomer($fi
     credit_limit
     note
     printColor
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -513,6 +551,8 @@ export const onUpdateCustomer = /* GraphQL */ `subscription OnUpdateCustomer($fi
     credit_limit
     note
     printColor
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename
@@ -551,6 +591,8 @@ export const onDeleteCustomer = /* GraphQL */ `subscription OnDeleteCustomer($fi
     credit_limit
     note
     printColor
+    companyID
+    adminID
     createdAt
     updatedAt
     __typename

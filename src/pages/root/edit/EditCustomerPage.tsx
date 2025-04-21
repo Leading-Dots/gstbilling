@@ -123,7 +123,6 @@ export default function EditCustomerPage() {
     try {
       const newCustomer = await editCustomer({
         id: params.id!!,
-        customer_id: "Customer" + Math.floor(Math.random() * 10000),
         company_name: data.customerName,
         owner_name: data.contactPerson,
         email: data.email,

@@ -76,16 +76,16 @@ export default function InventoryTable({ inventoryItems, onRefresh }) {
 
       </div>
       <div className="rounded-md border">
-        <Table className='w-full table-fixed max-w-5xl'>
+        <Table className='w-full table-fixed'>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Item Code</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Unit</TableHead>
-              <TableHead className="text-right">Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[100px]">Item Code</TableHead>
+                <TableHead className="w-[180px]">Name</TableHead>
+                <TableHead className="w-[80px]">Unit</TableHead>
+                <TableHead className="w-[100px] text-right">Price</TableHead>
+                <TableHead className="w-[80px]">Stock</TableHead>
+                <TableHead className="w-[120px]">Status</TableHead>
+                <TableHead className="w-[80px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

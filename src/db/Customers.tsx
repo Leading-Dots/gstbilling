@@ -3,10 +3,11 @@ import { createCustomer, updateCustomer } from "@/graphql/mutations";
 import { getCustomer, listCustomers } from "@/graphql/queries";
 import client from "@/lib/apiClient";
 
-export const getAllCustomers = async () => {
+export const getAllCustomers = async (company_id : string) => {
   try {
     const { data } = await client.graphql({
       query: listCustomers,
+      variables: { filter: { companyID: { eq: company_id } } },
     });
 
     if (data.listCustomers.items.length > 0) {
