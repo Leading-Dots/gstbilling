@@ -26,6 +26,7 @@ import {
   getUser,
 } from "@/db/Users";
 import Loader1 from "@/components/loaders/Loader1";
+import { DashboardLoader } from "@/components/loaders/DashboardLoader";
 
 type AuthContextType = {
   user: any | null;
@@ -63,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       //   const fcm_token = localStorage.getItem("fcm_token") || null;
 
       const { profile } = await fetchUserAttributes();
+      console.log("profile", profile);
 
       const existingUser = await getUser(
         currentUser.userId,
@@ -75,11 +77,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           await signOut();
           throw new Error("Failed to create new user");
         }
-        setUser({ ...newUser, role });
+        setUser({ ...newUser, role: profile });
         return true;
       }
 
-      setUser({ ...existingUser, role });
+      setUser({ ...existingUser, role: profile });
       return true;
     } catch (error) {
       const errorMessage =
@@ -228,7 +230,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {loading ? <Loader1 /> : children}
+      {loading ? <DashboardLoader /> : children}
     </AuthContext.Provider>
   );
 }

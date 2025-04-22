@@ -141,7 +141,7 @@ export default function EditEmployeePage() {
         email: data.email,
         department: data.department,
         permissionRole: data.role,
-        permissionMatrix: JSON.stringify(permissions),
+        permissionMatrix: permissions,
       };
 
       const updatedEmployee = await editCompanyEmployee(employeeData);

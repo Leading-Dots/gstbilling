@@ -63,7 +63,7 @@ export default function LoginForm({ userRole }: { userRole: UserRole }) {
       <Card className="flex flex-col">
         <CardHeader>
           <CardTitle>
-            {userRole === "admin" ? "Admin" : "Employee"} Login
+            Login
           </CardTitle>
           <CardDescription>
             Enter your credentials to access your account

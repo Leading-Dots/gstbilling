@@ -103,7 +103,7 @@ export default function CreateEmployeePage() {
         adminID: user.id,
         company_id: user.company_id,
         permissionRole: data.role,
-        permissionMatrix : JSON.stringify(permissions),
+        permissionMatrix : permissions,
       };
 
       console.log("Employee Data:", employeeData);

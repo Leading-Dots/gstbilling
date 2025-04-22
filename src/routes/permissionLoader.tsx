@@ -45,11 +45,13 @@ export const createPermissionLoader = (
 
       // If user is admin, grant access by default
       if (user.role === 'admin') {
+        console.log("Admin access granted");
         return { hasPermission: true };
       }
 
       // For regular employees, check the permission matrix
       if (user.permissionMatrix) {
+        console.log("Checking permission matrix for user");
         const hasAccess = hasPermission(
           JSON.parse(user.permissionMatrix),
           resource,
@@ -57,6 +59,7 @@ export const createPermissionLoader = (
         );
         
         if (!hasAccess) {
+          console.error("Access denied:", { resource, action });
           console.log(`Access denied: ${resource} ${action}`);
           return redirect(redirectTo);
         }

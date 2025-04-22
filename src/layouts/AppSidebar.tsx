@@ -115,7 +115,7 @@ export function AppSidebar() {
   const location = useLocation();
   const pathname = location.pathname;
 
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   // Group navigation items by section
   const sections = React.useMemo(() => {
@@ -214,8 +214,13 @@ export function AppSidebar() {
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start text-sm">
-                <span className="font-medium">John Doe</span>
-                <span className="text-xs text-muted-foreground">Admin</span>
+                <span className="font-medium">{user?.name}</span>
+                <span className="text-xs text-muted-foreground">
+                    {user?.role === "admin" 
+                    ? "Admin"
+                    : user?.permissionRole || "Employee"
+                    }
+                </span>
               </div>
             </Button>
           </DropdownMenuTrigger>
