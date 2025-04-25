@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 import { Search } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CustomerSelectorProps {
   onSelect?: (customer: Customer) => void;
@@ -25,13 +26,14 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
   const [selectedCustomer, setSelectedCustomer] =
     React.useState<Customer | null>(defaultSelectCustomer || null);
   const [customers, setCustomers] = React.useState<Customer[]>([]);
+  const {user} = useAuth()
   const [loading, setLoading] = React.useState(true);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
   const fetchCustomers = async () => {
     try {
-      const customerData = await getAllCustomers();
+      const customerData = await getAllCustomers(user.company_id!);
       setCustomers(customerData || []);
       setLoading(false);
     } catch (error) {

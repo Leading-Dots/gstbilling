@@ -184,7 +184,7 @@ export default function SelectInventoryItemTable({
                         {item.current_stock}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-center">{item.tax_rate}%</TableCell>
+                    <TableCell className="text-center">{item.rate}%</TableCell>
                   </TableRow>
                 ))
               ) : (
