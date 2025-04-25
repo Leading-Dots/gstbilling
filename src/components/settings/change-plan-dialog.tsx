@@ -67,7 +67,7 @@ export default function ChangePlanDialog({
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <div className="mb-2 flex flex-col gap-2">
+        <div className="mb-2 flex flex-col gap-3">
           <div
             className="flex size-11 shrink-0 items-center justify-center rounded-full border"
             aria-hidden="true"
@@ -75,8 +75,8 @@ export default function ChangePlanDialog({
             <RefreshCcwIcon className="opacity-80" size={16} />
           </div>
           <DialogHeader>
-            <DialogTitle className="text-left">Change your plan</DialogTitle>
-            <DialogDescription className="text-left">
+            <DialogTitle className="text-left text-2xl">Change your plan</DialogTitle>
+            <DialogDescription className="text-left text-lg" >
               Pick one of the following plans.
             </DialogDescription>
           </DialogHeader>
@@ -113,12 +113,12 @@ export default function ChangePlanDialog({
             ))}
           </div>
 
-          <div className="grid gap-2">
-            <Button type="button" className="w-full" onClick={onDone}>
+          <div className="grid gap-2 mt-4">
+            <Button type="button" className="w-full font-semibold text-md" size="lg"   onClick={onDone}>
               Change plan
             </Button>
             <DialogClose asChild>
-              <Button type="button" variant="ghost" className="w-full">
+              <Button type="button" variant="ghost" className="w-full font-semibold text-md" size="lg">
                 Cancel
               </Button>
             </DialogClose>

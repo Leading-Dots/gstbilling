@@ -29,7 +29,7 @@ import CreateInventoryItem from "@/pages/root/new/CreateInventoryItemPage";
 import EditEmployeePage from "@/pages/root/edit/EditEmployeePage";
 import UnauthorizedPage from "@/pages/root/UnauthorizedPage";
 import { RESOURCES, ACTIONS } from "@/lib/permissionManager";
-import { createPermissionLoader } from "./permissionLoader";
+import { adminOnlyLoader, createPermissionLoader } from "./permissionLoader";
 import SettingsPage from "@/pages/root/SettingsPage";
 
 const routes = [
@@ -85,6 +85,7 @@ const routes = [
 
   {
     path : "/settings",
+    loader : adminOnlyLoader,
     element : (
       <DashboardLayout>
         <SettingsPage />

@@ -78,3 +78,44 @@ export const createPermissionLoader = (
   };
 };
 
+
+
+/**
+ * A loader function that only allows admin users to access a route.
+ * Redirects to login if no user is found, or unauthorized if user is not an admin.
+ * 
+ * @returns A loader function compatible with React Router data loaders
+ */
+export const adminOnlyLoader = async () => {
+  try {
+    const userDataString = localStorage.getItem('user');
+    if (!userDataString) {
+      console.error("No user data found in localStorage");
+      return redirect("/login");
+    }
+
+    let user;
+    try {
+      user = JSON.parse(userDataString);
+    } catch (error) {
+      console.error("Failed to parse user data from localStorage:", error);
+      return redirect("/login");
+    }
+
+    if (!user) {
+      console.error("No user found");
+      return redirect("/login");
+    }
+
+    if (user.role !== "admin") {
+      console.error("User is not an admin");
+      return redirect("/unauthorized");
+    }
+
+    // Admin access granted
+    return { hasPermission: true };
+  } catch (error) {
+    console.error("Admin check error:", error);
+    return redirect("/unauthorized");
+  }
+};
