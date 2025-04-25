@@ -178,8 +178,10 @@ export function AppSidebar() {
                           className="transition-all duration-200 active:scale-95 hover:bg-accent/50 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
                         >
                           <Link to={subItem.href}>
-                            <subItem.icon className="h-5 w-5 transition-transform data-[active=true]:scale-110" />
-                            <span>{subItem.title}</span>
+                            <subItem.icon className="h-6 w-6 transition-transform data-[active=true]:scale-110" />
+                            <span className="text-md font-semibold  truncate tracking-wide"
+                            >
+                              {subItem.title}</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
@@ -195,8 +197,10 @@ export function AppSidebar() {
                           className="transition-all duration-200 active:scale-95 hover:bg-accent/50 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
                         >
                           <Link to={item.href}>
-                            <item.icon className="h-5 w-5 transition-transform data-[active=true]:scale-110" />
-                            <span>{item.title}</span>
+                            <item.icon className="h-8 w-8 transition-transform data-[active=true]:scale-110" />
+                            <span className="text-md font-semibold truncate tracking-wide">
+                              {item.title}
+                            </span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>

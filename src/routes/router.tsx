@@ -31,6 +31,7 @@ import UnauthorizedPage from "@/pages/root/UnauthorizedPage";
 import { RESOURCES, ACTIONS } from "@/lib/permissionManager";
 import { adminOnlyLoader, createPermissionLoader } from "./permissionLoader";
 import SettingsPage from "@/pages/root/SettingsPage";
+import PurchaseOrderPage from "@/pages/root/PurchaseOrderPage";
 
 const routes = [
   {
@@ -167,6 +168,15 @@ const routes = [
     element: (
       <DashboardLayout>
         <InvoicesPage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.LIST),
+  },
+  {
+    path: "/purchase-orders",
+    element: (
+      <DashboardLayout>
+        <PurchaseOrderPage />
       </DashboardLayout>
     ),
     loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.LIST),

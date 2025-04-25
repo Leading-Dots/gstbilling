@@ -67,12 +67,12 @@ export function CompanySwitcher() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="w-full flex justify-between items-center px-3 py-2"
+          className="w-full flex justify-between items-center p-3"
         >
           <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8 border">
+            <Avatar className="h-8 w-8 border rounded-full p-2">
               <AvatarFallback className="">
-                <span className="">
+                <span className="p-2">
                   {selectedCompany.company_name
                     .substring(0, 2)
                     .toLocaleUpperCase()}{" "}
