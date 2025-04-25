@@ -137,7 +137,7 @@ export default function CreateInventoryItem() {
         name: data.name,
         description: data.description,
         unit: data.unit,
-        tax_rate: data.tax_rate,
+        rate: data.tax_rate,
         current_stock: data.current_stock,
         stock_status: data.stock_status,
         category: data.category,

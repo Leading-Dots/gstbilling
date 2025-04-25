@@ -18,7 +18,7 @@ export const onCreateInventoryItem = /* GraphQL */ `subscription OnCreateInvento
     name
     description
     unit
-    tax_rate
+    rate
     current_stock
     stock_status
     category
@@ -46,7 +46,7 @@ export const onUpdateInventoryItem = /* GraphQL */ `subscription OnUpdateInvento
     name
     description
     unit
-    tax_rate
+    rate
     current_stock
     stock_status
     category
@@ -74,7 +74,7 @@ export const onDeleteInventoryItem = /* GraphQL */ `subscription OnDeleteInvento
     name
     description
     unit
-    tax_rate
+    rate
     current_stock
     stock_status
     category
@@ -425,6 +425,12 @@ export const onCreateVendor = /* GraphQL */ `subscription OnCreateVendor($filter
     shipping_address
     companyID
     adminID
+    city
+    state
+    pincode
+    country
+    pan_number
+    note
     createdAt
     updatedAt
     __typename
@@ -449,6 +455,12 @@ export const onUpdateVendor = /* GraphQL */ `subscription OnUpdateVendor($filter
     shipping_address
     companyID
     adminID
+    city
+    state
+    pincode
+    country
+    pan_number
+    note
     createdAt
     updatedAt
     __typename
@@ -473,6 +485,12 @@ export const onDeleteVendor = /* GraphQL */ `subscription OnDeleteVendor($filter
     shipping_address
     companyID
     adminID
+    city
+    state
+    pincode
+    country
+    pan_number
+    note
     createdAt
     updatedAt
     __typename
@@ -510,7 +528,6 @@ export const onCreateCustomer = /* GraphQL */ `subscription OnCreateCustomer($fi
     pan_number
     credit_limit
     note
-    printColor
     companyID
     adminID
     createdAt
@@ -550,7 +567,6 @@ export const onUpdateCustomer = /* GraphQL */ `subscription OnUpdateCustomer($fi
     pan_number
     credit_limit
     note
-    printColor
     companyID
     adminID
     createdAt
@@ -590,7 +606,6 @@ export const onDeleteCustomer = /* GraphQL */ `subscription OnDeleteCustomer($fi
     pan_number
     credit_limit
     note
-    printColor
     companyID
     adminID
     createdAt

@@ -1,18 +1,47 @@
-"use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Save } from "lucide-react"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "sonner"
-import { useNavigate } from "react-router-dom"
-import { Combobox } from "@/components/ui/combobox"
+import React from "react";
+
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Combobox } from "@/components/ui/combobox";
+import { ProfileStatus } from "@/API";
+import { useAuth } from "@/hooks/useAuth";
+import { addVendor } from "@/db/Vendors"; // Assuming this function exists
+
 // Define the form schema
 const vendorFormSchema = z.object({
   vendorName: z.string().min(1, "Vendor name is required"),
@@ -21,77 +50,26 @@ const vendorFormSchema = z.object({
   phone: z.string().min(1, "Phone number is required"),
   gstin: z.string().min(15, "GSTIN must be 15 characters").max(15),
   panNumber: z.string().min(10, "PAN must be 10 characters").max(10).optional(),
-  address: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   pincode: z.string().min(6, "PIN code must be 6 digits").max(6),
   country: z.string().min(1, "Country is required"),
-  status: z.enum(["active", "inactive"]),
+  status: z.enum(["ACTIVE", "INACTIVE"]),
+  creditTerms: z.string().optional(),
   paymentTerms: z.string().optional(),
+  notes: z.string().optional(),
+  billingAddress: z.string().min(1, "Billing address is required"),
   bankName: z.string().optional(),
   accountNumber: z.string().optional(),
   ifscCode: z.string().optional(),
-  accountType: z.enum(["savings", "current", "other"]).optional(),
-  notes: z.string().optional(),
-  category: z.string().optional(),
-  taxTreatment: z.enum(["regular", "composition", "unregistered"]),
-})
+  taxExempt: z.boolean(),
+});
 
-type VendorFormValues = z.infer<typeof vendorFormSchema>
-
-// List of Indian states
-const indianStates = [
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chhattisgarh",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-  "Andaman and Nicobar Islands",
-  "Chandigarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi",
-  "Jammu and Kashmir",
-  "Ladakh",
-  "Lakshadweep",
-  "Puducherry",
-]
-
-// Vendor categories
-const vendorCategories = [
-  "Supplier",
-  "Manufacturer",
-  "Distributor",
-  "Service Provider",
-  "Contractor",
-  "Consultant",
-  "Other",
-]
+type VendorFormValues = z.infer<typeof vendorFormSchema>;
 
 export default function NewVendorPage() {
-  const router = useNavigate()
+  const router = useNavigate();
+  const { user } = useAuth();
 
   // Initialize the form with default values
   const form = useForm<VendorFormValues>({
@@ -103,40 +81,68 @@ export default function NewVendorPage() {
       phone: "",
       gstin: "",
       panNumber: "",
-      address: "",
       city: "",
       state: "",
       pincode: "",
       country: "India",
-      status: "active",
+      status: "ACTIVE",
+      creditTerms: "",
       paymentTerms: "Net 30",
+      notes: "",
+      billingAddress: "",
       bankName: "",
       accountNumber: "",
       ifscCode: "",
-      accountType: "current",
-      notes: "",
-      category: "Supplier",
-      taxTreatment: "regular",
+      taxExempt: false,
     },
-  })
+  });
 
   // Form submission
-  const onSubmit = (data: VendorFormValues) => {
-    toast.success("Vendor created successfully", {
-        description: "The vendor has been added to your list.",
-    })
-
-    // In a real app, you would save the vendor to the database here
-    console.log("Vendor data:", data)
-
-    // Navigate back to vendors list
-    router("/vendors")
-  }
+  const onSubmit = async (data: VendorFormValues) => {
+    try {
+      const newVendor = await addVendor({
+        vendor_id: `VEN-${String(new Date().getFullYear()).slice(2)}${String(
+          new Date().getMonth() + 1
+        ).padStart(2, "0")}${String(Math.floor(Math.random() * 1000)).padStart(
+          3,
+          "0"
+        )}`,
+        companyID: user.company_id,
+        adminID: user.id,
+        company_name: data.vendorName,
+        owner_name: data.contactPerson,
+        email: data.email,
+        phone: data.phone,
+        gstin: data.gstin,
+        pan_number: data.panNumber,
+        billing_address: data.billingAddress,
+        shipping_address: data.billingAddress,
+        city: data.city,
+        country: data.country,
+        state: data.state,
+        pincode: data.pincode,
+        note: data.notes,
+        vendor_status: data.status as ProfileStatus,
+      });
+      if (newVendor) {
+        toast.success("Vendor created successfully");
+        router("/vendors");
+      } else {
+        toast.error("Failed to create vendor");
+      }
+    } catch (error) {
+      console.error("Error creating vendor:", error);
+      toast.error("Error creating vendor");
+    }
+  };
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Add New Vendor</h2>
+      <div className="flex flex-col justify-between">
+        <h2 className="text-2xl font-bold tracking-tight">Add New Vendor</h2>
+        <h3 className="text-sm text-muted-foreground">
+          Fill in the details below to create a new vendor profile.
+        </h3>
       </div>
 
       <Form {...form}>
@@ -145,7 +151,9 @@ export default function NewVendorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
-              <CardDescription>Enter the basic details for this vendor</CardDescription>
+              <CardDescription>
+                Enter the basic details for this vendor
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
@@ -216,9 +224,12 @@ export default function NewVendorPage() {
                     <FormItem>
                       <FormLabel>GSTIN*</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} maxLength={15} />
                       </FormControl>
-                      <FormDescription>15-character Goods and Services Tax Identification Number</FormDescription>
+                      <FormDescription>
+                        15-character Goods and Services Tax Identification
+                        Number
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -231,9 +242,11 @@ export default function NewVendorPage() {
                     <FormItem>
                       <FormLabel>PAN Number</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input maxLength={10} {...field} />
                       </FormControl>
-                      <FormDescription>10-character Permanent Account Number</FormDescription>
+                      <FormDescription>
+                        10-character Permanent Account Number
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -247,15 +260,18 @@ export default function NewVendorPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Status</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select status" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
+                          <SelectItem value="ACTIVE">Active</SelectItem>
+                          <SelectItem value="INACTIVE">Inactive</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -265,53 +281,25 @@ export default function NewVendorPage() {
 
                 <FormField
                   control={form.control}
-                  name="category"
+                  name="taxExempt"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Vendor Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {vendorCategories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                      <div className="space-y-0.5">
+                        <FormLabel>Tax Exempt</FormLabel>
+                        <FormDescription>
+                          Is this vendor exempt from taxes?
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
                     </FormItem>
                   )}
                 />
               </div>
-
-              <FormField
-                control={form.control}
-                name="taxTreatment"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tax Treatment</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select tax treatment" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="regular">Regular (Registered under GST)</SelectItem>
-                        <SelectItem value="composition">Composition Scheme</SelectItem>
-                        <SelectItem value="unregistered">Unregistered</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>Tax treatment affects how GST is calculated on purchases</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </CardContent>
           </Card>
 
@@ -319,24 +307,12 @@ export default function NewVendorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Address Information</CardTitle>
-              <CardDescription>Enter the address details for this vendor</CardDescription>
+              <CardDescription>
+                Enter the address details for this vendor
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address*</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-4">
                 <FormField
                   control={form.control}
                   name="city"
@@ -355,9 +331,11 @@ export default function NewVendorPage() {
                   control={form.control}
                   name="state"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col mt-2">
                       <FormLabel>State*</FormLabel>
+                      <FormControl>
                         <Combobox {...field} />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -376,16 +354,30 @@ export default function NewVendorPage() {
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country*</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <FormField
                 control={form.control}
-                name="country"
+                name="billingAddress"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Country*</FormLabel>
+                    <FormLabel>Business Address*</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Textarea {...field} rows={3} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -398,24 +390,26 @@ export default function NewVendorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Bank Information</CardTitle>
-              <CardDescription>Enter bank details for payment processing</CardDescription>
+              <CardDescription>
+                Enter banking details for this vendor
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="bankName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bank Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid gap-4 md:grid-cols-3">
+                <FormField
+                  control={form.control}
+                  name="bankName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Bank Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <div className="grid gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="accountNumber"
@@ -439,35 +433,11 @@ export default function NewVendorPage() {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>11-character Indian Financial System Code</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
-              <FormField
-                control={form.control}
-                name="accountType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Account Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select account type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="savings">Savings</SelectItem>
-                        <SelectItem value="current">Current</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </CardContent>
           </Card>
 
@@ -475,35 +445,63 @@ export default function NewVendorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Payment Information</CardTitle>
-              <CardDescription>Enter payment details for this vendor</CardDescription>
+              <CardDescription>
+                Enter payment details for this vendor
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="paymentTerms"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Payment Terms</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="creditTerms"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Credit Terms</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select payment terms" />
-                        </SelectTrigger>
+                        <Input {...field} />
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Due on Receipt">Due on Receipt</SelectItem>
-                        <SelectItem value="Net 15">Net 15</SelectItem>
-                        <SelectItem value="Net 30">Net 30</SelectItem>
-                        <SelectItem value="Net 45">Net 45</SelectItem>
-                        <SelectItem value="Net 60">Net 60</SelectItem>
-                        <SelectItem value="Custom">Custom</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>Standard payment terms for this vendor</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormDescription>
+                        Credit terms offered by this vendor
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="paymentTerms"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Payment Terms</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select payment terms" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Due on Receipt">
+                            Due on Receipt
+                          </SelectItem>
+                          <SelectItem value="Net 15">Net 15</SelectItem>
+                          <SelectItem value="Net 30">Net 30</SelectItem>
+                          <SelectItem value="Net 45">Net 45</SelectItem>
+                          <SelectItem value="Net 60">Net 60</SelectItem>
+                          <SelectItem value="Custom">Custom</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Standard payment terms for this vendor
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -511,7 +509,9 @@ export default function NewVendorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Additional Information</CardTitle>
-              <CardDescription>Any other details about this vendor</CardDescription>
+              <CardDescription>
+                Any other details about this vendor
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <FormField
@@ -523,7 +523,9 @@ export default function NewVendorPage() {
                     <FormControl>
                       <Textarea {...field} rows={4} />
                     </FormControl>
-                    <FormDescription>Internal notes about this vendor (not visible to the vendor)</FormDescription>
+                    <FormDescription>
+                      Internal notes about this vendor (not visible to the vendor)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -533,17 +535,13 @@ export default function NewVendorPage() {
 
           {/* Form Actions */}
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => router("/vendors")}>
+            <Button variant="outline" type="button" onClick={() => router("/vendors")}>
               Cancel
             </Button>
-            <Button type="submit">
-              <Save className="mr-2 h-4 w-4" />
-              Create Vendor
-            </Button>
+            <Button type="submit">Create Vendor</Button>
           </div>
         </form>
       </Form>
     </div>
-  )
+  );
 }
-

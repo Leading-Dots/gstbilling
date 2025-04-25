@@ -46,7 +46,6 @@ export default function CustomerCreateForm(props) {
     pan_number: "",
     credit_limit: "",
     note: "",
-    printColor: "",
     adminID: "",
   };
   const [customer_id, setCustomer_id] = React.useState(
@@ -80,7 +79,6 @@ export default function CustomerCreateForm(props) {
     initialValues.credit_limit
   );
   const [note, setNote] = React.useState(initialValues.note);
-  const [printColor, setPrintColor] = React.useState(initialValues.printColor);
   const [adminID, setAdminID] = React.useState(initialValues.adminID);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -101,7 +99,6 @@ export default function CustomerCreateForm(props) {
     setPan_number(initialValues.pan_number);
     setCredit_limit(initialValues.credit_limit);
     setNote(initialValues.note);
-    setPrintColor(initialValues.printColor);
     setAdminID(initialValues.adminID);
     setErrors({});
   };
@@ -123,7 +120,6 @@ export default function CustomerCreateForm(props) {
     pan_number: [],
     credit_limit: [],
     note: [],
-    printColor: [],
     adminID: [],
   };
   const runValidationTasks = async (
@@ -169,7 +165,6 @@ export default function CustomerCreateForm(props) {
           pan_number,
           credit_limit,
           note,
-          printColor,
           adminID,
         };
         const validationResponses = await Promise.all(
@@ -250,7 +245,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -292,7 +286,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -334,7 +327,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -376,7 +368,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -418,7 +409,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -464,7 +454,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -508,7 +497,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -550,7 +538,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -603,7 +590,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -645,7 +631,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -687,7 +672,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -729,7 +713,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -771,7 +754,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -813,7 +795,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -855,7 +836,6 @@ export default function CustomerCreateForm(props) {
               pan_number: value,
               credit_limit,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -897,7 +877,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit: value,
               note,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -939,7 +918,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note: value,
-              printColor,
               adminID,
             };
             const result = onChange(modelFields);
@@ -954,48 +932,6 @@ export default function CustomerCreateForm(props) {
         errorMessage={errors.note?.errorMessage}
         hasError={errors.note?.hasError}
         {...getOverrideProps(overrides, "note")}
-      ></TextField>
-      <TextField
-        label="Print color"
-        isRequired={false}
-        isReadOnly={false}
-        value={printColor}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              customer_id,
-              company_name,
-              owner_name,
-              email,
-              phone,
-              outstanding_amount,
-              billing_address,
-              customer_status,
-              gstin,
-              shipping_address,
-              city,
-              state,
-              pincode,
-              country,
-              pan_number,
-              credit_limit,
-              note,
-              printColor: value,
-              adminID,
-            };
-            const result = onChange(modelFields);
-            value = result?.printColor ?? value;
-          }
-          if (errors.printColor?.hasError) {
-            runValidationTasks("printColor", value);
-          }
-          setPrintColor(value);
-        }}
-        onBlur={() => runValidationTasks("printColor", printColor)}
-        errorMessage={errors.printColor?.errorMessage}
-        hasError={errors.printColor?.hasError}
-        {...getOverrideProps(overrides, "printColor")}
       ></TextField>
       <TextField
         label="Admin id"
@@ -1023,7 +959,6 @@ export default function CustomerCreateForm(props) {
               pan_number,
               credit_limit,
               note,
-              printColor,
               adminID: value,
             };
             const result = onChange(modelFields);

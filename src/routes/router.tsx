@@ -30,6 +30,7 @@ import EditEmployeePage from "@/pages/root/edit/EditEmployeePage";
 import UnauthorizedPage from "@/pages/root/UnauthorizedPage";
 import { RESOURCES, ACTIONS } from "@/lib/permissionManager";
 import { createPermissionLoader } from "./permissionLoader";
+import SettingsPage from "@/pages/root/SettingsPage";
 
 const routes = [
   {
@@ -80,6 +81,15 @@ const routes = [
         <OnboardingPage />
       </DashboardLayout>
     ),
+  },
+
+  {
+    path : "/settings",
+    element : (
+      <DashboardLayout>
+        <SettingsPage />
+      </DashboardLayout>
+    )
   },
   {
     path: "/unauthorized",

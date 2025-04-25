@@ -372,3 +372,18 @@ export const editCompanyEmployee = async (
     console.error(error);
   }
 };
+
+export const changeAdminPlan = async (planID: string, adminID: string) => {
+  try {
+    const updatedUser = editAdminUser({
+      id: adminID,
+      subscriptionPlanID: planID,
+    });
+
+    console.log(updatedUser);
+
+    return updatedUser;
+  } catch (error) {
+    console.error(error)
+  }
+};

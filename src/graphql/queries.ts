@@ -16,7 +16,7 @@ export const getInventoryItem = /* GraphQL */ `query GetInventoryItem($id: ID!) 
     name
     description
     unit
-    tax_rate
+    rate
     current_stock
     stock_status
     category
@@ -47,7 +47,7 @@ export const listInventoryItems = /* GraphQL */ `query ListInventoryItems(
       name
       description
       unit
-      tax_rate
+      rate
       current_stock
       stock_status
       category
@@ -89,7 +89,7 @@ export const inventoryItemsByCompanyID = /* GraphQL */ `query InventoryItemsByCo
       name
       description
       unit
-      tax_rate
+      rate
       current_stock
       stock_status
       category
@@ -414,6 +414,12 @@ export const getVendor = /* GraphQL */ `query GetVendor($id: ID!) {
     shipping_address
     companyID
     adminID
+    city
+    state
+    pincode
+    country
+    pan_number
+    note
     createdAt
     updatedAt
     __typename
@@ -440,6 +446,12 @@ export const listVendors = /* GraphQL */ `query ListVendors(
       shipping_address
       companyID
       adminID
+      city
+      state
+      pincode
+      country
+      pan_number
+      note
       createdAt
       updatedAt
       __typename
@@ -480,6 +492,12 @@ export const vendorsByCompanyID = /* GraphQL */ `query VendorsByCompanyID(
       shipping_address
       companyID
       adminID
+      city
+      state
+      pincode
+      country
+      pan_number
+      note
       createdAt
       updatedAt
       __typename
@@ -520,7 +538,6 @@ export const getCustomer = /* GraphQL */ `query GetCustomer($id: ID!) {
     pan_number
     credit_limit
     note
-    printColor
     companyID
     adminID
     createdAt
@@ -557,7 +574,6 @@ export const listCustomers = /* GraphQL */ `query ListCustomers(
       pan_number
       credit_limit
       note
-      printColor
       companyID
       adminID
       createdAt
@@ -605,7 +621,6 @@ export const customersByCompanyID = /* GraphQL */ `query CustomersByCompanyID(
       pan_number
       credit_limit
       note
-      printColor
       companyID
       adminID
       createdAt

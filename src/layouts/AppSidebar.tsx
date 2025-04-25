@@ -1,17 +1,21 @@
 "use client";
 
 import * as React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  BarChart3,
   FileText,
-  Home,
   LogOut,
   Settings,
   FileCheck,
   UserCircle,
   Building,
   LayoutDashboard,
+  ChevronsUpDown,
+  Package,
+  Users,
+  ClipboardList,
+  Receipt,
+  FileSpreadsheet,
 } from "lucide-react";
 
 import {
@@ -38,18 +42,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { getCompanyById } from "@/db/Company";
+import type { Company, SubscriptionPlan } from "@/API";
+import { getSubscriptionPlanById } from "@/db/SubscriptionPlans";
+import { SidebarLoader } from "@/components/loaders/SidebarLoader";
 
 const navigationItems = [
   {
     title: "Dashboard",
-    href: "/",
+    href: "/dashboard",
     icon: LayoutDashboard,
     section: "Overview",
   },
@@ -60,7 +64,7 @@ const navigationItems = [
       {
         title: "Customers",
         href: "/customers",
-        icon: UserCircle,
+        icon: Users,
       },
       {
         title: "Vendors",
@@ -81,12 +85,12 @@ const navigationItems = [
       {
         title: "Purchase Orders",
         href: "/purchase-orders",
-        icon: FileText,
+        icon: ClipboardList,
       },
       {
         title: "Invoices",
         href: "/invoices",
-        icon: FileText,
+        icon: Receipt,
       },
       {
         title: "Quotations",
@@ -99,14 +103,14 @@ const navigationItems = [
   {
     title: "Inventory",
     href: "/inventory",
-    icon: Home, // Consider using a more appropriate icon
+    icon: Package,
     section: "Products",
   },
 
   {
     title: "Reports",
     href: "/reports",
-    icon: BarChart3,
+    icon: FileSpreadsheet,
     section: "Analytics",
   },
 ];
@@ -114,8 +118,38 @@ const navigationItems = [
 export function AppSidebar() {
   const location = useLocation();
   const pathname = location.pathname;
+  const [selectedCompany, setSelectedCompany] = React.useState<Company | null>(
+    null
+  );
+  const [activePlan, setActivePlan] = React.useState<SubscriptionPlan | null>(
+    null
+  );
+
+  const [loading, setLoading] = React.useState(true);
+  const router = useNavigate();
 
   const { signOut, user } = useAuth();
+
+  const fetchActiveCompany = async () => {
+    const company = await getCompanyById(user.company_id);
+    setSelectedCompany(company);
+    console.log("Selected company:", company);
+  };
+
+  const fetchActivePlan = async () => {
+    const plan = await getSubscriptionPlanById(user.subscriptionPlanID);
+    console.log("Active plan:", plan);
+    setActivePlan(plan);
+  };
+
+  const fetchData = async () => {
+    await Promise.all([fetchActiveCompany(), fetchActivePlan()]);
+    setLoading(false);
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, [user]);
 
   // Group navigation items by section
   const sections = React.useMemo(() => {
@@ -131,9 +165,27 @@ export function AppSidebar() {
     return Object.entries(sectionMap);
   }, []);
 
+  if (!selectedCompany || !activePlan || loading) {
+    return (
+     <SidebarLoader />
+    );
+  }
+
+  // Get plan color based on plan name
+  const getPlanColor = (planName: string) => {
+    const planColors = {
+      Free: "bg-slate-500",
+      Basic: "bg-blue-500",
+      Pro: "bg-amber-500",
+      Enterprise: "bg-purple-500",
+    };
+
+    return planColors[planName as keyof typeof planColors] || "bg-green-500";
+  };
+
   return (
-    <Sidebar collapsible="offcanvas">
-      <SidebarHeader className="flex flex-col items-center justify-center py-4">
+    <Sidebar collapsible="offcanvas" className="border-r">
+      <SidebarHeader className="flex flex-col items-center justify-center py-4  border-b">
         <SidebarMenuButton
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -145,81 +197,122 @@ export function AppSidebar() {
             <span className="text-lg font-bold">InvoiceGST</span>
           </Link>
         </SidebarMenuButton>
-      </SidebarHeader>
-      <SidebarContent>
-        {sections.map(([sectionName, items]) => (
-          <Collapsible
-            key={sectionName}
-            defaultOpen
-            className="group/collapsible"
-          >
-            <SidebarGroup>
-              <SidebarGroupLabel asChild>
-                <CollapsibleTrigger className="flex w-full items-center justify-between">
-                  {sectionName}
-                  <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                </CollapsibleTrigger>
-              </SidebarGroupLabel>
-              <CollapsibleContent>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {items.map((item) => {
-                      if (item.items) {
-                        // This is a nested section
-                        return item.items.map((subItem) => (
-                          <SidebarMenuItem key={subItem.href}>
-                            <SidebarMenuButton
-                              asChild
-                              isActive={pathname === subItem.href}
-                              tooltip={subItem.title}
-                            >
-                              <Link to={subItem.href}>
-                                <subItem.icon className="h-5 w-5" />
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        ));
-                      } else {
-                        // This is a direct link
-                        return (
-                          <SidebarMenuItem key={item.href}>
-                            <SidebarMenuButton
-                              asChild
-                              isActive={pathname === item.href}
-                              tooltip={item.title}
-                            >
-                              <Link to={item.href}>
-                                <item.icon className="h-5 w-5" />
-                                <span>{item.title}</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </SidebarMenuItem>
-                        );
-                      }
-                    })}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </CollapsibleContent>
-            </SidebarGroup>
-          </Collapsible>
-        ))}
-      </SidebarContent>
-      <SidebarFooter className="p-2">
+
+        {/* Company Switcher */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start gap-2">
-              <Avatar className="h-6 w-6">
+            <Button
+              variant="ghost"
+              className="w-full flex justify-between items-center px-3 py-2"
+            >
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8 border">
+                  <AvatarFallback className="">
+                    <span className="">
+                      {selectedCompany!.company_name
+                        .substring(0, 2)
+                        .toLocaleUpperCase()}{" "}
+                    </span>
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col items-start text-sm">
+                  <span className="font-medium">
+                    {selectedCompany!.company_name}
+                  </span>
+                </div>
+              </div>
+              <ChevronsUpDown className="h-4 w-4 opacity-50" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuLabel>Current Company</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem disabled>
+              {selectedCompany!.company_name}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer">
+              <Badge
+                variant="outline"
+                className={cn(
+                  "w-full flex items-center justify-center gap-1 py-1.5 font-medium",
+                  getPlanColor(activePlan.title),
+                  "text-white border-0"
+                )}
+              >
+                {activePlan.title} Plan
+              </Badge>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarHeader>
+      <SidebarContent className="gap-1 py-2">
+        {sections.map(([sectionName, items]) => (
+          <SidebarGroup key={sectionName} className="">
+            <SidebarGroupLabel className="px-3 py-2 text-xs uppercase font-bold tracking-wider text-muted-foreground bg-muted/30">
+              {sectionName}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {items.map((item) => {
+                  if (item.items) {
+                    // This is a nested section
+                    return item.items.map((subItem) => (
+                      <SidebarMenuItem key={subItem.href}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === subItem.href}
+                          tooltip={subItem.title}
+                          className="transition-all duration-200 active:scale-95 hover:bg-accent/50 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
+                        >
+                          <Link to={subItem.href}>
+                            <subItem.icon className="h-5 w-5 transition-transform data-[active=true]:scale-110" />
+                            <span>{subItem.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ));
+                  } else {
+                    // This is a direct link
+                    return (
+                      <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === item.href}
+                          tooltip={item.title}
+                          className="transition-all duration-200 active:scale-95 hover:bg-accent/50 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-medium"
+                        >
+                          <Link to={item.href}>
+                            <item.icon className="h-5 w-5 transition-transform data-[active=true]:scale-110" />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  }
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+      <SidebarFooter className="p-2 border-t">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="w-full justify-start gap-2 hover:bg-accent/50 transition-colors"
+            >
+              <Avatar className="h-6 w-6 border">
                 <AvatarImage src="/placeholder-user.jpg" alt="User" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start text-sm">
                 <span className="font-medium">{user?.name}</span>
                 <span className="text-xs text-muted-foreground">
-                    {user?.role === "admin" 
+                  {user?.role === "admin"
                     ? "Admin"
-                    : user?.permissionRole || "Employee"
-                    }
+                    : user?.permissionRole || "Employee"}
                 </span>
               </div>
             </Button>
@@ -227,11 +320,19 @@ export function AppSidebar() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onSelect={() => {
+                router("/settings");
+              }}
+            >
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => signOut()}>
+            <DropdownMenuItem
+              onSelect={() => signOut()}
+              className="cursor-pointer"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>

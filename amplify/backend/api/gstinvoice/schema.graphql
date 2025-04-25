@@ -17,7 +17,7 @@ type InventoryItem @model @auth(rules: [{allow: public}]) {
   name: String
   description: String
   unit: String
-  tax_rate: String
+  rate: String
   current_stock: String
   stock_status: StockStatus
   category: String
@@ -117,6 +117,12 @@ type Vendor @model @auth(rules: [{allow: public}]) {
   shipping_address: String
   companyID: ID! @index(name: "byCompany")
   adminID: String
+  city: String
+  state: String
+  pincode: String
+  country: String
+  pan_number: String
+  note: String
 }
 
 type Customer @model @auth(rules: [{allow: public}]) {
@@ -140,7 +146,6 @@ type Customer @model @auth(rules: [{allow: public}]) {
   pan_number: String
   credit_limit: String
   note: String
-  printColor: String
   companyID: ID! @index(name: "byCompany")
   adminID: String
 }

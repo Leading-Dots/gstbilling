@@ -101,7 +101,7 @@ export default function InventoryTable({ inventoryItems, onRefresh }) {
                   <TableCell className="font-medium">{item.item_code}</TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.unit}</TableCell>
-                  <TableCell className="text-right">₹{item.tax_rate}</TableCell>
+                  <TableCell className="text-right">₹{item.rate}</TableCell>
                   <TableCell>{item.current_stock}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className={getStockStatusColor(item.stock_status)}>

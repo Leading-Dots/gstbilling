@@ -19,7 +19,7 @@ export const createInventoryItem = /* GraphQL */ `mutation CreateInventoryItem(
     name
     description
     unit
-    tax_rate
+    rate
     current_stock
     stock_status
     category
@@ -48,7 +48,7 @@ export const updateInventoryItem = /* GraphQL */ `mutation UpdateInventoryItem(
     name
     description
     unit
-    tax_rate
+    rate
     current_stock
     stock_status
     category
@@ -77,7 +77,7 @@ export const deleteInventoryItem = /* GraphQL */ `mutation DeleteInventoryItem(
     name
     description
     unit
-    tax_rate
+    rate
     current_stock
     stock_status
     category
@@ -455,6 +455,12 @@ export const createVendor = /* GraphQL */ `mutation CreateVendor(
     shipping_address
     companyID
     adminID
+    city
+    state
+    pincode
+    country
+    pan_number
+    note
     createdAt
     updatedAt
     __typename
@@ -482,6 +488,12 @@ export const updateVendor = /* GraphQL */ `mutation UpdateVendor(
     shipping_address
     companyID
     adminID
+    city
+    state
+    pincode
+    country
+    pan_number
+    note
     createdAt
     updatedAt
     __typename
@@ -509,6 +521,12 @@ export const deleteVendor = /* GraphQL */ `mutation DeleteVendor(
     shipping_address
     companyID
     adminID
+    city
+    state
+    pincode
+    country
+    pan_number
+    note
     createdAt
     updatedAt
     __typename
@@ -549,7 +567,6 @@ export const createCustomer = /* GraphQL */ `mutation CreateCustomer(
     pan_number
     credit_limit
     note
-    printColor
     companyID
     adminID
     createdAt
@@ -592,7 +609,6 @@ export const updateCustomer = /* GraphQL */ `mutation UpdateCustomer(
     pan_number
     credit_limit
     note
-    printColor
     companyID
     adminID
     createdAt
@@ -635,7 +651,6 @@ export const deleteCustomer = /* GraphQL */ `mutation DeleteCustomer(
     pan_number
     credit_limit
     note
-    printColor
     companyID
     adminID
     createdAt
