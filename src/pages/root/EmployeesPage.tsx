@@ -17,19 +17,20 @@ export default function EmployeesPage() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  useEffect(() => {
-    const listEmployees = async () => {
-      try {
-        const employeeData = await getEmployeesByCompany(user.company_id);
-        if (employeeData) {
-          setEmployees(employeeData);
-        }
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      } finally {
-        setLoading(false);
+  const listEmployees = async () => {
+    try {
+      const employeeData = await getEmployeesByCompany(user.company_id);
+      if (employeeData) {
+        setEmployees(employeeData);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+  
     listEmployees();
   }, []);
 
@@ -121,7 +122,7 @@ export default function EmployeesPage() {
           <TabsContent value="all" className="mt-0">
             <Card>
               <CardContent className="p-0">
-                <EmployeeTable employees={employees} />
+                <EmployeeTable employees={employees} onRefresh={listEmployees} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -130,6 +131,7 @@ export default function EmployeesPage() {
             <Card>
               <CardContent className="p-0">
                 <EmployeeTable
+                  onRefresh={listEmployees}
                   employees={employees.filter(
                     (employee) => employee.profile_status === EmployeeStatus.ACTIVE
                   )}
@@ -141,6 +143,7 @@ export default function EmployeesPage() {
             <Card>
               <CardContent className="p-0">
                 <EmployeeTable
+                  onRefresh={listEmployees}
                   employees={employees.filter(
                     (employee) => employee.profile_status === EmployeeStatus.INVITED
                   )}
@@ -153,6 +156,7 @@ export default function EmployeesPage() {
             <Card>
               <CardContent className="p-0">
                 <EmployeeTable
+                  onRefresh={listEmployees}
                   employees={employees.filter(
                     (employee) =>
                       employee.profile_status === EmployeeStatus.INACTIVE

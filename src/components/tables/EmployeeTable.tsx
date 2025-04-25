@@ -1,4 +1,9 @@
-import { CompanyEmployee, Customer, EmployeeStatus, ProfileStatus } from "@/API";
+import {
+  CompanyEmployee,
+  Customer,
+  EmployeeStatus,
+  ProfileStatus,
+} from "@/API";
 import {
   Table,
   TableHeader,
@@ -18,8 +23,38 @@ import {
 } from "../ui/dropdown-menu";
 import { Mail, Phone, MoreHorizontal, Download } from "lucide-react";
 import { Link } from "react-router-dom";
+import { editCompanyEmployee } from "@/db/Users";
+import { showToast } from "@/lib/toast";
 
-const EmployeeTable = ({ employees }: { employees: CompanyEmployee[] }) => {
+const EmployeeTable = ({
+  employees,
+  onRefresh,
+}: {
+  employees: CompanyEmployee[];
+  onRefresh: () => void;
+}) => {
+  const handleChangeEmployeeStatus = async (
+    employeeId: string,
+    status: EmployeeStatus
+  ) => {
+    try {
+      const updateEmployee = await editCompanyEmployee({
+        id: employeeId,
+        profile_status: status,
+      });
+
+      if (updateEmployee) {
+        onRefresh();
+
+        showToast(`Employee marked as ${status}`, "success");
+        console.log("Employee marked as inactive:", updateEmployee);
+      }
+    } catch (error) {
+      console.error("Error marking employee as inactive:", error);
+      showToast(`Employee marked as ${status}`, "error");
+    }
+  };
+
   return (
     <div className="w-full">
       <Table className="w-full table-auto">
@@ -46,9 +81,7 @@ const EmployeeTable = ({ employees }: { employees: CompanyEmployee[] }) => {
                   {employee.email}
                 </div>
               </TableCell>
-                <TableCell>
-                    {employee.department}
-                </TableCell>
+              <TableCell>{employee.department}</TableCell>
 
               <TableCell>
                 <div
@@ -72,14 +105,31 @@ const EmployeeTable = ({ employees }: { employees: CompanyEmployee[] }) => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                   
+
                     <DropdownMenuItem asChild>
                       <Link to={`/employees/${employee.id}/edit`}>
                         Edit Employee
                       </Link>
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem>Create Invoice</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Button
+                        variant="ghost"
+                        className=""
+                        onClick={() =>
+                          handleChangeEmployeeStatus(
+                            employee.id,
+                            employee.profile_status === EmployeeStatus.ACTIVE
+                              ? EmployeeStatus.INACTIVE
+                              : EmployeeStatus.ACTIVE
+                          )
+                        }
+                      >
+                        {employee.profile_status === EmployeeStatus.ACTIVE
+                          ? "Mark as Inactive"
+                          : "Mark as Active"}
+                      </Button>
+                    </DropdownMenuItem>
                     <DropdownMenuItem>Create Quotation</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

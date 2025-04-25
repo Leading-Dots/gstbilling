@@ -71,12 +71,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         profile as UserRole
       );
 
+    
+
       if (!existingUser) {
         const newUser = await createUser(role, email, userId);
         if (!newUser) {
           await signOut();
           throw new Error("Failed to create new user");
         }
+
+
         setUser({ ...newUser, role: profile });
         return true;
       }
