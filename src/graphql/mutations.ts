@@ -340,6 +340,14 @@ export const createCompany = /* GraphQL */ `mutation CreateCompany(
       nextToken
       __typename
     }
+    Invoices {
+      nextToken
+      __typename
+    }
+    Quotations {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -384,6 +392,14 @@ export const updateCompany = /* GraphQL */ `mutation UpdateCompany(
       nextToken
       __typename
     }
+    Invoices {
+      nextToken
+      __typename
+    }
+    Quotations {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -425,6 +441,14 @@ export const deleteCompany = /* GraphQL */ `mutation DeleteCompany(
       __typename
     }
     Vendors {
+      nextToken
+      __typename
+    }
+    Invoices {
+      nextToken
+      __typename
+    }
+    Quotations {
       nextToken
       __typename
     }
@@ -692,6 +716,7 @@ export const createQuotation = /* GraphQL */ `mutation CreateQuotation(
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -731,6 +756,7 @@ export const updateQuotation = /* GraphQL */ `mutation UpdateQuotation(
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -770,6 +796,7 @@ export const deleteQuotation = /* GraphQL */ `mutation DeleteQuotation(
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -809,6 +836,7 @@ export const createInvoice = /* GraphQL */ `mutation CreateInvoice(
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -848,6 +876,7 @@ export const updateInvoice = /* GraphQL */ `mutation UpdateInvoice(
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -887,6 +916,7 @@ export const deleteInvoice = /* GraphQL */ `mutation DeleteInvoice(
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename

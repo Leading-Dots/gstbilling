@@ -3,10 +3,14 @@ import { CreateInvoiceInput, InvoiceStatus, UpdateInvoiceInput } from "@/API";
 import { createInvoice, updateInvoice } from "@/graphql/mutations";
 import { getInvoice, listInvoices } from "@/graphql/queries";
 
-export const getAllInvoices = async () => {
+export const getAllInvoices = async (company_id : string) => {
   try {
     const { data, errors } = await client.graphql({
       query: listInvoices,
+      variables: { filter: {
+        companyID: { eq: company_id },
+        
+      } },
     });
 
     if (data.listInvoices.items.length > 0) {

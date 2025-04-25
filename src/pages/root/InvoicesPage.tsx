@@ -9,6 +9,7 @@ import { Invoice, InvoiceStatus } from "@/API";
 import { getAllInvoices } from "@/db/Invoices";
 import InvoiceTable from "@/components/tables/InvoiceTable";
 import Loader1 from "@/components/loaders/Loader1";
+import { useAuth } from "@/hooks/useAuth";
 
 const invoices = [
   {
@@ -71,6 +72,7 @@ const invoices = [
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
 
   console.log("InvoicesPage rendered");
@@ -78,7 +80,7 @@ export default function InvoicesPage() {
   useEffect(() => {
     const listInvoices = async () => {
       try {
-        const invoiceData = await getAllInvoices();
+        const invoiceData = await getAllInvoices(user.company_id);
         if (invoiceData) {
           setInvoices(invoiceData || []);
         }

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Quotation, QuotationStatus } from "@/API";
 import { getAllQuotations } from "@/db/Quotations";
 import Loader1 from "@/components/loaders/Loader1";
+import { useAuth } from "@/hooks/useAuth";
 
 const quotations = [
   {
@@ -80,12 +81,13 @@ const quotations = [
 
 export default function QuotationsPage() {
   const [quotations, setInvoices] = useState<Quotation[]>([]);
+  const {user} = useAuth();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const listQuotations = async () => {
       try {
-        const quotationData = await getAllQuotations();
+        const quotationData = await getAllQuotations(user.company_id);
         if (quotationData) {
           setInvoices(quotationData || []);
         }

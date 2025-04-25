@@ -62,6 +62,10 @@ export function CompanySwitcher() {
     return null; // Or return a loading state
   }
 
+  if(!user.company_id) {
+    return null; // Or return a loading state
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

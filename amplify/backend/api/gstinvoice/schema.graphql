@@ -81,6 +81,8 @@ type Company @model @auth(rules: [{allow: public}]) {
   country: String
   Customers: [Customer] @hasMany(indexName: "byCompany", fields: ["id"])
   Vendors: [Vendor] @hasMany(indexName: "byCompany", fields: ["id"])
+  Invoices: [Invoice] @hasMany(indexName: "byCompany", fields: ["id"])
+  Quotations: [Quotation] @hasMany(indexName: "byCompany", fields: ["id"])
 }
 
 enum QuotationStatus {
@@ -176,6 +178,7 @@ type Quotation @model @auth(rules: [{allow: public}]) {
   notes: String
   terms_conditions: String
   customerID: ID! @index(name: "byCustomer")
+  companyID: ID! @index(name: "byCompany")
 }
 
 type Invoice @model @auth(rules: [{allow: public}]) {
@@ -204,5 +207,6 @@ type Invoice @model @auth(rules: [{allow: public}]) {
   notes: String
   terms_conditions: String
   customerID: ID! @index(name: "byCustomer")
+  companyID: ID! @index(name: "byCompany")
 }
  

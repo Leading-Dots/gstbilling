@@ -357,6 +357,14 @@ export const getCompany = /* GraphQL */ `query GetCompany($id: ID!) {
       nextToken
       __typename
     }
+    Invoices {
+      nextToken
+      __typename
+    }
+    Quotations {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -662,6 +670,7 @@ export const getQuotation = /* GraphQL */ `query GetQuotation($id: ID!) {
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -703,6 +712,7 @@ export const listQuotations = /* GraphQL */ `query ListQuotations(
       notes
       terms_conditions
       customerID
+      companyID
       createdAt
       updatedAt
       __typename
@@ -755,6 +765,7 @@ export const quotationsByCustomerID = /* GraphQL */ `query QuotationsByCustomerI
       notes
       terms_conditions
       customerID
+      companyID
       createdAt
       updatedAt
       __typename
@@ -766,6 +777,59 @@ export const quotationsByCustomerID = /* GraphQL */ `query QuotationsByCustomerI
 ` as GeneratedQuery<
   APITypes.QuotationsByCustomerIDQueryVariables,
   APITypes.QuotationsByCustomerIDQuery
+>;
+export const quotationsByCompanyID = /* GraphQL */ `query QuotationsByCompanyID(
+  $companyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelQuotationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  quotationsByCompanyID(
+    companyID: $companyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      quotation_id
+      quotation_status
+      quotation_number
+      quotation_date
+      valid_until
+      from_company
+      from_address
+      from_gstin
+      from_email
+      from_phone
+      to_customer
+      to_address
+      to_gstin
+      to_email
+      to_phone
+      items
+      subtotal
+      cgst
+      sgst
+      igst
+      total
+      notes
+      terms_conditions
+      customerID
+      companyID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.QuotationsByCompanyIDQueryVariables,
+  APITypes.QuotationsByCompanyIDQuery
 >;
 export const getInvoice = /* GraphQL */ `query GetInvoice($id: ID!) {
   getInvoice(id: $id) {
@@ -794,6 +858,7 @@ export const getInvoice = /* GraphQL */ `query GetInvoice($id: ID!) {
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -835,6 +900,7 @@ export const listInvoices = /* GraphQL */ `query ListInvoices(
       notes
       terms_conditions
       customerID
+      companyID
       createdAt
       updatedAt
       __typename
@@ -887,6 +953,7 @@ export const invoicesByCustomerID = /* GraphQL */ `query InvoicesByCustomerID(
       notes
       terms_conditions
       customerID
+      companyID
       createdAt
       updatedAt
       __typename
@@ -898,4 +965,57 @@ export const invoicesByCustomerID = /* GraphQL */ `query InvoicesByCustomerID(
 ` as GeneratedQuery<
   APITypes.InvoicesByCustomerIDQueryVariables,
   APITypes.InvoicesByCustomerIDQuery
+>;
+export const invoicesByCompanyID = /* GraphQL */ `query InvoicesByCompanyID(
+  $companyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelInvoiceFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  invoicesByCompanyID(
+    companyID: $companyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      invoice_id
+      invoice_status
+      invoice_number
+      invoice_date
+      due_date
+      from_company
+      from_address
+      from_gstin
+      from_email
+      from_phone
+      to_customer
+      to_address
+      to_gstin
+      to_email
+      to_phone
+      items
+      subtotal
+      cgst
+      sgst
+      igst
+      total
+      notes
+      terms_conditions
+      customerID
+      companyID
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.InvoicesByCompanyIDQueryVariables,
+  APITypes.InvoicesByCompanyIDQuery
 >;

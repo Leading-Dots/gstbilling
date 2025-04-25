@@ -319,6 +319,14 @@ export const onCreateCompany = /* GraphQL */ `subscription OnCreateCompany($filt
       nextToken
       __typename
     }
+    Invoices {
+      nextToken
+      __typename
+    }
+    Quotations {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -360,6 +368,14 @@ export const onUpdateCompany = /* GraphQL */ `subscription OnUpdateCompany($filt
       nextToken
       __typename
     }
+    Invoices {
+      nextToken
+      __typename
+    }
+    Quotations {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -398,6 +414,14 @@ export const onDeleteCompany = /* GraphQL */ `subscription OnDeleteCompany($filt
       __typename
     }
     Vendors {
+      nextToken
+      __typename
+    }
+    Invoices {
+      nextToken
+      __typename
+    }
+    Quotations {
       nextToken
       __typename
     }
@@ -644,6 +668,7 @@ export const onCreateQuotation = /* GraphQL */ `subscription OnCreateQuotation($
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -680,6 +705,7 @@ export const onUpdateQuotation = /* GraphQL */ `subscription OnUpdateQuotation($
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -716,6 +742,7 @@ export const onDeleteQuotation = /* GraphQL */ `subscription OnDeleteQuotation($
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -752,6 +779,7 @@ export const onCreateInvoice = /* GraphQL */ `subscription OnCreateInvoice($filt
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -788,6 +816,7 @@ export const onUpdateInvoice = /* GraphQL */ `subscription OnUpdateInvoice($filt
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename
@@ -824,6 +853,7 @@ export const onDeleteInvoice = /* GraphQL */ `subscription OnDeleteInvoice($filt
     notes
     terms_conditions
     customerID
+    companyID
     createdAt
     updatedAt
     __typename

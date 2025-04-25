@@ -67,59 +67,74 @@ export function SubscriptionPlanForm({ form }: SubscriptionPlanFormProps) {
             <RadioGroup
               onValueChange={field.onChange}
               defaultValue={field.value}
-              className="space-y-4"
+              className="flex flex-col md:flex-row gap-6"
             >
               {subscriptionPlans.map((plan) => (
-                <div key={plan.id} className="relative">
+                <div key={plan.id} className="relative flex-1">
                   <RadioGroupItem
                     value={plan.id}
                     id={plan.id}
                     className="peer sr-only"
                   />
-                  <label htmlFor={plan.id} className="block">
+                  <label htmlFor={plan.id} className="block h-full">
                     <Card
                       className={cn(
-                        "cursor-pointer transition-all",
-                        "hover:border-primary hover:bg-muted/50",
+                        "cursor-pointer transition-all h-full border-2",
+                        "hover:border-primary hover:shadow-lg hover:translate-y-[-4px]",
                         "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring",
                         "peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5",
                         Number(plan.cost) === 0 ? "border-dashed" : ""
                       )}
                     >
-                      <CardHeader className="pb-2">
-                        {field.value === plan.id && (
-                          <div className="absolute top-4 right-4 text-primary">
-                            <CheckIcon className="h-6 w-6" />
-                          </div>
-                        )}
-
-                        {Number(plan.cost) === 0 && (
-                          <div className="absolute -top-3 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                            Free Plan
-                          </div>
-                        )}
-                        <CardTitle>{plan.title}</CardTitle>
-                        <CardDescription>{plan.description}</CardDescription>
+                      {field.value === plan.id && (
+                        <div className="absolute top-0 right-0 bg-primary text-white p-1 rounded-bl-md">
+                          <CheckIcon className="h-5 w-5" />
+                        </div>
+                      )}
+                      
+                      {Number(plan.cost) === 0 && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-bold shadow-sm">
+                          FREE
+                        </div>
+                      )}
+                      
+                      <CardHeader className="text-center pb-4">
+                        <CardTitle className="text-xl">{plan.title}</CardTitle>
+                        <CardDescription className="text-sm">{plan.description}</CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="pt-2 border-t">
-                          <span className="text-xl font-bold">
-                            {plan.isPaid ? `₹${plan.cost}` : null}
+                      
+                      <CardContent className="space-y-6">
+                        <div className="text-center py-4">
+                          <span className={cn("text-3xl font-bold", Number(plan.cost) === 0 ? "text-primary" : "")}>
+                            {plan.isPaid ? `₹${plan.cost}` : "Free"}
                           </span>
                           {Number(plan.cost) > 0 && (
-                            <span className="text-muted-foreground ml-1 text-sm">
+                            <span className="text-muted-foreground ml-1">
                               /month
                             </span>
                           )}
                         </div>
-
-                        <div className="flex items-center text-muted-foreground bg-muted/50 p-2 rounded-md">
-                          <Users className="mr-2 h-4 w-4 text-primary" />
-                          <span>
-                            {plan.users === 1
-                              ? "Single user"
-                              : `Up to ${plan.users} users`}
-                          </span>
+                        
+                        <div className="space-y-3">
+                          <div className="flex items-center bg-muted/30 p-3 rounded-lg">
+                            <Users className="mr-3 h-5 w-5 text-primary" />
+                            <span className="font-medium">
+                              {plan.users === 1
+                                ? "Single user"
+                                : `${plan.users} team members`}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="pt-4">
+                          <div className={cn(
+                            "w-full py-2 px-4 rounded-md text-center font-medium transition-colors",
+                            field.value === plan.id 
+                              ? "bg-primary text-primary-foreground" 
+                              : "bg-muted hover:bg-muted/80"
+                          )}>
+                            {field.value === plan.id ? "Selected" : "Select Plan"}
+                          </div>
                         </div>
                       </CardContent>
                     </Card>

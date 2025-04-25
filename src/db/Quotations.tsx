@@ -4,10 +4,13 @@ import { createQuotation, updateQuotation } from "@/graphql/mutations";
 import { getQuotation, listQuotations } from "@/graphql/queries";
 import { Quotation } from "@/API";
 
-export const getAllQuotations = async () => {
+export const getAllQuotations = async (company_id : string) => {
   try {
     const { data, errors } = await client.graphql({
       query: listQuotations,
+      variables: { filter: {
+        companyID: { eq: company_id },
+      } },
     });
 
     if (data.listQuotations.items.length > 0) {
