@@ -8,6 +8,194 @@ type GeneratedQuery<InputType, OutputType> = string & {
   __generatedQueryOutput: OutputType;
 };
 
+export const getPurchaseOrder = /* GraphQL */ `query GetPurchaseOrder($id: ID!) {
+  getPurchaseOrder(id: $id) {
+    id
+    purchase_order_id
+    purchase_order_number
+    purchase_order_date
+    expected_delivery_date
+    from_company
+    from_address
+    from_gstin
+    from_email
+    from_phone
+    to_customer
+    to_address
+    to_gstin
+    to_email
+    to_phone
+    items
+    subtotal
+    cgst
+    sgst
+    igst
+    total
+    notes
+    terms_conditions
+    customerID
+    companyID
+    purchase_order_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.GetPurchaseOrderQueryVariables,
+  APITypes.GetPurchaseOrderQuery
+>;
+export const listPurchaseOrders = /* GraphQL */ `query ListPurchaseOrders(
+  $filter: ModelPurchaseOrderFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listPurchaseOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      purchase_order_id
+      purchase_order_number
+      purchase_order_date
+      expected_delivery_date
+      from_company
+      from_address
+      from_gstin
+      from_email
+      from_phone
+      to_customer
+      to_address
+      to_gstin
+      to_email
+      to_phone
+      items
+      subtotal
+      cgst
+      sgst
+      igst
+      total
+      notes
+      terms_conditions
+      customerID
+      companyID
+      purchase_order_status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.ListPurchaseOrdersQueryVariables,
+  APITypes.ListPurchaseOrdersQuery
+>;
+export const purchaseOrdersByCustomerID = /* GraphQL */ `query PurchaseOrdersByCustomerID(
+  $customerID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelPurchaseOrderFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  purchaseOrdersByCustomerID(
+    customerID: $customerID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      purchase_order_id
+      purchase_order_number
+      purchase_order_date
+      expected_delivery_date
+      from_company
+      from_address
+      from_gstin
+      from_email
+      from_phone
+      to_customer
+      to_address
+      to_gstin
+      to_email
+      to_phone
+      items
+      subtotal
+      cgst
+      sgst
+      igst
+      total
+      notes
+      terms_conditions
+      customerID
+      companyID
+      purchase_order_status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.PurchaseOrdersByCustomerIDQueryVariables,
+  APITypes.PurchaseOrdersByCustomerIDQuery
+>;
+export const purchaseOrdersByCompanyID = /* GraphQL */ `query PurchaseOrdersByCompanyID(
+  $companyID: ID!
+  $sortDirection: ModelSortDirection
+  $filter: ModelPurchaseOrderFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  purchaseOrdersByCompanyID(
+    companyID: $companyID
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      purchase_order_id
+      purchase_order_number
+      purchase_order_date
+      expected_delivery_date
+      from_company
+      from_address
+      from_gstin
+      from_email
+      from_phone
+      to_customer
+      to_address
+      to_gstin
+      to_email
+      to_phone
+      items
+      subtotal
+      cgst
+      sgst
+      igst
+      total
+      notes
+      terms_conditions
+      customerID
+      companyID
+      purchase_order_status
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+  APITypes.PurchaseOrdersByCompanyIDQueryVariables,
+  APITypes.PurchaseOrdersByCompanyIDQuery
+>;
 export const getInventoryItem = /* GraphQL */ `query GetInventoryItem($id: ID!) {
   getInventoryItem(id: $id) {
     id
@@ -365,6 +553,10 @@ export const getCompany = /* GraphQL */ `query GetCompany($id: ID!) {
       nextToken
       __typename
     }
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -548,6 +740,10 @@ export const getCustomer = /* GraphQL */ `query GetCustomer($id: ID!) {
     note
     companyID
     adminID
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename

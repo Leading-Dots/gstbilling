@@ -32,6 +32,7 @@ import { RESOURCES, ACTIONS } from "@/lib/permissionManager";
 import { adminOnlyLoader, createPermissionLoader } from "./permissionLoader";
 import SettingsPage from "@/pages/root/SettingsPage";
 import PurchaseOrderPage from "@/pages/root/PurchaseOrderPage";
+import CreatePurchaseOrderPage from "@/pages/root/new/CreatePurchaseOrderPage";
 
 const routes = [
   {
@@ -170,7 +171,7 @@ const routes = [
         <InvoicesPage />
       </DashboardLayout>
     ),
-    loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.LIST),
+    loader: createPermissionLoader(RESOURCES.PURCHASE_ORDER, ACTIONS.LIST),
   },
   {
     path: "/purchase-orders",
@@ -179,7 +180,16 @@ const routes = [
         <PurchaseOrderPage />
       </DashboardLayout>
     ),
-    loader: createPermissionLoader(RESOURCES.INVOICE, ACTIONS.LIST),
+    loader: createPermissionLoader(RESOURCES.PURCHASE_ORDER, ACTIONS.LIST),
+  },
+  {
+    path: "/purchase-orders/new",
+    element: (
+      <DashboardLayout>
+        <CreatePurchaseOrderPage />
+      </DashboardLayout>
+    ),
+    loader: createPermissionLoader(RESOURCES.PURCHASE_ORDER, ACTIONS.CREATE),
   },
   {
     path: "/invoices/new",

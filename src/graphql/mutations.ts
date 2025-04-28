@@ -8,6 +8,126 @@ type GeneratedMutation<InputType, OutputType> = string & {
   __generatedMutationOutput: OutputType;
 };
 
+export const createPurchaseOrder = /* GraphQL */ `mutation CreatePurchaseOrder(
+  $input: CreatePurchaseOrderInput!
+  $condition: ModelPurchaseOrderConditionInput
+) {
+  createPurchaseOrder(input: $input, condition: $condition) {
+    id
+    purchase_order_id
+    purchase_order_number
+    purchase_order_date
+    expected_delivery_date
+    from_company
+    from_address
+    from_gstin
+    from_email
+    from_phone
+    to_customer
+    to_address
+    to_gstin
+    to_email
+    to_phone
+    items
+    subtotal
+    cgst
+    sgst
+    igst
+    total
+    notes
+    terms_conditions
+    customerID
+    companyID
+    purchase_order_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.CreatePurchaseOrderMutationVariables,
+  APITypes.CreatePurchaseOrderMutation
+>;
+export const updatePurchaseOrder = /* GraphQL */ `mutation UpdatePurchaseOrder(
+  $input: UpdatePurchaseOrderInput!
+  $condition: ModelPurchaseOrderConditionInput
+) {
+  updatePurchaseOrder(input: $input, condition: $condition) {
+    id
+    purchase_order_id
+    purchase_order_number
+    purchase_order_date
+    expected_delivery_date
+    from_company
+    from_address
+    from_gstin
+    from_email
+    from_phone
+    to_customer
+    to_address
+    to_gstin
+    to_email
+    to_phone
+    items
+    subtotal
+    cgst
+    sgst
+    igst
+    total
+    notes
+    terms_conditions
+    customerID
+    companyID
+    purchase_order_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.UpdatePurchaseOrderMutationVariables,
+  APITypes.UpdatePurchaseOrderMutation
+>;
+export const deletePurchaseOrder = /* GraphQL */ `mutation DeletePurchaseOrder(
+  $input: DeletePurchaseOrderInput!
+  $condition: ModelPurchaseOrderConditionInput
+) {
+  deletePurchaseOrder(input: $input, condition: $condition) {
+    id
+    purchase_order_id
+    purchase_order_number
+    purchase_order_date
+    expected_delivery_date
+    from_company
+    from_address
+    from_gstin
+    from_email
+    from_phone
+    to_customer
+    to_address
+    to_gstin
+    to_email
+    to_phone
+    items
+    subtotal
+    cgst
+    sgst
+    igst
+    total
+    notes
+    terms_conditions
+    customerID
+    companyID
+    purchase_order_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedMutation<
+  APITypes.DeletePurchaseOrderMutationVariables,
+  APITypes.DeletePurchaseOrderMutation
+>;
 export const createInventoryItem = /* GraphQL */ `mutation CreateInventoryItem(
   $input: CreateInventoryItemInput!
   $condition: ModelInventoryItemConditionInput
@@ -348,6 +468,10 @@ export const createCompany = /* GraphQL */ `mutation CreateCompany(
       nextToken
       __typename
     }
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -400,6 +524,10 @@ export const updateCompany = /* GraphQL */ `mutation UpdateCompany(
       nextToken
       __typename
     }
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -449,6 +577,10 @@ export const deleteCompany = /* GraphQL */ `mutation DeleteCompany(
       __typename
     }
     Quotations {
+      nextToken
+      __typename
+    }
+    PurchaseOrders {
       nextToken
       __typename
     }
@@ -593,6 +725,10 @@ export const createCustomer = /* GraphQL */ `mutation CreateCustomer(
     note
     companyID
     adminID
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -635,6 +771,10 @@ export const updateCustomer = /* GraphQL */ `mutation UpdateCustomer(
     note
     companyID
     adminID
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -677,6 +817,10 @@ export const deleteCustomer = /* GraphQL */ `mutation DeleteCustomer(
     note
     companyID
     adminID
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename

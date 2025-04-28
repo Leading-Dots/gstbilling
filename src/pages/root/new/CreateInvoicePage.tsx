@@ -54,6 +54,7 @@ import { useNavigate } from "react-router-dom";
 import { addInvoice } from "@/db/Invoices";
 import { Customer, InvoiceStatus } from "@/API";
 import CustomerSelector from "@/components/shared/CustomerSelector";
+import { useAuth } from "@/hooks/useAuth";
 
 // Define the form schema
 const invoiceFormSchema = z.object({
@@ -165,6 +166,9 @@ const invoiceThemes = [
 
 export default function NewInvoicePage() {
   const router = useNavigate();
+
+  const { user } = useAuth();
+
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
@@ -355,6 +359,7 @@ export default function NewInvoicePage() {
 
     try {
       const newInvoice = await addInvoice({
+        companyID: user?.company_id!!,
         customerID: selectedCustomer?.id!!,
         invoice_status: InvoiceStatus.PENDING,
         invoice_number: data.invoiceNumber,

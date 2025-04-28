@@ -2,6 +2,204 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
+export type CreatePurchaseOrderInput = {
+  id?: string | null,
+  purchase_order_id?: string | null,
+  purchase_order_number?: string | null,
+  purchase_order_date?: string | null,
+  expected_delivery_date?: string | null,
+  from_company?: string | null,
+  from_address?: string | null,
+  from_gstin?: string | null,
+  from_email?: string | null,
+  from_phone?: string | null,
+  to_customer?: string | null,
+  to_address?: string | null,
+  to_gstin?: string | null,
+  to_email?: string | null,
+  to_phone?: string | null,
+  items?: string | null,
+  subtotal?: string | null,
+  cgst?: string | null,
+  sgst?: string | null,
+  igst?: string | null,
+  total?: string | null,
+  notes?: string | null,
+  terms_conditions?: string | null,
+  customerID: string,
+  companyID: string,
+  purchase_order_status?: PurchaseOrderStatus | null,
+};
+
+export enum PurchaseOrderStatus {
+  DRAFT = "DRAFT",
+  SENT = "SENT",
+  CONFIRMED = "CONFIRMED",
+  RECIEVED = "RECIEVED",
+  CANCELLED = "CANCELLED",
+  PARTIALLY_RECIEVED = "PARTIALLY_RECIEVED",
+}
+
+
+export type ModelPurchaseOrderConditionInput = {
+  purchase_order_id?: ModelStringInput | null,
+  purchase_order_number?: ModelStringInput | null,
+  purchase_order_date?: ModelStringInput | null,
+  expected_delivery_date?: ModelStringInput | null,
+  from_company?: ModelStringInput | null,
+  from_address?: ModelStringInput | null,
+  from_gstin?: ModelStringInput | null,
+  from_email?: ModelStringInput | null,
+  from_phone?: ModelStringInput | null,
+  to_customer?: ModelStringInput | null,
+  to_address?: ModelStringInput | null,
+  to_gstin?: ModelStringInput | null,
+  to_email?: ModelStringInput | null,
+  to_phone?: ModelStringInput | null,
+  items?: ModelStringInput | null,
+  subtotal?: ModelStringInput | null,
+  cgst?: ModelStringInput | null,
+  sgst?: ModelStringInput | null,
+  igst?: ModelStringInput | null,
+  total?: ModelStringInput | null,
+  notes?: ModelStringInput | null,
+  terms_conditions?: ModelStringInput | null,
+  customerID?: ModelIDInput | null,
+  companyID?: ModelIDInput | null,
+  purchase_order_status?: ModelPurchaseOrderStatusInput | null,
+  and?: Array< ModelPurchaseOrderConditionInput | null > | null,
+  or?: Array< ModelPurchaseOrderConditionInput | null > | null,
+  not?: ModelPurchaseOrderConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+};
+
+export type ModelStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export enum ModelAttributeTypes {
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null",
+}
+
+
+export type ModelSizeInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export type ModelPurchaseOrderStatusInput = {
+  eq?: PurchaseOrderStatus | null,
+  ne?: PurchaseOrderStatus | null,
+};
+
+export type PurchaseOrder = {
+  __typename: "PurchaseOrder",
+  id: string,
+  purchase_order_id?: string | null,
+  purchase_order_number?: string | null,
+  purchase_order_date?: string | null,
+  expected_delivery_date?: string | null,
+  from_company?: string | null,
+  from_address?: string | null,
+  from_gstin?: string | null,
+  from_email?: string | null,
+  from_phone?: string | null,
+  to_customer?: string | null,
+  to_address?: string | null,
+  to_gstin?: string | null,
+  to_email?: string | null,
+  to_phone?: string | null,
+  items?: string | null,
+  subtotal?: string | null,
+  cgst?: string | null,
+  sgst?: string | null,
+  igst?: string | null,
+  total?: string | null,
+  notes?: string | null,
+  terms_conditions?: string | null,
+  customerID: string,
+  companyID: string,
+  purchase_order_status?: PurchaseOrderStatus | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdatePurchaseOrderInput = {
+  id: string,
+  purchase_order_id?: string | null,
+  purchase_order_number?: string | null,
+  purchase_order_date?: string | null,
+  expected_delivery_date?: string | null,
+  from_company?: string | null,
+  from_address?: string | null,
+  from_gstin?: string | null,
+  from_email?: string | null,
+  from_phone?: string | null,
+  to_customer?: string | null,
+  to_address?: string | null,
+  to_gstin?: string | null,
+  to_email?: string | null,
+  to_phone?: string | null,
+  items?: string | null,
+  subtotal?: string | null,
+  cgst?: string | null,
+  sgst?: string | null,
+  igst?: string | null,
+  total?: string | null,
+  notes?: string | null,
+  terms_conditions?: string | null,
+  customerID?: string | null,
+  companyID?: string | null,
+  purchase_order_status?: PurchaseOrderStatus | null,
+};
+
+export type DeletePurchaseOrderInput = {
+  id: string,
+};
+
 export type CreateInventoryItemInput = {
   id?: string | null,
   item_code?: string | null,
@@ -49,65 +247,9 @@ export type ModelInventoryItemConditionInput = {
   updatedAt?: ModelStringInput | null,
 };
 
-export type ModelStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
-export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null",
-}
-
-
-export type ModelSizeInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-};
-
 export type ModelStockStatusInput = {
   eq?: StockStatus | null,
   ne?: StockStatus | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
 };
 
 export type InventoryItem = {
@@ -416,6 +558,7 @@ export type Company = {
   Vendors?: ModelVendorConnection | null,
   Invoices?: ModelInvoiceConnection | null,
   Quotations?: ModelQuotationConnection | null,
+  PurchaseOrders?: ModelPurchaseOrderConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -456,6 +599,7 @@ export type Customer = {
   note?: string | null,
   companyID: string,
   adminID?: string | null,
+  PurchaseOrders?: ModelPurchaseOrderConnection | null,
   createdAt: string,
   updatedAt: string,
 };
@@ -558,6 +702,12 @@ export enum QuotationStatus {
   CONVERTED = "CONVERTED",
 }
 
+
+export type ModelPurchaseOrderConnection = {
+  __typename: "ModelPurchaseOrderConnection",
+  items:  Array<PurchaseOrder | null >,
+  nextToken?: string | null,
+};
 
 export type ModelVendorConnection = {
   __typename: "ModelVendorConnection",
@@ -979,6 +1129,46 @@ export type DeleteInvoiceInput = {
   id: string,
 };
 
+export type ModelPurchaseOrderFilterInput = {
+  id?: ModelIDInput | null,
+  purchase_order_id?: ModelStringInput | null,
+  purchase_order_number?: ModelStringInput | null,
+  purchase_order_date?: ModelStringInput | null,
+  expected_delivery_date?: ModelStringInput | null,
+  from_company?: ModelStringInput | null,
+  from_address?: ModelStringInput | null,
+  from_gstin?: ModelStringInput | null,
+  from_email?: ModelStringInput | null,
+  from_phone?: ModelStringInput | null,
+  to_customer?: ModelStringInput | null,
+  to_address?: ModelStringInput | null,
+  to_gstin?: ModelStringInput | null,
+  to_email?: ModelStringInput | null,
+  to_phone?: ModelStringInput | null,
+  items?: ModelStringInput | null,
+  subtotal?: ModelStringInput | null,
+  cgst?: ModelStringInput | null,
+  sgst?: ModelStringInput | null,
+  igst?: ModelStringInput | null,
+  total?: ModelStringInput | null,
+  notes?: ModelStringInput | null,
+  terms_conditions?: ModelStringInput | null,
+  customerID?: ModelIDInput | null,
+  companyID?: ModelIDInput | null,
+  purchase_order_status?: ModelPurchaseOrderStatusInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelPurchaseOrderFilterInput | null > | null,
+  or?: Array< ModelPurchaseOrderFilterInput | null > | null,
+  not?: ModelPurchaseOrderFilterInput | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelInventoryItemFilterInput = {
   id?: ModelIDInput | null,
   item_code?: ModelStringInput | null,
@@ -1001,12 +1191,6 @@ export type ModelInventoryItemFilterInput = {
   or?: Array< ModelInventoryItemFilterInput | null > | null,
   not?: ModelInventoryItemFilterInput | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelCompanyEmployeeFilterInput = {
   id?: ModelIDInput | null,
@@ -1219,26 +1403,37 @@ export type ModelInvoiceFilterInput = {
   not?: ModelInvoiceFilterInput | null,
 };
 
-export type ModelSubscriptionInventoryItemFilterInput = {
+export type ModelSubscriptionPurchaseOrderFilterInput = {
   id?: ModelSubscriptionIDInput | null,
-  item_code?: ModelSubscriptionStringInput | null,
-  hsn_number?: ModelSubscriptionStringInput | null,
-  name?: ModelSubscriptionStringInput | null,
-  description?: ModelSubscriptionStringInput | null,
-  unit?: ModelSubscriptionStringInput | null,
-  rate?: ModelSubscriptionStringInput | null,
-  current_stock?: ModelSubscriptionStringInput | null,
-  stock_status?: ModelSubscriptionStringInput | null,
-  category?: ModelSubscriptionStringInput | null,
-  brand?: ModelSubscriptionStringInput | null,
+  purchase_order_id?: ModelSubscriptionStringInput | null,
+  purchase_order_number?: ModelSubscriptionStringInput | null,
+  purchase_order_date?: ModelSubscriptionStringInput | null,
+  expected_delivery_date?: ModelSubscriptionStringInput | null,
+  from_company?: ModelSubscriptionStringInput | null,
+  from_address?: ModelSubscriptionStringInput | null,
+  from_gstin?: ModelSubscriptionStringInput | null,
+  from_email?: ModelSubscriptionStringInput | null,
+  from_phone?: ModelSubscriptionStringInput | null,
+  to_customer?: ModelSubscriptionStringInput | null,
+  to_address?: ModelSubscriptionStringInput | null,
+  to_gstin?: ModelSubscriptionStringInput | null,
+  to_email?: ModelSubscriptionStringInput | null,
+  to_phone?: ModelSubscriptionStringInput | null,
+  items?: ModelSubscriptionStringInput | null,
+  subtotal?: ModelSubscriptionStringInput | null,
   cgst?: ModelSubscriptionStringInput | null,
   sgst?: ModelSubscriptionStringInput | null,
   igst?: ModelSubscriptionStringInput | null,
+  total?: ModelSubscriptionStringInput | null,
+  notes?: ModelSubscriptionStringInput | null,
+  terms_conditions?: ModelSubscriptionStringInput | null,
+  customerID?: ModelSubscriptionIDInput | null,
   companyID?: ModelSubscriptionIDInput | null,
+  purchase_order_status?: ModelSubscriptionStringInput | null,
   createdAt?: ModelSubscriptionStringInput | null,
   updatedAt?: ModelSubscriptionStringInput | null,
-  and?: Array< ModelSubscriptionInventoryItemFilterInput | null > | null,
-  or?: Array< ModelSubscriptionInventoryItemFilterInput | null > | null,
+  and?: Array< ModelSubscriptionPurchaseOrderFilterInput | null > | null,
+  or?: Array< ModelSubscriptionPurchaseOrderFilterInput | null > | null,
 };
 
 export type ModelSubscriptionIDInput = {
@@ -1269,6 +1464,28 @@ export type ModelSubscriptionStringInput = {
   beginsWith?: string | null,
   in?: Array< string | null > | null,
   notIn?: Array< string | null > | null,
+};
+
+export type ModelSubscriptionInventoryItemFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  item_code?: ModelSubscriptionStringInput | null,
+  hsn_number?: ModelSubscriptionStringInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  description?: ModelSubscriptionStringInput | null,
+  unit?: ModelSubscriptionStringInput | null,
+  rate?: ModelSubscriptionStringInput | null,
+  current_stock?: ModelSubscriptionStringInput | null,
+  stock_status?: ModelSubscriptionStringInput | null,
+  category?: ModelSubscriptionStringInput | null,
+  brand?: ModelSubscriptionStringInput | null,
+  cgst?: ModelSubscriptionStringInput | null,
+  sgst?: ModelSubscriptionStringInput | null,
+  igst?: ModelSubscriptionStringInput | null,
+  companyID?: ModelSubscriptionIDInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
+  and?: Array< ModelSubscriptionInventoryItemFilterInput | null > | null,
+  or?: Array< ModelSubscriptionInventoryItemFilterInput | null > | null,
 };
 
 export type ModelSubscriptionCompanyEmployeeFilterInput = {
@@ -1483,6 +1700,123 @@ export type ModelSubscriptionInvoiceFilterInput = {
   updatedAt?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionInvoiceFilterInput | null > | null,
   or?: Array< ModelSubscriptionInvoiceFilterInput | null > | null,
+};
+
+export type CreatePurchaseOrderMutationVariables = {
+  input: CreatePurchaseOrderInput,
+  condition?: ModelPurchaseOrderConditionInput | null,
+};
+
+export type CreatePurchaseOrderMutation = {
+  createPurchaseOrder?:  {
+    __typename: "PurchaseOrder",
+    id: string,
+    purchase_order_id?: string | null,
+    purchase_order_number?: string | null,
+    purchase_order_date?: string | null,
+    expected_delivery_date?: string | null,
+    from_company?: string | null,
+    from_address?: string | null,
+    from_gstin?: string | null,
+    from_email?: string | null,
+    from_phone?: string | null,
+    to_customer?: string | null,
+    to_address?: string | null,
+    to_gstin?: string | null,
+    to_email?: string | null,
+    to_phone?: string | null,
+    items?: string | null,
+    subtotal?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    total?: string | null,
+    notes?: string | null,
+    terms_conditions?: string | null,
+    customerID: string,
+    companyID: string,
+    purchase_order_status?: PurchaseOrderStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdatePurchaseOrderMutationVariables = {
+  input: UpdatePurchaseOrderInput,
+  condition?: ModelPurchaseOrderConditionInput | null,
+};
+
+export type UpdatePurchaseOrderMutation = {
+  updatePurchaseOrder?:  {
+    __typename: "PurchaseOrder",
+    id: string,
+    purchase_order_id?: string | null,
+    purchase_order_number?: string | null,
+    purchase_order_date?: string | null,
+    expected_delivery_date?: string | null,
+    from_company?: string | null,
+    from_address?: string | null,
+    from_gstin?: string | null,
+    from_email?: string | null,
+    from_phone?: string | null,
+    to_customer?: string | null,
+    to_address?: string | null,
+    to_gstin?: string | null,
+    to_email?: string | null,
+    to_phone?: string | null,
+    items?: string | null,
+    subtotal?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    total?: string | null,
+    notes?: string | null,
+    terms_conditions?: string | null,
+    customerID: string,
+    companyID: string,
+    purchase_order_status?: PurchaseOrderStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeletePurchaseOrderMutationVariables = {
+  input: DeletePurchaseOrderInput,
+  condition?: ModelPurchaseOrderConditionInput | null,
+};
+
+export type DeletePurchaseOrderMutation = {
+  deletePurchaseOrder?:  {
+    __typename: "PurchaseOrder",
+    id: string,
+    purchase_order_id?: string | null,
+    purchase_order_number?: string | null,
+    purchase_order_date?: string | null,
+    expected_delivery_date?: string | null,
+    from_company?: string | null,
+    from_address?: string | null,
+    from_gstin?: string | null,
+    from_email?: string | null,
+    from_phone?: string | null,
+    to_customer?: string | null,
+    to_address?: string | null,
+    to_gstin?: string | null,
+    to_email?: string | null,
+    to_phone?: string | null,
+    items?: string | null,
+    subtotal?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    total?: string | null,
+    notes?: string | null,
+    terms_conditions?: string | null,
+    customerID: string,
+    companyID: string,
+    purchase_order_status?: PurchaseOrderStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
 };
 
 export type CreateInventoryItemMutationVariables = {
@@ -1816,6 +2150,10 @@ export type CreateCompanyMutation = {
       __typename: "ModelQuotationConnection",
       nextToken?: string | null,
     } | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1867,6 +2205,10 @@ export type UpdateCompanyMutation = {
       __typename: "ModelQuotationConnection",
       nextToken?: string | null,
     } | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1916,6 +2258,10 @@ export type DeleteCompanyMutation = {
     } | null,
     Quotations?:  {
       __typename: "ModelQuotationConnection",
+      nextToken?: string | null,
+    } | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -2055,6 +2401,10 @@ export type CreateCustomerMutation = {
     note?: string | null,
     companyID: string,
     adminID?: string | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2096,6 +2446,10 @@ export type UpdateCustomerMutation = {
     note?: string | null,
     companyID: string,
     adminID?: string | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2137,6 +2491,10 @@ export type DeleteCustomerMutation = {
     note?: string | null,
     companyID: string,
     adminID?: string | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2373,6 +2731,180 @@ export type DeleteInvoiceMutation = {
     companyID: string,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type GetPurchaseOrderQueryVariables = {
+  id: string,
+};
+
+export type GetPurchaseOrderQuery = {
+  getPurchaseOrder?:  {
+    __typename: "PurchaseOrder",
+    id: string,
+    purchase_order_id?: string | null,
+    purchase_order_number?: string | null,
+    purchase_order_date?: string | null,
+    expected_delivery_date?: string | null,
+    from_company?: string | null,
+    from_address?: string | null,
+    from_gstin?: string | null,
+    from_email?: string | null,
+    from_phone?: string | null,
+    to_customer?: string | null,
+    to_address?: string | null,
+    to_gstin?: string | null,
+    to_email?: string | null,
+    to_phone?: string | null,
+    items?: string | null,
+    subtotal?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    total?: string | null,
+    notes?: string | null,
+    terms_conditions?: string | null,
+    customerID: string,
+    companyID: string,
+    purchase_order_status?: PurchaseOrderStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListPurchaseOrdersQueryVariables = {
+  filter?: ModelPurchaseOrderFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPurchaseOrdersQuery = {
+  listPurchaseOrders?:  {
+    __typename: "ModelPurchaseOrderConnection",
+    items:  Array< {
+      __typename: "PurchaseOrder",
+      id: string,
+      purchase_order_id?: string | null,
+      purchase_order_number?: string | null,
+      purchase_order_date?: string | null,
+      expected_delivery_date?: string | null,
+      from_company?: string | null,
+      from_address?: string | null,
+      from_gstin?: string | null,
+      from_email?: string | null,
+      from_phone?: string | null,
+      to_customer?: string | null,
+      to_address?: string | null,
+      to_gstin?: string | null,
+      to_email?: string | null,
+      to_phone?: string | null,
+      items?: string | null,
+      subtotal?: string | null,
+      cgst?: string | null,
+      sgst?: string | null,
+      igst?: string | null,
+      total?: string | null,
+      notes?: string | null,
+      terms_conditions?: string | null,
+      customerID: string,
+      companyID: string,
+      purchase_order_status?: PurchaseOrderStatus | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type PurchaseOrdersByCustomerIDQueryVariables = {
+  customerID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPurchaseOrderFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type PurchaseOrdersByCustomerIDQuery = {
+  purchaseOrdersByCustomerID?:  {
+    __typename: "ModelPurchaseOrderConnection",
+    items:  Array< {
+      __typename: "PurchaseOrder",
+      id: string,
+      purchase_order_id?: string | null,
+      purchase_order_number?: string | null,
+      purchase_order_date?: string | null,
+      expected_delivery_date?: string | null,
+      from_company?: string | null,
+      from_address?: string | null,
+      from_gstin?: string | null,
+      from_email?: string | null,
+      from_phone?: string | null,
+      to_customer?: string | null,
+      to_address?: string | null,
+      to_gstin?: string | null,
+      to_email?: string | null,
+      to_phone?: string | null,
+      items?: string | null,
+      subtotal?: string | null,
+      cgst?: string | null,
+      sgst?: string | null,
+      igst?: string | null,
+      total?: string | null,
+      notes?: string | null,
+      terms_conditions?: string | null,
+      customerID: string,
+      companyID: string,
+      purchase_order_status?: PurchaseOrderStatus | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type PurchaseOrdersByCompanyIDQueryVariables = {
+  companyID: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelPurchaseOrderFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type PurchaseOrdersByCompanyIDQuery = {
+  purchaseOrdersByCompanyID?:  {
+    __typename: "ModelPurchaseOrderConnection",
+    items:  Array< {
+      __typename: "PurchaseOrder",
+      id: string,
+      purchase_order_id?: string | null,
+      purchase_order_number?: string | null,
+      purchase_order_date?: string | null,
+      expected_delivery_date?: string | null,
+      from_company?: string | null,
+      from_address?: string | null,
+      from_gstin?: string | null,
+      from_email?: string | null,
+      from_phone?: string | null,
+      to_customer?: string | null,
+      to_address?: string | null,
+      to_gstin?: string | null,
+      to_email?: string | null,
+      to_phone?: string | null,
+      items?: string | null,
+      subtotal?: string | null,
+      cgst?: string | null,
+      sgst?: string | null,
+      igst?: string | null,
+      total?: string | null,
+      notes?: string | null,
+      terms_conditions?: string | null,
+      customerID: string,
+      companyID: string,
+      purchase_order_status?: PurchaseOrderStatus | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
   } | null,
 };
 
@@ -2720,6 +3252,10 @@ export type GetCompanyQuery = {
       __typename: "ModelQuotationConnection",
       nextToken?: string | null,
     } | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -2899,6 +3435,10 @@ export type GetCustomerQuery = {
     note?: string | null,
     companyID: string,
     adminID?: string | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3330,6 +3870,120 @@ export type InvoicesByCompanyIDQuery = {
   } | null,
 };
 
+export type OnCreatePurchaseOrderSubscriptionVariables = {
+  filter?: ModelSubscriptionPurchaseOrderFilterInput | null,
+};
+
+export type OnCreatePurchaseOrderSubscription = {
+  onCreatePurchaseOrder?:  {
+    __typename: "PurchaseOrder",
+    id: string,
+    purchase_order_id?: string | null,
+    purchase_order_number?: string | null,
+    purchase_order_date?: string | null,
+    expected_delivery_date?: string | null,
+    from_company?: string | null,
+    from_address?: string | null,
+    from_gstin?: string | null,
+    from_email?: string | null,
+    from_phone?: string | null,
+    to_customer?: string | null,
+    to_address?: string | null,
+    to_gstin?: string | null,
+    to_email?: string | null,
+    to_phone?: string | null,
+    items?: string | null,
+    subtotal?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    total?: string | null,
+    notes?: string | null,
+    terms_conditions?: string | null,
+    customerID: string,
+    companyID: string,
+    purchase_order_status?: PurchaseOrderStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdatePurchaseOrderSubscriptionVariables = {
+  filter?: ModelSubscriptionPurchaseOrderFilterInput | null,
+};
+
+export type OnUpdatePurchaseOrderSubscription = {
+  onUpdatePurchaseOrder?:  {
+    __typename: "PurchaseOrder",
+    id: string,
+    purchase_order_id?: string | null,
+    purchase_order_number?: string | null,
+    purchase_order_date?: string | null,
+    expected_delivery_date?: string | null,
+    from_company?: string | null,
+    from_address?: string | null,
+    from_gstin?: string | null,
+    from_email?: string | null,
+    from_phone?: string | null,
+    to_customer?: string | null,
+    to_address?: string | null,
+    to_gstin?: string | null,
+    to_email?: string | null,
+    to_phone?: string | null,
+    items?: string | null,
+    subtotal?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    total?: string | null,
+    notes?: string | null,
+    terms_conditions?: string | null,
+    customerID: string,
+    companyID: string,
+    purchase_order_status?: PurchaseOrderStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeletePurchaseOrderSubscriptionVariables = {
+  filter?: ModelSubscriptionPurchaseOrderFilterInput | null,
+};
+
+export type OnDeletePurchaseOrderSubscription = {
+  onDeletePurchaseOrder?:  {
+    __typename: "PurchaseOrder",
+    id: string,
+    purchase_order_id?: string | null,
+    purchase_order_number?: string | null,
+    purchase_order_date?: string | null,
+    expected_delivery_date?: string | null,
+    from_company?: string | null,
+    from_address?: string | null,
+    from_gstin?: string | null,
+    from_email?: string | null,
+    from_phone?: string | null,
+    to_customer?: string | null,
+    to_address?: string | null,
+    to_gstin?: string | null,
+    to_email?: string | null,
+    to_phone?: string | null,
+    items?: string | null,
+    subtotal?: string | null,
+    cgst?: string | null,
+    sgst?: string | null,
+    igst?: string | null,
+    total?: string | null,
+    notes?: string | null,
+    terms_conditions?: string | null,
+    customerID: string,
+    companyID: string,
+    purchase_order_status?: PurchaseOrderStatus | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateInventoryItemSubscriptionVariables = {
   filter?: ModelSubscriptionInventoryItemFilterInput | null,
 };
@@ -3648,6 +4302,10 @@ export type OnCreateCompanySubscription = {
       __typename: "ModelQuotationConnection",
       nextToken?: string | null,
     } | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3698,6 +4356,10 @@ export type OnUpdateCompanySubscription = {
       __typename: "ModelQuotationConnection",
       nextToken?: string | null,
     } | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3746,6 +4408,10 @@ export type OnDeleteCompanySubscription = {
     } | null,
     Quotations?:  {
       __typename: "ModelQuotationConnection",
+      nextToken?: string | null,
+    } | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
       nextToken?: string | null,
     } | null,
     createdAt: string,
@@ -3881,6 +4547,10 @@ export type OnCreateCustomerSubscription = {
     note?: string | null,
     companyID: string,
     adminID?: string | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3921,6 +4591,10 @@ export type OnUpdateCustomerSubscription = {
     note?: string | null,
     companyID: string,
     adminID?: string | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -3961,6 +4635,10 @@ export type OnDeleteCustomerSubscription = {
     note?: string | null,
     companyID: string,
     adminID?: string | null,
+    PurchaseOrders?:  {
+      __typename: "ModelPurchaseOrderConnection",
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,

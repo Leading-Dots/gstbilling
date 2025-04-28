@@ -1,5 +1,5 @@
 // Permission type definitions
-export type ResourceType = 'invoice' | 'quotation' | 'customer' | 'vendor' | 'inventory' | 'company' | 'employee';
+export type ResourceType = 'invoice' | 'quotation' | "purchase-order" | 'customer' | 'vendor' | 'inventory' | 'company' | 'employee';
 export type ActionType = 'create' | 'read' | 'update' | 'delete' | 'list';
 
 // Resource permissions structure
@@ -43,7 +43,8 @@ const RESOURCES = {
   VENDOR: 'vendor' as ResourceType,
   INVENTORY_ITEM: 'inventory' as ResourceType,
   COMPANY: 'company' as ResourceType,
-  EMPLOYEE: 'employee' as ResourceType
+  EMPLOYEE: 'employee' as ResourceType,
+  PURCHASE_ORDER: 'purchase-order' as ResourceType
 };
 
 const ACTIONS = {
@@ -67,6 +68,7 @@ const ROLES: RolesDict = {
       [RESOURCES.INVENTORY_ITEM]: { create: true, read: true, update: true, delete: true, list: true },
       [RESOURCES.COMPANY]: { create: true, read: true, update: true, delete: false, list: true },
       [RESOURCES.EMPLOYEE]: { create: true, read: true, update: true, delete: true, list: true },
+      [RESOURCES.PURCHASE_ORDER]: { create: true, read: true, update: true, delete: true, list: true }
     }
   },
   MANAGER: {
@@ -80,6 +82,7 @@ const ROLES: RolesDict = {
       [RESOURCES.INVENTORY_ITEM]: { create: true, read: true, update: true, delete: false, list: true },
       [RESOURCES.COMPANY]: { create: false, read: true, update: true, delete: false, list: true },
       [RESOURCES.EMPLOYEE]: { create: false, read: true, update: false, delete: false, list: true },
+      [RESOURCES.PURCHASE_ORDER]: { create: true, read: true, update: true, delete: false, list: true }
     }
   },
   ACCOUNTANT: {
@@ -93,6 +96,7 @@ const ROLES: RolesDict = {
       [RESOURCES.INVENTORY_ITEM]: { create: false, read: true, update: false, delete: false, list: true },
       [RESOURCES.COMPANY]: { create: false, read: true, update: false, delete: false, list: false },
       [RESOURCES.EMPLOYEE]: { create: false, read: false, update: false, delete: false, list: false },
+      [RESOURCES.PURCHASE_ORDER]: { create: true, read: true, update: true, delete: false, list: true }
     }
   },
   EMPLOYEE: {
@@ -106,6 +110,7 @@ const ROLES: RolesDict = {
       [RESOURCES.INVENTORY_ITEM]: { create: false, read: true, update: false, delete: false, list: true },
       [RESOURCES.COMPANY]: { create: false, read: true, update: false, delete: false, list: false },
       [RESOURCES.EMPLOYEE]: { create: false, read: false, update: false, delete: false, list: false },
+      [RESOURCES.PURCHASE_ORDER]: { create: false, read: true, update: false, delete: false, list: true }
     }
   }
 };

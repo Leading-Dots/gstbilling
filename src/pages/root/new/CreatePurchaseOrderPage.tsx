@@ -1,6 +1,4 @@
-"use client";
-
-import { useRef, useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,6 +32,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import generatePDF from "react-to-pdf";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -49,20 +48,19 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
-import { useNavigate } from "react-router-dom";
-import { HexColorPicker } from "react-colorful";
 import { toast } from "sonner";
-import { addQuotation } from "@/db/Quotations";
-import { Customer, QuotationStatus } from "@/API";
+import { HexColorPicker } from "react-colorful";
+import { useNavigate } from "react-router-dom";
+import { addPurchaseOrder } from "@/db/PurchaseOrder";
+import { Vendor, PurchaseOrderStatus, Customer } from "@/API";
 import CustomerSelector from "@/components/shared/CustomerSelector";
-import generatePDF from "react-to-pdf";
 import { useAuth } from "@/hooks/useAuth";
 
 // Define the form schema
-const quotationFormSchema = z.object({
-  quotationNumber: z.string().min(1, "Quotation number is required"),
-  quotationDate: z.date(),
-  validUntil: z.date(),
+const purchaseOrderFormSchema = z.object({
+  purchaseOrderNumber: z.string().min(1, "Purchase order number is required"),
+  purchaseOrderDate: z.date(),
+  deliveryDate: z.date(),
   fromCompany: z.string().min(1, "Company name is required"),
   fromAddress: z.string().min(1, "Address is required"),
   fromGstin: z.string().min(15, "GSTIN must be 15 characters").max(15),
@@ -73,15 +71,17 @@ const quotationFormSchema = z.object({
   toGstin: z.string().min(15, "GSTIN must be 15 characters").max(15),
   toEmail: z.string().email("Invalid email address"),
   toPhone: z.string().min(1, "Phone number is required"),
-  items: z.array(
-    z.object({
-      description: z.string().min(1, "Description is required"),
-      quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
-      rate: z.coerce.number().min(0, "Rate must be a positive number"),
-      gstRate: z.coerce.number().min(0, "GST rate must be a positive number"),
-      amount: z.coerce.number(),
-    })
-  ),
+  items: z
+    .array(
+      z.object({
+        description: z.string().min(1, "Description is required"),
+        quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+        rate: z.coerce.number().min(0, "Rate must be a positive number"),
+        gstRate: z.coerce.number().min(0, "GST rate must be a positive number"),
+        amount: z.coerce.number(),
+      })
+    )
+    .min(1, "At least one item is required"),
   subtotal: z.coerce.number(),
   cgst: z.coerce.number(),
   sgst: z.coerce.number(),
@@ -91,35 +91,7 @@ const quotationFormSchema = z.object({
   termsAndConditions: z.string().optional(),
 });
 
-type QuotationFormValues = z.infer<typeof quotationFormSchema>;
-
-// Sample customers for the demo
-const customers = [
-  {
-    id: "CUST-001",
-    name: "Acme Corp",
-    address: "123 Business Park, Mumbai, MH",
-    gstin: "27AABCU9603R1ZX",
-    email: "john@acmecorp.com",
-    phone: "+91 98765 43210",
-  },
-  {
-    id: "CUST-002",
-    name: "TechSolutions",
-    address: "456 Tech Hub, Bangalore, KA",
-    gstin: "29AADCT1234R1ZX",
-    email: "priya@techsolutions.com",
-    phone: "+91 87654 32109",
-  },
-  {
-    id: "CUST-003",
-    name: "Retail Kings",
-    address: "789 Market Street, Delhi, DL",
-    gstin: "07AAECR5678P1ZX",
-    email: "rajesh@retailkings.com",
-    phone: "+91 76543 21098",
-  },
-];
+type PurchaseOrderFormValues = z.infer<typeof purchaseOrderFormSchema>;
 
 // Default company information
 const companyInfo = {
@@ -130,8 +102,8 @@ const companyInfo = {
   phone: "+91 98765 12345",
 };
 
-// Quotation themes
-const quotationThemes = [
+// Purchase order themes
+const purchaseOrderThemes = [
   {
     name: "Classic",
     primaryColor: "#4f46e5",
@@ -164,33 +136,32 @@ const quotationThemes = [
   },
 ];
 
-export default function NewQuotationPage() {
+const CreatePurchaseOrderPage = () => {
   const router = useNavigate();
   const { user } = useAuth();
+
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedTheme, setSelectedTheme] = useState(quotationThemes[0]);
+  const [selectedTheme, setSelectedTheme] = useState(purchaseOrderThemes[0]);
   const [customColor, setCustomColor] = useState(
-    quotationThemes[0].primaryColor
+    purchaseOrderThemes[0].primaryColor
   );
   const [showColorPicker, setShowColorPicker] = useState(false);
-
-  const targetRef = useRef<HTMLDivElement>(null);
+  const targetRef = React.useRef<HTMLDivElement>(null);
 
   // Initialize the form with default values
-  const form = useForm<QuotationFormValues>({
-    resolver: zodResolver(quotationFormSchema),
+  const form = useForm<PurchaseOrderFormValues>({
+    resolver: zodResolver(purchaseOrderFormSchema),
     defaultValues: {
-      quotationNumber: `QT-${String(new Date().getFullYear()).slice(2)}${String(
-        new Date().getMonth() + 1
-      ).padStart(2, "0")}${String(Math.floor(Math.random() * 1000)).padStart(
-        3,
-        "0"
-      )}`,
-      quotationDate: new Date(),
-      validUntil: new Date(new Date().setDate(new Date().getDate() + 30)),
+      purchaseOrderNumber: `PO-${String(new Date().getFullYear()).slice(
+        2
+      )}${String(new Date().getMonth() + 1).padStart(2, "0")}${String(
+        Math.floor(Math.random() * 1000)
+      ).padStart(3, "0")}`,
+      purchaseOrderDate: new Date(),
+      deliveryDate: new Date(new Date().setDate(new Date().getDate() + 14)),
       fromCompany: companyInfo.name,
       fromAddress: companyInfo.address,
       fromGstin: companyInfo.gstin,
@@ -215,20 +186,20 @@ export default function NewQuotationPage() {
       sgst: 0,
       igst: 0,
       total: 0,
-      notes: "This quotation is valid for 30 days from the date of issue.",
+      notes: "Please deliver as per agreed terms.",
       termsAndConditions:
-        "1. Prices are subject to change without notice\n2. GST will be charged as applicable\n3. Delivery timeline to be confirmed upon order placement",
+        "1. Payment terms: Within 30 days of invoice receipt\n2. Delivery must include all items listed\n3. Quality standards as per specification agreed upon",
     },
   });
 
   // Calculate totals whenever items change
-  const calculateTotals = (items: QuotationFormValues["items"]) => {
+  const calculateTotals = (items: PurchaseOrderFormValues["items"]) => {
     const subtotal = items.reduce(
       (sum, item) => sum + item.quantity * item.rate,
       0
     );
 
-    // Determine if IGST or CGST+SGST based on customer location
+    // Determine if IGST or CGST+SGST based on vendor location
     // For demo, we'll use CGST+SGST
     const useIGST = false;
 
@@ -250,8 +221,8 @@ export default function NewQuotationPage() {
     form.setValue("total", total);
   };
 
-  // Handle customer selection
-  const handleCustomerSelect = (customer: Customer) => {
+  // Handle vendor selection
+  const handleVendorSelect = (customer: Customer) => {
     setSelectedCustomer(customer);
 
     if (customer) {
@@ -301,7 +272,7 @@ export default function NewQuotationPage() {
 
   // Handle theme selection
   const handleThemeSelect = (themeName: string) => {
-    const theme = quotationThemes.find((t) => t.name === themeName);
+    const theme = purchaseOrderThemes.find((t) => t.name === themeName);
     if (theme) {
       setSelectedTheme(theme);
       setCustomColor(theme.primaryColor);
@@ -309,14 +280,20 @@ export default function NewQuotationPage() {
   };
 
   // Navigate to next step
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (currentStep === 1) {
-      const isValid = form.trigger();
-      isValid.then((valid) => {
-        if (valid) {
-          setCurrentStep(2);
-        }
-      });
+      const result = await form.trigger();
+      if (!result) {
+        toast.error("Please fill in all required fields correctly");
+        return;
+      }
+
+      if (form.getValues("items").length === 0) {
+        toast.error("Please add at least one item to the purchase order");
+        return;
+      }
+
+      setCurrentStep(2);
     }
   };
 
@@ -327,67 +304,62 @@ export default function NewQuotationPage() {
     }
   };
 
-  // Download quotation as PDF
-  const downloadQuotation = () => {
-    // In a real app, you would generate a PDF here
+  // Download purchase order as PDF
+  const downloadPurchaseOrder = () => {
     const pdfContent = targetRef;
     if (pdfContent) {
       const pdf = generatePDF(pdfContent, {
-        filename: `quotation-${form.getValues("quotationNumber")}.pdf`,
+        filename: `purchase-order-${form.getValues("purchaseOrderNumber")}.pdf`,
       });
-      //download it
-
-      toast.success("Invoice downloaded successfully!");
+      toast.success("Purchase order downloaded successfully!");
     } else {
-      toast.error("Failed to download invoice.");
+      toast.error("Failed to download purchase order.");
     }
   };
 
-  // Share quotation
-  const shareQuotation = () => {
-    // In a real app, you would implement sharing functionality
-    toast.success("Quotation shared successfully.");
+  // Share purchase order
+  const sharePurchaseOrder = () => {
+    toast.success("Purchase order shared successfully!");
   };
 
   // Form submission
-  const onSubmit = async (data: QuotationFormValues) => {
+  const onSubmit = async (data: PurchaseOrderFormValues) => {
     try {
-      const newQuotation = await addQuotation({
+      const newPurchaseOrder = await addPurchaseOrder({
+        companyID: user?.company_id!!,
         customerID: selectedCustomer?.id!!,
-        companyID: user.company_id!!,
-        quotation_number: data.quotationNumber,
-        quotation_status: QuotationStatus.SENT,
-        items: JSON.stringify(data.items),
+        purchase_order_status: PurchaseOrderStatus.SENT,
+        purchase_order_number: data.purchaseOrderNumber,
+        purchase_order_date: data.purchaseOrderDate.toISOString().split("T")[0],
+        expected_delivery_date: data.deliveryDate.toISOString().split("T")[0],
         from_company: data.fromCompany,
         from_address: data.fromAddress,
         from_gstin: data.fromGstin,
         from_email: data.fromEmail,
         from_phone: data.fromPhone,
-        to_customer: data.toCustomer,
+        to_customer: data.toCustomer, // Using "to_customer" field for vendor
         to_address: data.toAddress,
         to_gstin: data.toGstin,
         to_email: data.toEmail,
         to_phone: data.toPhone,
-        notes: data.notes,
-        terms_conditions: data.termsAndConditions,
-        quotation_date: data.quotationDate.toISOString().split("T")[0],
-        valid_until: data.validUntil.toISOString().split("T")[0],
+        items: JSON.stringify(data.items),
         subtotal: String(data.subtotal),
         cgst: String(data.cgst),
         sgst: String(data.sgst),
         igst: String(data.igst),
         total: String(data.total.toFixed(2)),
+        notes: data.notes || "",
+        terms_conditions: data.termsAndConditions || "",
       });
-
-      if (newQuotation) {
-        toast.success("Quotation created successfully.");
-        router("/quotations");
+      if (newPurchaseOrder) {
+        toast.success("Purchase order created successfully!");
+        router("/purchase-orders");
       } else {
-        toast.error("Failed to create quotation. Please try again.");
+        toast.error("Failed to create purchase order.");
       }
     } catch (error) {
-      console.error("Error creating quotation:", error);
-      toast.error("Failed to create quotation. Please try again.");
+      console.error("Error creating purchase order:", error);
+      toast.error("Failed to create purchase order.");
     }
   };
 
@@ -407,7 +379,7 @@ export default function NewQuotationPage() {
             </Button>
           )}
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            Create New Quotation
+            Create New Purchase Order
           </h2>
         </div>
 
@@ -421,7 +393,7 @@ export default function NewQuotationPage() {
             ) : (
               <Button type="button" onClick={form.handleSubmit(onSubmit)}>
                 <Save className="h-4 w-4" />
-                Create Quotation
+                Create Purchase Order
               </Button>
             )}
           </span>
@@ -432,21 +404,21 @@ export default function NewQuotationPage() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid gap-6 md:grid-cols-2">
-              {/* Quotation Details */}
+              {/* Purchase Order Details */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Quotation Details</CardTitle>
+                  <CardTitle>Purchase Order Details</CardTitle>
                   <CardDescription>
-                    Enter the basic details for this quotation
+                    Enter the basic details for this purchase order
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="quotationNumber"
+                    name="purchaseOrderNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Quotation Number</FormLabel>
+                        <FormLabel>Purchase Order Number</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -458,10 +430,10 @@ export default function NewQuotationPage() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name="quotationDate"
+                      name="purchaseOrderDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Quotation Date</FormLabel>
+                          <FormLabel>Order Date</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
@@ -497,10 +469,10 @@ export default function NewQuotationPage() {
 
                     <FormField
                       control={form.control}
-                      name="validUntil"
+                      name="deliveryDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Valid Until</FormLabel>
+                          <FormLabel>Delivery Date</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
@@ -537,7 +509,7 @@ export default function NewQuotationPage() {
                 </CardContent>
               </Card>
 
-              {/* Customer Selection */}
+              {/* Vendor Selection */}
               <Card>
                 <CardHeader>
                   <CardTitle>Select Customer</CardTitle>
@@ -546,8 +518,7 @@ export default function NewQuotationPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <CustomerSelector onSelect={handleCustomerSelect} />
-
+                  <CustomerSelector onSelect={handleVendorSelect} />
                   <p className="mt-2 text-sm text-muted-foreground">
                     Or enter customer details manually below
                   </p>
@@ -638,11 +609,11 @@ export default function NewQuotationPage() {
                 </CardContent>
               </Card>
 
-              {/* To (Customer) */}
+              {/* To (Vendor) */}
               <Card>
                 <CardHeader>
-                  <CardTitle>To (Customer)</CardTitle>
-                  <CardDescription>Customer details</CardDescription>
+                  <CardTitle>To (Vendor)</CardTitle>
+                  <CardDescription>Vendor details</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -650,7 +621,7 @@ export default function NewQuotationPage() {
                     name="toCustomer"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Customer Name</FormLabel>
+                        <FormLabel>Vendor Name</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -720,12 +691,12 @@ export default function NewQuotationPage() {
               </Card>
             </div>
 
-            {/* Quotation Items */}
+            {/* Purchase Order Items */}
             <Card>
               <CardHeader>
-                <CardTitle>Quotation Items</CardTitle>
+                <CardTitle>Purchase Order Items</CardTitle>
                 <CardDescription>
-                  Add the items you want to include in this quotation
+                  Add the items you want to include in this purchase order
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -827,6 +798,14 @@ export default function NewQuotationPage() {
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
+
+                      {form.formState.errors.items && (
+                        <div className="col-span-12">
+                          <p className="text-sm text-destructive">
+                            {form.formState.errors.items.message}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   ))}
 
@@ -847,7 +826,7 @@ export default function NewQuotationPage() {
             {/* Totals */}
             <Card>
               <CardHeader>
-                <CardTitle>Quotation Summary</CardTitle>
+                <CardTitle>Purchase Order Summary</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -883,7 +862,7 @@ export default function NewQuotationPage() {
                 <CardHeader>
                   <CardTitle>Notes</CardTitle>
                   <CardDescription>
-                    Add any additional notes for this quotation
+                    Add any additional notes for this purchase order
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -906,7 +885,7 @@ export default function NewQuotationPage() {
                 <CardHeader>
                   <CardTitle>Terms & Conditions</CardTitle>
                   <CardDescription>
-                    Specify the terms and conditions for this quotation
+                    Specify the terms and conditions for this purchase order
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -927,6 +906,15 @@ export default function NewQuotationPage() {
             </div>
 
             {/* Form Actions */}
+            <div className="flex justify-end gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router("/purchase-orders")}
+              >
+                Cancel
+              </Button>
+            </div>
           </form>
         </Form>
       ) : (
@@ -939,12 +927,12 @@ export default function NewQuotationPage() {
                   className="flex flex-row items-center justify-between"
                   style={{ backgroundColor: customColor, color: "white" }}
                 >
-                  <CardTitle>Quotation Preview</CardTitle>
+                  <CardTitle>Purchase Order Preview</CardTitle>
                   <div className="flex space-x-2">
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={downloadQuotation}
+                      onClick={downloadPurchaseOrder}
                     >
                       <Download className="mr-2 h-4 w-4" />
                       Download
@@ -952,7 +940,7 @@ export default function NewQuotationPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={shareQuotation}
+                      onClick={sharePurchaseOrder}
                     >
                       <Share2 className="mr-2 h-4 w-4" />
                       Share
@@ -961,7 +949,7 @@ export default function NewQuotationPage() {
                 </CardHeader>
                 <CardContent className="p-0" ref={targetRef}>
                   <div className="p-8 space-y-8">
-                    {/* Invoice Header */}
+                    {/* Purchase Order Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start gap-8">
                       {/* Company Logo & Details */}
                       <div className="space-y-4 flex-1">
@@ -982,45 +970,48 @@ export default function NewQuotationPage() {
                         </div>
                       </div>
 
-                      {/* Invoice Details */}
+                      {/* Purchase Order Details */}
                       <div className="md:text-right space-y-4">
                         <h1
                           className="text-4xl font-bold tracking-tight"
                           style={{ color: customColor }}
                         >
-                          QUOTATION
+                          PURCHASE ORDER
                         </h1>
                         <div className="space-y-1">
                           <div className="flex justify-between md:justify-end gap-4">
                             <span className="text-muted-foreground">
-                              Invoice Number:
+                              PO Number:
                             </span>
                             <span className="font-medium">
-                              {form.getValues("quotationNumber")}
+                              {form.getValues("purchaseOrderNumber")}
                             </span>
                           </div>
                           <div className="flex justify-between md:justify-end gap-4">
                             <span className="text-muted-foreground">Date:</span>
                             <span className="font-medium">
                               {format(
-                                form.getValues("quotationDate"),
+                                form.getValues("purchaseOrderDate"),
                                 "dd MMM yyyy"
                               )}
                             </span>
                           </div>
                           <div className="flex justify-between md:justify-end gap-4">
                             <span className="text-muted-foreground">
-                              Due Date:
+                              Delivery Date:
                             </span>
                             <span className="font-medium">
-                              {format(form.getValues("validUntil"), "dd MMM yyyy")}
+                              {format(
+                                form.getValues("deliveryDate"),
+                                "dd MMM yyyy"
+                              )}
                             </span>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Bill To Section */}
+                    {/* Vendor Section */}
                     <div
                       className="border rounded-lg p-6 space-y-3"
                       style={{ borderColor: customColor }}
@@ -1029,7 +1020,7 @@ export default function NewQuotationPage() {
                         className="text-lg font-semibold"
                         style={{ color: customColor }}
                       >
-                        Bill To:
+                        Vendor:
                       </h3>
                       <div className="space-y-2">
                         <h4 className="text-xl font-bold">
@@ -1048,7 +1039,7 @@ export default function NewQuotationPage() {
                       </div>
                     </div>
 
-                    {/* Invoice Items */}
+                    {/* Purchase Order Items */}
                     <div className="overflow-x-auto rounded-lg border">
                       <table className="w-full">
                         <thead>
@@ -1089,7 +1080,7 @@ export default function NewQuotationPage() {
                       </table>
                     </div>
 
-                    {/* Invoice Summary */}
+                    {/* Purchase Order Summary */}
                     <div className="flex justify-end">
                       <div className="w-full md:w-72 space-y-2">
                         <div className="flex justify-between text-sm">
@@ -1161,9 +1152,9 @@ export default function NewQuotationPage() {
             <div>
               <Card>
                 <CardHeader>
-                  <CardTitle>Customize Quotation</CardTitle>
+                  <CardTitle>Customize Purchase Order</CardTitle>
                   <CardDescription>
-                    Change the appearance of your quotation
+                    Change the appearance of your purchase order
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -1177,7 +1168,7 @@ export default function NewQuotationPage() {
                         <SelectValue placeholder="Select a theme" />
                       </SelectTrigger>
                       <SelectContent>
-                        {quotationThemes.map((theme) => (
+                        {purchaseOrderThemes.map((theme) => (
                           <SelectItem key={theme.name} value={theme.name}>
                             {theme.name}
                           </SelectItem>
@@ -1222,8 +1213,21 @@ export default function NewQuotationPage() {
           </div>
 
           {/* Form Actions */}
+          <div className="flex justify-between">
+            <div className="space-x-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router("/purchase-orders")}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
-}
+};
+
+export default CreatePurchaseOrderPage;

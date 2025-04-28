@@ -8,6 +8,123 @@ type GeneratedSubscription<InputType, OutputType> = string & {
   __generatedSubscriptionOutput: OutputType;
 };
 
+export const onCreatePurchaseOrder = /* GraphQL */ `subscription OnCreatePurchaseOrder(
+  $filter: ModelSubscriptionPurchaseOrderFilterInput
+) {
+  onCreatePurchaseOrder(filter: $filter) {
+    id
+    purchase_order_id
+    purchase_order_number
+    purchase_order_date
+    expected_delivery_date
+    from_company
+    from_address
+    from_gstin
+    from_email
+    from_phone
+    to_customer
+    to_address
+    to_gstin
+    to_email
+    to_phone
+    items
+    subtotal
+    cgst
+    sgst
+    igst
+    total
+    notes
+    terms_conditions
+    customerID
+    companyID
+    purchase_order_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnCreatePurchaseOrderSubscriptionVariables,
+  APITypes.OnCreatePurchaseOrderSubscription
+>;
+export const onUpdatePurchaseOrder = /* GraphQL */ `subscription OnUpdatePurchaseOrder(
+  $filter: ModelSubscriptionPurchaseOrderFilterInput
+) {
+  onUpdatePurchaseOrder(filter: $filter) {
+    id
+    purchase_order_id
+    purchase_order_number
+    purchase_order_date
+    expected_delivery_date
+    from_company
+    from_address
+    from_gstin
+    from_email
+    from_phone
+    to_customer
+    to_address
+    to_gstin
+    to_email
+    to_phone
+    items
+    subtotal
+    cgst
+    sgst
+    igst
+    total
+    notes
+    terms_conditions
+    customerID
+    companyID
+    purchase_order_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnUpdatePurchaseOrderSubscriptionVariables,
+  APITypes.OnUpdatePurchaseOrderSubscription
+>;
+export const onDeletePurchaseOrder = /* GraphQL */ `subscription OnDeletePurchaseOrder(
+  $filter: ModelSubscriptionPurchaseOrderFilterInput
+) {
+  onDeletePurchaseOrder(filter: $filter) {
+    id
+    purchase_order_id
+    purchase_order_number
+    purchase_order_date
+    expected_delivery_date
+    from_company
+    from_address
+    from_gstin
+    from_email
+    from_phone
+    to_customer
+    to_address
+    to_gstin
+    to_email
+    to_phone
+    items
+    subtotal
+    cgst
+    sgst
+    igst
+    total
+    notes
+    terms_conditions
+    customerID
+    companyID
+    purchase_order_status
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+` as GeneratedSubscription<
+  APITypes.OnDeletePurchaseOrderSubscriptionVariables,
+  APITypes.OnDeletePurchaseOrderSubscription
+>;
 export const onCreateInventoryItem = /* GraphQL */ `subscription OnCreateInventoryItem(
   $filter: ModelSubscriptionInventoryItemFilterInput
 ) {
@@ -327,6 +444,10 @@ export const onCreateCompany = /* GraphQL */ `subscription OnCreateCompany($filt
       nextToken
       __typename
     }
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -376,6 +497,10 @@ export const onUpdateCompany = /* GraphQL */ `subscription OnUpdateCompany($filt
       nextToken
       __typename
     }
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -422,6 +547,10 @@ export const onDeleteCompany = /* GraphQL */ `subscription OnDeleteCompany($filt
       __typename
     }
     Quotations {
+      nextToken
+      __typename
+    }
+    PurchaseOrders {
       nextToken
       __typename
     }
@@ -554,6 +683,10 @@ export const onCreateCustomer = /* GraphQL */ `subscription OnCreateCustomer($fi
     note
     companyID
     adminID
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -593,6 +726,10 @@ export const onUpdateCustomer = /* GraphQL */ `subscription OnUpdateCustomer($fi
     note
     companyID
     adminID
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename
@@ -632,6 +769,10 @@ export const onDeleteCustomer = /* GraphQL */ `subscription OnDeleteCustomer($fi
     note
     companyID
     adminID
+    PurchaseOrders {
+      nextToken
+      __typename
+    }
     createdAt
     updatedAt
     __typename

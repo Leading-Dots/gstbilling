@@ -1,3 +1,41 @@
+enum PurchaseOrderStatus {
+  DRAFT
+  SENT
+  CONFIRMED
+  RECIEVED
+  CANCELLED
+  PARTIALLY_RECIEVED
+}
+
+type PurchaseOrder @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  purchase_order_id: String
+  purchase_order_number: String
+  purchase_order_date: String
+  expected_delivery_date: String
+  from_company: String
+  from_address: String
+  from_gstin: String
+  from_email: String
+  from_phone: String
+  to_customer: String
+  to_address: String
+  to_gstin: String
+  to_email: String
+  to_phone: String
+  items: AWSJSON
+  subtotal: String
+  cgst: String
+  sgst: String
+  igst: String
+  total: String
+  notes: String
+  terms_conditions: String
+  customerID: ID! @index(name: "byCustomer")
+  companyID: ID! @index(name: "byCompany")
+  purchase_order_status: PurchaseOrderStatus
+}
+
 enum EmployeeStatus {
   ACTIVE
   INACTIVE
@@ -83,6 +121,7 @@ type Company @model @auth(rules: [{allow: public}]) {
   Vendors: [Vendor] @hasMany(indexName: "byCompany", fields: ["id"])
   Invoices: [Invoice] @hasMany(indexName: "byCompany", fields: ["id"])
   Quotations: [Quotation] @hasMany(indexName: "byCompany", fields: ["id"])
+  PurchaseOrders: [PurchaseOrder] @hasMany(indexName: "byCompany", fields: ["id"])
 }
 
 enum QuotationStatus {
@@ -150,6 +189,7 @@ type Customer @model @auth(rules: [{allow: public}]) {
   note: String
   companyID: ID! @index(name: "byCompany")
   adminID: String
+  PurchaseOrders: [PurchaseOrder] @hasMany(indexName: "byCustomer", fields: ["id"])
 }
 
 type Quotation @model @auth(rules: [{allow: public}]) {

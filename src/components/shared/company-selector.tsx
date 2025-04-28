@@ -39,6 +39,10 @@ export function CompanySwitcher() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+
+        if(!user || !user.company_id) {
+          return;
+        }
         // Fetch company data
         const company = await getCompanyById(user.company_id);
         setSelectedCompany(company);
