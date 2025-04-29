@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -53,10 +53,11 @@ import { useNavigate } from "react-router-dom";
 import { HexColorPicker } from "react-colorful";
 import { toast } from "sonner";
 import { addQuotation } from "@/db/Quotations";
-import { Customer, QuotationStatus } from "@/API";
+import { Company, Customer, QuotationStatus } from "@/API";
 import CustomerSelector from "@/components/shared/CustomerSelector";
 import generatePDF from "react-to-pdf";
 import { useAuth } from "@/hooks/useAuth";
+import { getCompanyById } from "@/db/Company";
 
 // Define the form schema
 const quotationFormSchema = z.object({
@@ -179,6 +180,9 @@ export default function NewQuotationPage() {
 
   const targetRef = useRef<HTMLDivElement>(null);
 
+  const [loading, setLoading] = useState(true);
+  const [companyInfo, setCompanyInfo] = useState<Company | null>(null);
+
   // Initialize the form with default values
   const form = useForm<QuotationFormValues>({
     resolver: zodResolver(quotationFormSchema),
@@ -191,11 +195,11 @@ export default function NewQuotationPage() {
       )}`,
       quotationDate: new Date(),
       validUntil: new Date(new Date().setDate(new Date().getDate() + 30)),
-      fromCompany: companyInfo.name,
-      fromAddress: companyInfo.address,
-      fromGstin: companyInfo.gstin,
-      fromEmail: companyInfo.email,
-      fromPhone: companyInfo.phone,
+      fromCompany: "",
+      fromAddress: "",
+      fromGstin: "",
+      fromEmail: "",
+      fromPhone: "",
       toCustomer: "",
       toAddress: "",
       toGstin: "",
@@ -219,6 +223,9 @@ export default function NewQuotationPage() {
       termsAndConditions:
         "1. Prices are subject to change without notice\n2. GST will be charged as applicable\n3. Delivery timeline to be confirmed upon order placement",
     },
+    mode: "onChange",
+    reValidateMode: "onChange",
+    
   });
 
   // Calculate totals whenever items change
@@ -390,6 +397,39 @@ export default function NewQuotationPage() {
       toast.error("Failed to create quotation. Please try again.");
     }
   };
+
+  const fetchCompanyDetails = async () => {
+    try {
+      console.log("Fetching company details...");
+      const company = await getCompanyById(user?.company_id!!);
+      if (company) {
+        setCompanyInfo(company);
+        form.setValue("fromCompany", company?.company_name);
+        form.setValue("fromAddress", company?.billing_address);
+        form.setValue("fromGstin", company?.gstin);
+        form.setValue("fromEmail", company?.email);
+        form.setValue("fromPhone", company?.phone);
+      } else {
+        toast.error("Company details not found");
+      }
+    } catch (error) {
+      console.error("Error fetching company details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCompanyDetails();
+  }, []);
+
+  if(loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
@@ -1013,7 +1053,10 @@ export default function NewQuotationPage() {
                               Due Date:
                             </span>
                             <span className="font-medium">
-                              {format(form.getValues("validUntil"), "dd MMM yyyy")}
+                              {format(
+                                form.getValues("validUntil"),
+                                "dd MMM yyyy"
+                              )}
                             </span>
                           </div>
                         </div>

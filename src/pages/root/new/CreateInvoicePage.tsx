@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -52,9 +52,10 @@ import { toast } from "sonner";
 import { HexColorPicker } from "react-colorful";
 import { useNavigate } from "react-router-dom";
 import { addInvoice } from "@/db/Invoices";
-import { Customer, InvoiceStatus } from "@/API";
+import { Company, Customer, InvoiceStatus } from "@/API";
 import CustomerSelector from "@/components/shared/CustomerSelector";
 import { useAuth } from "@/hooks/useAuth";
+import { getCompanyById } from "@/db/Company";
 
 // Define the form schema
 const invoiceFormSchema = z.object({
@@ -122,13 +123,7 @@ const customers = [
 ];
 
 // Default company information
-const companyInfo = {
-  name: "Your Company Name",
-  address: "123 Company Street, City, State, PIN",
-  gstin: "33AABCX1234Y1ZX",
-  email: "contact@yourcompany.com",
-  phone: "+91 98765 12345",
-};
+
 
 // Invoice themes
 const invoiceThemes = [
@@ -172,10 +167,12 @@ export default function NewInvoicePage() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+  const [companyInfo, setCompanyInfo] = useState<Company | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTheme, setSelectedTheme] = useState(invoiceThemes[0]);
   const [customColor, setCustomColor] = useState(invoiceThemes[0].primaryColor);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [loading, setLoading] = useState(true);
   const targetRef = React.useRef<HTMLDivElement>(null);
 
   // Initialize the form with default values
@@ -190,11 +187,11 @@ export default function NewInvoicePage() {
       )}`,
       invoiceDate: new Date(),
       dueDate: new Date(new Date().setDate(new Date().getDate() + 30)),
-      fromCompany: companyInfo.name,
-      fromAddress: companyInfo.address,
-      fromGstin: companyInfo.gstin,
-      fromEmail: companyInfo.email,
-      fromPhone: companyInfo.phone,
+      fromCompany: "",
+      fromAddress: "",
+      fromGstin: "",
+      fromEmail: "",
+      fromPhone: "",
       toCustomer: "",
       toAddress: "",
       toGstin: "",
@@ -219,6 +216,29 @@ export default function NewInvoicePage() {
         "1. Payment due within 30 days\n2. GST will be charged as applicable\n3. Late payment will incur a 2% monthly interest",
     },
   });
+
+
+  const fetchCompanyDetails = async () => {
+    try {
+      console.log("Fetching company details...");
+        const company = await getCompanyById(user?.company_id!!);
+        if (company) {
+          setCompanyInfo(company);
+          form.setValue("fromCompany", company?.company_name);
+          form.setValue("fromAddress", company?.billing_address);
+          form.setValue("fromGstin", company?.gstin);
+          form.setValue("fromEmail", company?.email);
+          form.setValue("fromPhone", company?.phone);
+        }
+        else {
+          toast.error("Company details not found");
+        }
+    } catch (error) {
+        console.error("Error fetching company details:", error);
+    } finally {
+        setLoading(false);
+    }
+  }
 
   // Calculate totals whenever items change
   const calculateTotals = (items: InvoiceFormValues["items"]) => {
@@ -396,6 +416,20 @@ export default function NewInvoicePage() {
       toast.error("Failed to create invoice.");
     }
   };
+
+
+  useEffect(() => {
+    fetchCompanyDetails();
+  }, [])
+
+
+  if(loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">

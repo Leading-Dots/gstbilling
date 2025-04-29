@@ -52,9 +52,10 @@ import { toast } from "sonner";
 import { HexColorPicker } from "react-colorful";
 import { useNavigate } from "react-router-dom";
 import { addPurchaseOrder } from "@/db/PurchaseOrder";
-import { Vendor, PurchaseOrderStatus, Customer } from "@/API";
+import { Vendor, PurchaseOrderStatus, Customer, Company } from "@/API";
 import CustomerSelector from "@/components/shared/CustomerSelector";
 import { useAuth } from "@/hooks/useAuth";
+import { getCompanyById } from "@/db/Company";
 
 // Define the form schema
 const purchaseOrderFormSchema = z.object({
@@ -143,6 +144,8 @@ const CreatePurchaseOrderPage = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+
+  const [companyInfo, setCompanyInfo] = useState<Company | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTheme, setSelectedTheme] = useState(purchaseOrderThemes[0]);
   const [customColor, setCustomColor] = useState(
@@ -150,6 +153,8 @@ const CreatePurchaseOrderPage = () => {
   );
   const [showColorPicker, setShowColorPicker] = useState(false);
   const targetRef = React.useRef<HTMLDivElement>(null);
+
+  const [loading, setLoading] = useState(true);
 
   // Initialize the form with default values
   const form = useForm<PurchaseOrderFormValues>({
@@ -162,11 +167,11 @@ const CreatePurchaseOrderPage = () => {
       ).padStart(3, "0")}`,
       purchaseOrderDate: new Date(),
       deliveryDate: new Date(new Date().setDate(new Date().getDate() + 14)),
-      fromCompany: companyInfo.name,
-      fromAddress: companyInfo.address,
-      fromGstin: companyInfo.gstin,
-      fromEmail: companyInfo.email,
-      fromPhone: companyInfo.phone,
+      fromCompany: "",
+      fromAddress: "",
+      fromGstin: "",
+      fromEmail: "",
+      fromPhone: "",
       toCustomer: "",
       toAddress: "",
       toGstin: "",
@@ -362,6 +367,40 @@ const CreatePurchaseOrderPage = () => {
       toast.error("Failed to create purchase order.");
     }
   };
+
+  const fetchCompanyDetails = async () => {
+    try {
+      console.log("Fetching company details...");
+      const company = await getCompanyById(user?.company_id!!);
+      if (company) {
+        setCompanyInfo(company);
+        form.setValue("fromCompany", company?.company_name);
+        form.setValue("fromAddress", company?.billing_address);
+        form.setValue("fromGstin", company?.gstin);
+        form.setValue("fromEmail", company?.email);
+        form.setValue("fromPhone", company?.phone);
+      } else {
+        toast.error("Company details not found");
+      }
+    } catch (error) {
+      console.error("Error fetching company details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  React.useEffect(() => {
+    fetchCompanyDetails();
+  }, []);
+
+  if(loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
